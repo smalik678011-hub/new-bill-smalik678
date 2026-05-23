@@ -128,98 +128,98 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {/* Backdrop click closer */}
           <div className="flex-1" onClick={() => setShowMoreMenu(false)} />
           
-          <div className="bg-gray-900 border-t border-gray-800 rounded-t-3xl pt-5 pb-8 px-6 space-y-5 animate-slideUp max-h-[85vh] overflow-y-auto shadow-2xl">
+          <div className="bg-white rounded-t-[32px] pt-5 pb-8 px-6 space-y-5 animate-slideUp max-h-[85vh] overflow-y-auto shadow-2xl">
             {/* Header section */}
-            <div className="flex items-center justify-between pb-3 border-b border-gray-800">
+            <div className="flex items-center justify-between pb-3">
               <div className="flex items-center space-x-2">
-                <Sparkles className="h-5 w-5 text-amber-500" />
-                <h3 className="font-extrabold text-sm text-gray-200">अन्य जरूरी टूल्स (BillKaro Utilities)</h3>
+                <Sparkles className="h-6 w-6 text-orange-500" />
+                <h3 className="font-black text-lg text-gray-900">BillKaro Utilities</h3>
               </div>
               <button 
                 onClick={() => setShowMoreMenu(false)}
-                className="p-1 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full cursor-pointer"
+                className="p-1.5 bg-orange-100 text-orange-600 hover:bg-orange-200 rounded-full cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Grid list of other menu modules */}
-            <div className="grid grid-cols-2 gap-3.5">
+            <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => handleMoreItemNavigate('/quotations')}
-                className="flex items-center space-x-3 bg-gray-950/70 border border-gray-850 p-3.5 rounded-2xl hover:border-amber-500/40 text-left transition cursor-pointer"
+                className="flex flex-col items-center space-y-3 bg-white border border-orange-100 p-4 rounded-3xl shadow-sm hover:border-orange-300 text-center transition cursor-pointer"
               >
-                <div className="h-9 w-9 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-500">
-                  <ClipboardCheck className="h-5 w-5" />
+                <div className="h-12 w-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white">
+                  <ClipboardCheck className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-gray-200 block">एस्टीमेट बही</span>
-                  <span className="text-[9.5px] text-gray-500 block leading-none mt-0.5">Quotations</span>
+                  <span className="text-sm font-black text-gray-900 block">एस्टीमेट बही</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Quotations</span>
                 </div>
               </button>
 
               <button
                 onClick={() => handleMoreItemNavigate('/profit')}
-                className="flex items-center space-x-3 bg-gray-950/70 border border-gray-850 p-3.5 rounded-2xl hover:border-amber-500/40 text-left transition cursor-pointer"
+                className="flex flex-col items-center space-y-3 bg-white border border-orange-100 p-4 rounded-3xl shadow-sm hover:border-orange-300 text-center transition cursor-pointer"
               >
-                <div className="h-9 w-9 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-400">
-                  <Calculator className="h-5 w-5" />
+                <div className="h-12 w-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white">
+                  <Calculator className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-gray-200 block">प्राइवेट बचत</span>
-                  <span className="text-[9.5px] text-gray-500 block leading-none mt-0.5">Marge Profits</span>
+                  <span className="text-sm font-black text-gray-900 block">प्राइवेट बचत</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Marge Profits</span>
                 </div>
               </button>
 
               <button
                 onClick={() => handleMoreItemNavigate('/expenses')}
-                className="flex items-center space-x-3 bg-gray-950/70 border border-gray-850 p-3.5 rounded-2xl hover:border-amber-500/40 text-left transition cursor-pointer"
+                className="flex flex-col items-center space-y-3 bg-white border border-orange-100 p-4 rounded-3xl shadow-sm hover:border-orange-300 text-center transition cursor-pointer"
               >
-                <div className="h-9 w-9 bg-cyan-500/10 rounded-xl flex items-center justify-center text-cyan-400">
-                  <TrendingUp className="h-5 w-5" />
+                <div className="h-12 w-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white">
+                  <TrendingUp className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-gray-200 block">कमाई-खर्चा</span>
-                  <span className="text-[9.5px] text-gray-500 block leading-none mt-0.5">Kamaai Kharcha</span>
+                  <span className="text-sm font-black text-gray-900 block">कमाई-खर्चा</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Kamaai Kharcha</span>
                 </div>
               </button>
 
               <button
                 onClick={() => handleMoreItemNavigate('/digital-card')}
-                className="flex items-center space-x-3 bg-gray-950/70 border border-gray-850 p-3.5 rounded-2xl hover:border-amber-500/40 text-left transition cursor-pointer"
+                className="flex flex-col items-center space-y-3 bg-white border border-orange-100 p-4 rounded-3xl shadow-sm hover:border-orange-300 text-center transition cursor-pointer"
               >
-                <div className="h-9 w-9 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-400">
-                  <CreditCard className="h-5 w-5" />
+                <div className="h-12 w-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white">
+                  <CreditCard className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-gray-200 block">डिजिटल कार्ड</span>
-                  <span className="text-[9.5px] text-gray-500 block leading-none mt-0.5">Visiting Cards</span>
+                  <span className="text-sm font-black text-gray-900 block">डिजिटल कार्ड</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Visiting Cards</span>
                 </div>
               </button>
 
               <button
                 onClick={() => handleMoreItemNavigate('/stock')}
-                className="flex items-center space-x-3 bg-gray-950/70 border border-gray-850 p-3.5 rounded-2xl hover:border-amber-500/40 text-left transition cursor-pointer"
+                className="flex flex-col items-center space-y-3 bg-white border border-orange-100 p-4 rounded-3xl shadow-sm hover:border-orange-300 text-center transition cursor-pointer"
               >
-                <div className="h-9 w-9 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-500">
-                  <Package className="h-5 w-5" />
+                <div className="h-12 w-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white">
+                  <Package className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-gray-200 block">स्टॉक माल</span>
-                  <span className="text-[9.5px] text-gray-500 block leading-none mt-0.5">Inventory</span>
+                  <span className="text-sm font-black text-gray-900 block">स्टॉक माल</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Inventory</span>
                 </div>
               </button>
 
               <button
                 onClick={() => handleMoreItemNavigate('/settings')}
-                className="flex items-center space-x-3 bg-gray-950/70 border border-gray-850 p-3.5 rounded-2xl hover:border-amber-500/40 text-left transition cursor-pointer"
+                className="flex flex-col items-center space-y-3 bg-white border border-orange-100 p-4 rounded-3xl shadow-sm hover:border-orange-300 text-center transition cursor-pointer"
               >
-                <div className="h-9 w-9 bg-gray-600/10 rounded-xl flex items-center justify-center text-gray-300">
-                  <Building className="h-5 w-5" />
+                <div className="h-12 w-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white">
+                  <Building className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-gray-200 block">सिटिंग्स व प्रोफाइल</span>
-                  <span className="text-[9.5px] text-gray-500 block leading-none mt-0.5">Settings Info</span>
+                  <span className="text-sm font-black text-gray-900 block">सिटिंग्स व प्रोफाइल</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Settings Info</span>
                 </div>
               </button>
             </div>
@@ -228,10 +228,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <div className="pt-2">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center space-x-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/10 p-3.5 rounded-xl transition cursor-pointer font-black text-xs uppercase"
+                className="w-full flex items-center justify-center space-x-2 bg-orange-500 text-white p-4 rounded-[24px] transition cursor-pointer font-black text-sm uppercase shadow-lg shadow-orange-500/30"
               >
-                <LogOut className="h-4.5 w-4.5" />
-                <span>लॉगआउट करें (Sign Out)</span>
+                <LogOut className="h-5 w-5" />
+                <span>SIGN OUT</span>
               </button>
             </div>
           </div>

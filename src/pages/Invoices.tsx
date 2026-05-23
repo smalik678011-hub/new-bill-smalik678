@@ -19,6 +19,7 @@ import {
   History,
   Share2
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store';
 import { Invoice } from '../types';
 import InvoiceBuilder from '../components/invoice/InvoiceBuilder';
@@ -62,6 +63,7 @@ const mapDbInvoiceToUi = (inv: any): Invoice => {
 };
 
 export default function Invoices() {
+  const navigate = useNavigate();
 
   const { invoices: storeInvoices, clients: storeClients, addInvoice, updateInvoice, deleteInvoice } = useAppStore();
 
@@ -344,26 +346,43 @@ export default function Invoices() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
       
-      {/* Visual Header / Screen Title */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-800/60 pb-5">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight flex items-center">
-            <span className="h-8.5 w-8.5 bg-amber-500 text-white flex items-center justify-center rounded-2xl mr-3 font-mono font-black shadow-lg">i</span>
-            <span>कर एवं पक्के बिल (Tax Invoices Ledger)</span>
-          </h2>
-          <p className="text-[11px] text-gray-550 mt-1 uppercase tracking-wider font-medium">Business Ledger & GST Compliant Sales Manager</p>
+      {/* UPGRADE BANNER */}
+      <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/10 border border-orange-200 dark:border-orange-500/20 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 max-w-7xl mx-auto shadow-sm">
+        <div className="flex items-center gap-2.5 text-center sm:text-left">
+          <span className="text-xl">🔒</span>
+          <span className="text-xs text-orange-900 dark:text-orange-300 font-extrabold font-sans">Free Trial active · Max 5 clients allowed</span>
         </div>
-
-        {activeView === 'LIST' && (
-          <button
-            onClick={() => setActiveView('CREATE')}
-            className="bg-amber-500 hover:bg-amber-600 active:scale-98 text-white px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition cursor-pointer flex items-center justify-center space-x-2 shadow-md"
-          >
-            <PlusCircle className="h-5 w-5 stroke-[2.5]" />
-            <span>नया इनवॉइस बनाएँ (Create Invoice)</span>
-          </button>
-        )}
+        <button 
+          className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-black px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md shadow-orange-500/25 border-0 cursor-pointer active:scale-98"
+          onClick={() => navigate('/pricing')}
+        >
+          Upgrade →
+        </button>
       </div>
+
+      {/* PAGE HEADER */}
+      <div className="flex items-center gap-3.5 py-1">
+        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-orange-500/30 text-white shrink-0">
+          🧾
+        </div>
+        <div className="text-left font-sans">
+          <h1 className="text-xl font-black text-[#0B0F1A] dark:text-white tracking-tight leading-none uppercase">Tax Invoices</h1>
+          <p className="text-[10px] text-orange-500 font-extrabold uppercase tracking-widest mt-2">GST Compliant Sales Manager</p>
+        </div>
+      </div>
+
+      {/* CREATE BUTTON */}
+      {activeView === 'LIST' && (
+        <div className="w-full">
+          <button 
+            onClick={() => setActiveView('CREATE')}
+            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 py-4.5 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center space-x-2.5 shadow-lg shadow-orange-500/20 active:scale-[0.98] transition-all cursor-pointer text-center"
+          >
+            <div className="w-5 h-5 rounded-full border border-white/60 flex items-center justify-center text-sm font-light leading-none">+</div>
+            <span>CREATE NEW INVOICE / नया बिल बनाएं</span>
+          </button>
+        </div>
+      )}
 
       {/* Primary Routing Render Box */}
       {activeView === 'CREATE' && (
@@ -391,35 +410,35 @@ export default function Invoices() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             
             {/* Stat A: Total Outstanding */}
-            <div className="bg-[#241712] border border-amber-500/20 p-4 sm:p-5 rounded-3xl text-left flex items-start justify-between">
+            <div className="bg-gradient-to-br from-[#2D1B00] to-[#3D2400] border border-orange-500/10 p-5 rounded-3xl text-left flex items-start justify-between shadow-md">
               <div className="space-y-1">
-                <span className="text-[10px] text-amber-500 font-extrabold block uppercase font-mono tracking-wider">कुल बकाया बैलेंस (Due)</span>
-                <span className="text-lg sm:text-2xl font-black text-amber-400 block font-mono">
+                <span className="text-[10px] text-amber-500 font-extrabold block uppercase tracking-wider font-mono">कुल बकाया बैलेंस (Due)</span>
+                <span className="text-xl sm:text-2xl font-black text-white block font-mono">
                   ₹{(totalOutstanding ?? 0).toLocaleString('en-IN')}
                 </span>
-                <span className="text-[9.5px] text-gray-500 block">Collect balance immediately</span>
+                <span className="text-[9px] text-[#FFEDD5]/40 block leading-snug">Collect balance immediately</span>
               </div>
-              <div className="p-2.5 bg-amber-500/15 text-amber-450 border border-amber-500/20 rounded-2xl hidden sm:block">
-                <AlertCircle className="h-5 w-5" />
+              <div className="p-2 bg-amber-500/10 text-amber-500 border border-amber-500/15 rounded-xl hidden sm:block">
+                <AlertCircle className="h-4.5 w-4.5" />
               </div>
             </div>
 
             {/* Stat B: Total Collected */}
-            <div className="bg-[#0B1C14] border border-emerald-500/20 p-4 sm:p-5 rounded-3xl text-left flex items-start justify-between">
+            <div className="bg-gradient-to-br from-[#052E16] to-[#083923] border border-emerald-500/10 p-5 rounded-3xl text-left flex items-start justify-between shadow-md">
               <div className="space-y-1">
-                <span className="text-[10px] text-emerald-500 font-extrabold block uppercase font-mono tracking-wider">प्राप्त जमा राशि (Collected)</span>
-                <span className="text-lg sm:text-2xl font-black text-emerald-400 block font-mono">
+                <span className="text-[10px] text-emerald-450 font-extrabold block uppercase tracking-wider font-mono">प्राप्त जमा राशि (Collected)</span>
+                <span className="text-xl sm:text-2xl font-black text-white block font-mono">
                   ₹{(totalCollected ?? 0).toLocaleString('en-IN')}
                 </span>
-                <span className="text-[9.5px] text-gray-550 block">Successfully credited in bank/cash</span>
+                <span className="text-[9px] text-[RGBA(209,250,229,0.4)] block leading-snug">Successfully credited in bank/cash</span>
               </div>
-              <div className="p-2.5 bg-emerald-500/15 text-emerald-450 border border-emerald-500/20 rounded-2xl hidden sm:block">
-                <CheckCircle2 className="h-5 w-5" />
+              <div className="p-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/15 rounded-xl hidden sm:block">
+                <CheckCircle2 className="h-4.5 w-4.5" />
               </div>
             </div>
 
             {/* Stat C: Total Invoiced overall */}
-            <div className="bg-gray-900 border border-gray-850 p-4 sm:p-5 rounded-3xl text-left flex items-start justify-between">
+            <div className="bg-gray-905 border border-gray-800 p-4 sm:p-5 rounded-3xl text-left flex items-start justify-between">
               <div className="space-y-1">
                 <span className="text-[10px] text-gray-450 block uppercase font-mono tracking-wider font-extrabold">कुल बिकवाली योग (Turnover)</span>
                 <span className="text-lg sm:text-2xl font-black text-white block font-mono">
@@ -428,12 +447,12 @@ export default function Invoices() {
                 <span className="text-[9.5px] text-gray-500 block">All-time billing volume</span>
               </div>
               <div className="p-2.5 bg-gray-950 border border-gray-800 text-gray-400 rounded-2xl hidden sm:block">
-                <TrendingUp className="h-5 w-5" />
+                <TrendingUp className="h-4.5 w-4.5" />
               </div>
             </div>
 
             {/* StatD: All Bills count */}
-            <div className="bg-gray-900 border border-gray-850 p-4 sm:p-5 rounded-3xl text-left flex items-start justify-between">
+            <div className="bg-gray-905 border border-gray-800 p-4 sm:p-5 rounded-3xl text-left flex items-start justify-between">
               <div className="space-y-1">
                 <span className="text-[10px] text-gray-450 block uppercase font-mono tracking-wider font-extrabold">कुल इनवॉइस गिनती (Count)</span>
                 <span className="text-lg sm:text-2xl font-black text-white block font-mono">
@@ -442,39 +461,39 @@ export default function Invoices() {
                 <span className="text-[9.5px] text-gray-500 block">GST non-GST merged</span>
               </div>
               <div className="p-2.5 bg-gray-950 border border-gray-800 text-gray-400 rounded-2xl hidden sm:block">
-                <FileSpreadsheet className="h-5 w-5" />
+                <FileSpreadsheet className="h-4.5 w-4.5" />
               </div>
             </div>
 
           </div>
 
           {/* Section 2: Advanced Search Toolbars */}
-          <div className="bg-gray-900 border border-gray-850 p-5 rounded-3xl space-y-4">
-            <h3 className="text-xs font-black text-amber-500 uppercase tracking-widest font-mono flex items-center">
-              <ListFilter className="h-4.5 w-4.5 mr-2" />
+          <div className="bg-[#111927]/60 border border-gray-800 p-5 rounded-3xl space-y-4">
+            <h3 className="text-xs font-black text-orange-500 uppercase tracking-widest font-mono flex items-center">
+              <ListFilter className="h-4 w-4 mr-2" />
               <span>इनवॉइस फ़िल्टर एवं खोज उपकरण (Filter & Sort Desk)</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3.5">
               
               {/* Keyword Search */}
-              <div className="relative">
-                <Search className="absolute left-3.5 top-3 h-4 w-4 text-gray-550" />
+              <div className="relative font-sans">
+                <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-500" />
                 <input 
                   type="text"
                   placeholder="ग्राहक का नाम, बिल संख्या खोजें..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full bg-[#0B0F1A] border border-gray-850 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-secondary-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-[#0B0F1A] border border-gray-800 rounded-2xl pl-10 pr-4 py-3 text-xs text-secondary-white focus:outline-none focus:border-orange-500 transition-colors"
                 />
               </div>
 
               {/* Status Filter Dropdown */}
-              <div>
+              <div className="font-sans">
                 <select
                   value={statusFilter}
                   onChange={e => setStatusFilter(e.target.value)}
-                  className="w-full bg-[#0B0F1A] border border-gray-850 rounded-2xl px-4 py-2.8 text-xs text-white focus:outline-none"
+                  className="w-full bg-[#0B0F1A] border border-gray-800 rounded-2xl px-4 py-3.2 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                 >
                   <option value="ALL">सभी भुगतान श्रेणियाँ (All Statuses)</option>
                   <option value="Paid">Paid Only (चुक्ता बिल)</option>
@@ -487,11 +506,11 @@ export default function Invoices() {
               </div>
 
               {/* GST Filter Dropdown */}
-              <div>
+              <div className="font-sans">
                 <select
                   value={gstFilter}
                   onChange={e => setGstFilter(e.target.value)}
-                  className="w-full bg-[#0B0F1A] border border-gray-850 rounded-2xl px-4 py-2.8 text-xs text-white focus:outline-none"
+                  className="w-full bg-[#0B0F1A] border border-gray-800 rounded-2xl px-4 py-3.2 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                 >
                   <option value="ALL">सभी टैक्स प्रकार (All Bil types)</option>
                   <option value="GST">GST Bills Only (जीएसटी बिल)</option>
@@ -500,11 +519,11 @@ export default function Invoices() {
               </div>
 
               {/* Sorting List Dropdown */}
-              <div>
+              <div className="font-sans">
                 <select
                   value={sortBy}
                   onChange={e => setSortBy(e.target.value)}
-                  className="w-full bg-[#0B0F1A] border border-gray-850 rounded-2xl px-4 py-2.8 text-xs text-white focus:outline-none font-sans"
+                  className="w-full bg-[#0B0F1A] border border-gray-800 rounded-2xl px-4 py-3.2 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                 >
                   <option value="DATE_DESC">दिनांक: नवीन पहले (Newest Date)</option>
                   <option value="DATE_ASC">दिनांक: पुराना पहले (Oldest Date)</option>
@@ -516,31 +535,145 @@ export default function Invoices() {
             </div>
           </div>
 
-          {/* Section 3: Primary Invoices List Table */}
+          {/* SECTION HEAD */}
+          <div className="flex justify-between items-center pt-2">
+            <h2 className="text-xs font-black text-gray-200 uppercase tracking-widest">Recent Invoices ({sortedInvoices.length})</h2>
+            <span className="text-[10px] text-orange-500 font-extrabold uppercase tracking-widest cursor-pointer">See all</span>
+          </div>
+
+          {/* Section 3: Primary Invoices List Container */}
           {sortedInvoices.length === 0 ? (
-            <div className="bg-gray-900 border border-gray-850 rounded-3xl p-12 text-center text-gray-500 space-y-2">
+            <div className="bg-[#111927]/40 border border-gray-800 rounded-3xl p-12 text-center text-gray-500 space-y-2">
               <FileText className="h-12 w-12 mx-auto text-gray-700 animate-pulse" />
-              <h4 className="text-sm font-black text-gray-400">कोई बिल नहीं मिला!</h4>
-              <p className="text-xs max-w-sm mx-auto leading-relaxed">
+              <h4 className="text-sm font-black text-gray-400 font-sans">कोई बिल नहीं मिला!</h4>
+              <p className="text-xs max-w-sm mx-auto leading-relaxed font-sans">
                 दिए गए मापदंडों के अनुसार कोई इनवॉइस नहीं मिला। कृपया फ़िल्टर बदलें या ऊपर बटन पर क्लिक करके नया पक्का बिल बनाएँ।
               </p>
             </div>
           ) : (
-            <div className="bg-gray-900 border border-gray-850 rounded-3xl overflow-hidden shadow-lg">
+            <div className="space-y-4">
               
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-gray-300">
-                  <thead className="bg-[#0D121F] text-gray-400 font-mono text-[9px] uppercase border-b border-gray-800">
-                    <tr>
-                      <th className="py-4 pl-4 sm:pl-6">इनवॉइस विवरण (Invoice)</th>
-                      <th className="py-4">क्रेता / ग्राहक (Client)</th>
-                      <th className="py-4 font-mono text-center">बिल तिथि (Dates)</th>
-                      <th className="py-4 text-center">टैक्स (GST)</th>
-                      <th className="py-4 text-right font-mono pr-4">वित्तीय पत्रक (Finances)</th>
-                      <th className="py-4 text-center">स्थिति (Status)</th>
-                      <th className="py-4 text-center pr-4 sm:pr-6">कार्य (Actions Panel)</th>
-                    </tr>
-                  </thead>
+              {/* MOBILE VIEW: CARD DECK (block md:hidden) */}
+              <div className="block md:hidden space-y-3 pb-6">
+                {sortedInvoices.map((inv) => {
+                  const clientMatch = dbClients.find(c => c.id === inv.clientId);
+                  const displayClientName = clientMatch?.name || 'अज्ञात ग्राहक';
+                  const initials = displayClientName.charAt(0).toUpperCase() || 'NA';
+                  const balanceRemaining = Math.max(0, inv.totalAmount - inv.paidAmount);
+
+                  return (
+                    <div 
+                      key={inv.id}
+                      className="bg-[#111927]/80 border border-gray-800 rounded-2xl p-4.5 space-y-3.5 shadow-sm relative group hover:border-orange-500/30 transition-all text-left"
+                    >
+                      {/* Top Header Row of the Card */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/15 flex items-center justify-center font-black text-xs text-orange-500 font-mono">
+                            {initials}
+                          </div>
+                          <div className="text-left">
+                            <h4 className="text-xs font-black text-white leading-tight">{displayClientName}</h4>
+                            <span className="text-[9px] text-gray-450 font-mono block mt-0.5">{inv.invoiceNumber}</span>
+                          </div>
+                        </div>
+
+                        {/* Status badge */}
+                        <div>
+                          <span className={`text-[8.5px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
+                            inv.status === 'Paid' 
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                              : inv.status === 'Partial' 
+                                ? 'bg-orange-500/10 text-orange-450 border border-orange-500/20' 
+                                : 'bg-rose-500/10 text-rose-455 border border-rose-500/20'
+                          }`}>
+                            {inv.status}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Middle Details Box */}
+                      <div className="grid grid-cols-2 gap-2 bg-[#0B0F1A]/50 p-3 rounded-xl border border-gray-800/40 text-left">
+                        <div>
+                          <span className="text-[8px] text-gray-500 block uppercase font-mono tracking-wider">बिल दिनांक (Date)</span>
+                          <span className="text-[10px] text-gray-300 font-bold font-mono">{inv.date}</span>
+                        </div>
+                        <div>
+                          <span className="text-[8px] text-orange-500 block uppercase font-mono tracking-wider">भुगतान तिथि (Due)</span>
+                          <span className="text-[10px] text-amber-500 font-bold font-mono">{inv.dueDate}</span>
+                        </div>
+                        <div className="col-span-2 pt-1.5 border-t border-gray-800/30 flex justify-between items-center">
+                          <div>
+                            <span className="text-[8px] text-gray-550 block uppercase font-mono tracking-wider">बिल कुल योग (Total)</span>
+                            <span className="text-xs font-black text-white font-mono">₹{(inv.totalAmount ?? 0).toLocaleString('en-IN')}</span>
+                          </div>
+                          {balanceRemaining > 0 && (
+                            <div className="text-right">
+                              <span className="text-[8px] text-orange-500 block uppercase font-mono tracking-wider">शेष ड्यू (Balance)</span>
+                              <span className="text-xs font-black text-amber-450 font-mono">₹{(balanceRemaining ?? 0).toLocaleString('en-IN')}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action Triggers Grid */}
+                      <div className="flex items-center justify-between gap-2 pt-1">
+                        <button
+                          onClick={() => setPreviewingInvoice(inv)}
+                          className="flex-1 py-1.8 bg-gray-950 hover:bg-gray-900 border border-gray-800 rounded-xl text-[9.5px] font-bold text-gray-300 flex items-center justify-center space-x-1 cursor-pointer font-sans"
+                        >
+                          <Eye className="h-3.5 w-3.5 text-emerald-400" />
+                          <span>पक्का बिल देखें</span>
+                        </button>
+
+                        <button
+                          onClick={() => setPayingInvoice(inv)}
+                          className="flex-1 py-1.8 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 rounded-xl text-[9.5px] font-black text-orange-450 flex items-center justify-center space-x-1 cursor-pointer font-sans"
+                        >
+                          <CreditCard className="h-3.5 w-3.5" />
+                          <span>जमा करें (Pay)</span>
+                        </button>
+
+                        <div className="flex items-center space-x-1">
+                          <button
+                            onClick={() => {
+                              setEditingInvoice(inv);
+                              setActiveView('EDIT');
+                            }}
+                            className="p-1.8 bg-gray-950 border border-gray-800 rounded-xl text-sky-400 hover:text-sky-305 cursor-pointer"
+                            title="एडिट"
+                          >
+                            <Edit2 className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleWhatsAppShare(inv)}
+                            className="p-1.8 bg-gray-950 border border-gray-800 rounded-xl text-blue-450 hover:text-blue-350 cursor-pointer"
+                            title="Share"
+                          >
+                            <Share2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* DESKTOP VIEW: TABULAR LIST GRID (hidden md:block) */}
+              <div className="hidden md:block bg-[#111927]/60 border border-gray-800 rounded-3xl overflow-hidden shadow-lg">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-gray-300">
+                    <thead className="bg-[#0D121F] text-gray-400 font-mono text-[9px] uppercase border-b border-gray-800">
+                      <tr>
+                        <th className="py-4 pl-4 sm:pl-6">इनवॉइस विवरण (Invoice)</th>
+                        <th className="py-4 font-bold">क्रेता / ग्राहक (Client)</th>
+                        <th className="py-4 font-mono text-center">बिल तिथि (Dates)</th>
+                        <th className="py-4 text-center">टैक्स (GST)</th>
+                        <th className="py-4 text-right font-mono pr-4">वित्तीय पत्रक (Finances)</th>
+                        <th className="py-4 text-center">स्थिति (Status)</th>
+                        <th className="py-4 text-center pr-4 sm:pr-6">कार्य (Actions Panel)</th>
+                      </tr>
+                    </thead>
                   <tbody className="divide-y divide-gray-855/35">
                     {sortedInvoices.map((inv) => {
                       const clientMatch = dbClients.find(c => c.id === inv.clientId);
@@ -704,6 +837,7 @@ export default function Invoices() {
               </div>
 
             </div>
+          </div>
           )}
 
         </div>

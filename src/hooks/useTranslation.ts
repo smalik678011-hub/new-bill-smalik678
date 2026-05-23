@@ -272,6 +272,51 @@ const TRANSLATION_DICTIONARY: Record<string, Record<'Hindi' | 'English' | 'Hingl
     Hindi: "हाजिरी भरें",
     English: "Mark Attendance",
     Hinglish: "हाजिरी भरें (Mark Attendance)"
+  },
+  "व्यापार का हिसाब-किताब": {
+    Hindi: "व्यापार का हिसाब-किताब",
+    English: "Business Ledger Book",
+    Hinglish: "व्यापार का हिसाब-किताब (Business Ledger)"
+  },
+  "⚠️ वसूली बाकी है!": {
+    Hindi: "⚠️ वसूली बाकी है!",
+    English: "⚠️ Outstanding Dues!",
+    Hinglish: "⚠️ वसूली बाकी है! (Dues Pending)"
+  },
+  "वसूली बाकी है!": {
+    Hindi: "वसूली बाकी है!",
+    English: "Outstanding Dues!",
+    Hinglish: "वसूली बाकी है! (Dues Pending)"
+  },
+  "कोई बकाया भुगतान नहीं है।": {
+    Hindi: "कोई बकाया भुगतान नहीं है।",
+    English: "No outstanding payments.",
+    Hinglish: "कोई बकाया भुगतान नहीं है (No outstandings)."
+  },
+  "इस महीने आई कुल नगदी": {
+    Hindi: "इस महीने आई कुल नगदी",
+    English: "Total Cash Received This Month",
+    Hinglish: "इस महीने आई कुल नगदी (Total Cash)"
+  },
+  "सारे ग्राहक खता सूची": {
+    Hindi: "सारे ग्राहक खता सूची",
+    English: "All Client Ledger Accounts",
+    Hinglish: "सारे ग्राहक खता सूची (All Clients)"
+  },
+  "अधूरी/बाकी पेमेंट की संख्या": {
+    Hindi: "अधूरी/बाकी पेमेंट की संख्या",
+    English: "Total Outstanding Invoice Count",
+    Hinglish: "अधूरी/बाकी पेमेंट की संख्या (Pending Bills)"
+  },
+  "क्लाउड डेटा एक्टिव (Supabase Live)": {
+    Hindi: "क्लाउड डेटा एक्टिव (Supabase Live)",
+    English: "Cloud Sync Active (Supabase Live)",
+    Hinglish: "क्लाउड डेटा एक्टिव (Supabase Live)"
+  },
+  "ऑफ़लाइन डेटा (Local Khata Only)": {
+    Hindi: "ऑफ़लाइन डेटा (Local Khata Only)",
+    English: "Offline Data (Local Khata Only)",
+    Hinglish: "ऑफ़लाइन डेटा (Local Khata Only)"
   }
 };
 
@@ -372,6 +417,256 @@ const ENGLISH_TO_HINDI_VOCAB: Record<string, string> = {
 /**
  * Universal translation function
  */
+/**
+ * Greedy sub-phrase translator for fallback translation of mixed Hindi/English text nodes
+ */
+export const translateHindiToEnglishGreedy = (text: string): string => {
+  let result = text;
+  
+  // 1. Compile all possible Hindi -> English translation pairs
+  const pairs: { hindi: string; english: string }[] = [];
+  
+  // Add entries from HINDI_TO_ENGLISH_VOCAB
+  for (const [hindi, english] of Object.entries(HINDI_TO_ENGLISH_VOCAB)) {
+    pairs.push({ hindi, english });
+  }
+  
+  // Add entries from TRANSLATION_DICTIONARY
+  for (const [key, langs] of Object.entries(TRANSLATION_DICTIONARY)) {
+    if (HINDI_RANGE_REGEX.test(key) && langs.English) {
+      pairs.push({ hindi: key, english: langs.English });
+    }
+    if (HINDI_RANGE_REGEX.test(langs.Hindi) && langs.English) {
+      pairs.push({ hindi: langs.Hindi, english: langs.English });
+    }
+  }
+
+  // Add explicit common UI phrases identified in Settings, Labour, Expenses, etc.
+  const customPairs = [
+    { hindi: "व्यापार का हिसाब-किताब", english: "Business Ledger Book" },
+    { hindi: "⚠️ वसूली बाकी है!", english: "⚠️ Outstanding Dues!" },
+    { hindi: "वसूली बाकी है!", english: "Outstanding Dues!" },
+    { hindi: "कोई बकाया भुगतान नहीं है।", english: "No outstanding payments." },
+    { hindi: "इस महीने आई कुल नगदी", english: "Total Cash Received This Month" },
+    { hindi: "सारे ग्राहक खता सूची", english: "All Client Ledger Accounts" },
+    { hindi: "अधूरी/बाकी पेमेंट की संख्या", english: "Total Outstanding Invoice Count" },
+    { hindi: "क्लाउड डेटा एक्टिव (Supabase Live)", english: "Cloud Sync Active (Supabase Live)" },
+    { hindi: "ऑफ़लाइन डेटा (Local Khata Only)", english: "Offline Data (Local Khata Only)" },
+    { hindi: "व्यापारिक प्रोफाइल", english: "Business Profile" },
+    { hindi: "प्लान एवं लिमिट", english: "Plans & Limits" },
+    { hindi: "सेफ्टी लॉक पिन", english: "Security Lock PIN" },
+    { hindi: "नियम और सेटिंग्स", english: "Settings & Options" },
+    { hindi: "अपनी दुकान के विज्ञापनों, बैंक खाता, लोगो, भाषा चयन, पिन सिक्योरिटी और प्लान को नियंत्रित करें।", english: "Manage your storefront, business profiles, bank accounts, languages, security PINs, and active subscriptions." },
+    { hindi: "प्राइवेट खतौनी सेफ्टी पिन", english: "Private Margin Ledger PIN" },
+    { hindi: "अपना \"प्राइवेट बचत (Estimate Margin)\" सुरक्षा लॉक बदलने के लिए नीचे फॉर्म भरें।", english: "Fill out the form below to change your private margin ledger security PIN." },
+    { hindi: "पुराना पिन", english: "Current PIN" },
+    { hindi: "नया सुरक्षा पिन", english: "New 4-digit PIN" },
+    { hindi: "नया पिन दुबारा लिखे", english: "Confirm PIN" },
+    { hindi: "सेफ्टी पिन अपडेट करें", english: "Update Security PIN" },
+    { hindi: "यह पिन कहाँ उपयोग होता है?", english: "Where is this PIN used?" },
+    { hindi: "जब आप \"प्राइवेट बचत (Estimate Margin)\" की प्राइवेट बही खोलते हैं, तब यह सेफ्टी पिन मागा जाता है ताकि आपकी अनुपस्थिति में कोई भी कर्मचारी आपकी वास्तविक बचत या मुनाफा न देख सके।", english: "This PIN is required when opening the Private Margin Ledger so that employees cannot access your actual business profits and margins in your absence." },
+    { hindi: "डिफ़ॉल्ट आरंभिक पिन:", english: "Default PIN:" },
+    { hindi: "मजदूरों और खर्चों का पक्का हिसाब।", english: "Seamless management of labor, expenses, and invoices." },
+    { hindi: "रजिस्ट्रेशन एंड प्रोफाइल सेटअप", english: "Registration & Profile Setup" },
+    { hindi: "मालिक का नाम", english: "Owner Name" },
+    { hindi: "अपना शुभ नाम डालें", english: "Enter your full name" },
+    { hindi: "पासवर्ड", english: "Password" },
+    { hindi: "अंक या अक्षर", english: "Alpha-numeric" },
+    { hindi: "ईमेल", english: "Email" },
+    { hindi: "मोबाइल नंबर", english: "Mobile No." },
+    { hindi: "फर्म/दुकान का नाम", english: "Business/Firm Name" },
+    { hindi: "वैकल्पिक GST संख्या", english: "Optional GSTIN" },
+    { hindi: "व्यापार का प्रकार", english: "Business Type" },
+    { hindi: "भाषा का माध्यम", english: "In-app Language" },
+    { hindi: "रजिस्ट्रेशन प्रगति पर है...", english: "Registering account..." },
+    { hindi: "अकाउंट बनाएं", english: "Create Free Account" },
+    { hindi: "पहले से ही खाता है?", english: "Already have an account?" },
+    { hindi: "यहाँ लॉगइन करें", english: "Sign In here" },
+    { hindi: "डेमो शुरू करें", english: "Explore Demo (Instant)" },
+    { hindi: "अथवा", english: "OR" },
+    { hindi: "अपना ईमेल डालें", english: "Enter your email" },
+    { hindi: "लॉगइन करें", english: "Sign In" },
+    { hindi: "GOOGLE के साथ लॉगइन करें", english: "SIGN IN WITH GOOGLE" },
+    { hindi: "नया खाता चाहिए?", english: "Need a new account?" },
+    { hindi: "यहाँ नया अकाउंट बनाएं", english: "Register a new account here" },
+    { hindi: "लेबर और हाज़िरी रजिस्टर", english: "Labour Attendance Register" },
+    { hindi: "दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन (हिसाब-किताब) व्यवस्थित करें।", english: "Mark daily attendance, view monthly calendar journals, and manage payroll wages." },
+    { hindi: "हाज़िरी कैलेंडर", english: "Attendance Calendar" },
+    { hindi: "कारीगर प्रबंधक", english: "Manage Workers" },
+    { hindi: "हिसाब और सैलरी", english: "Payroll Wage Ledger" },
+    { hindi: "कारीगर जोड़ने में समस्या आयी!", english: "Error occurred while adding worker!" },
+    { hindi: "को register में जोड़ लिया गया है!", english: "has been added to the register!" },
+    { hindi: "कारीगर register से सफलतापूर्वक हटा दिया गया!", english: "Worker successfully deleted from register!" },
+    { hindi: "हाज़िरी सिंक हो गयी!", english: "Attendance ledger synced successfully!" },
+    { hindi: "हाज़िरी सिंक करने में गड़बड़ हुई!", english: "Attendance sync failed!" },
+    { hindi: "लोकल हाज़िरी अपडेट हो गयी है!", english: "Local attendance updated successfully!" },
+    { hindi: "सबकी हाज़िरी लगाने में कोई त्रुटि हुई!", english: "Failed to mark attendance for all!" },
+    { hindi: "वेतन भुगतान क्लाउड बहीखाते में सहेजा गया!", english: "Payment successfully saved to cloud!" },
+    { hindi: "वेतन भुगतान दर्ज करने में गड़बड़ हुई!", english: "Failed to register salary payout!" },
+    { hindi: "भुगतान लोकल ट्रांजेक्शन बुक में लिख दिया गया है!", english: "Salary checkout logged to local transactional book!" },
+    { hindi: "पेंडिंग हाज़िरी सहेजें", english: "Save Pending Attendance" },
+    { hindi: "सबकी हाज़िरी लगाएं", english: "Mark All Present" },
+    { hindi: "नया कारीगर जोड़ें", english: "Register New Worker" },
+    { hindi: "कारीगर का नाम", english: "Worker Name" },
+    { hindi: "दैनिक मजदूरी दर", english: "Daily Wage Rate" },
+    { hindi: "कारीगर का काम / श्रेणी", english: "Worker Category / Designation" },
+    { hindi: "कारीगर का फोन", english: "Worker Phone" },
+    { hindi: "कारीगर का पता", english: "Worker Address" },
+    { hindi: "रद्द करें", english: "Cancel" },
+    { hindi: "सेव करें", english: "Save" },
+    { hindi: "कोई कारीगर पंजीकृत नहीं है", english: "No workers registered yet" },
+    { hindi: "कारीगर और वेतन का विवरण", english: "Worker payroll breakdown" },
+    { hindi: "एडवांस भुगतान करें / सैलरी चुकाएं", english: "Pay Salary Checkout Detail" },
+    { hindi: "भुगतान प्रकार", english: "Payment Type" },
+    { hindi: "सैलरी भुगतान", english: "Salary Wage Checkout" },
+    { hindi: "अग्रिम पेशगी भुगतान", english: "Advance Issued" },
+    { hindi: "भुगतान राशि", english: "Checkout Amount" },
+    { hindi: "भुगतान करने का माध्यम", english: "Transaction Channel" },
+    { hindi: "विवरण / नोट", english: "Transaction Description" },
+    { hindi: "सामग्री / माल ख़रीद", english: "Raw Inventory / Material Purchases" },
+    { hindi: "मशीन किराया & डीजल", english: "Rentals & Fuel Expenses" },
+    { hindi: "चाय-पानी & भोजन", english: "Staff Meals & Hospitality" },
+    { hindi: "किराया / बिजली बिल", english: "Office Rent & Utilitarian Bills" },
+    { hindi: "लोकल ट्रांसपोर्ट / भाड़ा", english: "Local Logistic & Freight Rates" },
+    { hindi: "विवरण / बिल रसीद सं.", english: "Transaction Details / Bill Slips" },
+    { hindi: "नया बँधा मासिक खर्चा", english: "Register Monthly Fixed Bills" },
+    { hindi: "खर्चे / मद का नाम", english: "Monthly Fixed Item Label" },
+    { hindi: "मासिक देय रकम", english: "Monthly Bill Amount" },
+    { hindi: "देय तारीख", english: "Billing Due Day" },
+    { hindi: "खर्चे की श्रेणी", english: "Fixed Expenditure Category" },
+    { hindi: "दुकान किराया", english: "Shop / Yard Lease" },
+    { hindi: "बिजली/पानी", english: "Water / Electric Grid Bill" },
+    { hindi: "मशीनें ईएमआई", english: "Equipment EMI payments" },
+    { hindi: "कर्मचारी वेतन", english: "Staff Fixed Salary Roll" },
+    { hindi: "सॉफ्टवेयर / अन्य", english: "Digital Softwares / Miscellaneous" },
+    { hindi: "प्रीमियम विज़िटिंग कार्ड स्टूडियो", english: "Premium Visiting Card Design Studio" },
+    { hindi: "अपने व्यापार के लिए आधुनिक डिजिटल विज़िटिंग कार्ड डिज़ाइन करें। अलग-अलग सोशल मीडिया साइज में उच्च गुणवत्ता (PNG) डाउनलोड करें।", english: "Design beautiful and professional digital business cards. Save and download high-resolution PNG images for social media platforms." },
+    { hindi: "डिज़ाइन थीम चुनें", english: "Select Premium Design Presets" },
+    { hindi: "लाइव कार्ड मॉकअप", english: "Real-Time Card Previews" },
+    { hindi: "थीम चुनी गयी!", english: "design theme chosen!" },
+    { hindi: "कार्ड पर आपका शुभ नाम", english: "Owner Name Label" },
+    { hindi: "व्यवसाय / दुकान का नाम", english: "Registered Shop / Firm Name" },
+    { hindi: "व्यापार का नारा / टैगलाइन", english: "Corporate Slogan / Tagline" },
+    { hindi: "व्हाट्सएप नंबर", english: "WhatsApp Channel Number" },
+    { hindi: "व्यावसायिक ईमेल", english: "Professional Business Email" },
+    { hindi: "दुकान / स्टोर का पता", english: "Physical Store Address" },
+    { hindi: "पसंदीदा सर्विसेज़", english: "Core Professional Services" },
+    { hindi: "सेवा 1", english: "Service 1" },
+    { hindi: "सेवा 2", english: "Service 2" },
+    { hindi: "सेवा 3", english: "Service 3" },
+    { hindi: "सेवा 4", english: "Service 4" },
+    { hindi: "उच्च गुणवत्ता (PNG) तस्वीर डाउनलोड करें", english: "Download High-Res PNG Visual" },
+    { hindi: "व्हाट्सएप पर शेयर करें", english: "Instant Share via WhatsApp" },
+    { hindi: "कच्चे बिल का बही खाता", english: "Offline Quotations Register" },
+    { hindi: "कोटेशन एवं एस्टीमेट मेकर", english: "Corporate Quotations & Estimates Maker" },
+    { hindi: "अनुमानित सक्रिय एस्टीमेट", english: "Active Project Estimates" },
+    { hindi: "अनुमानित कुल शेष मूल्य", english: "Active Quote Portfolio Value" },
+    { hindi: "पक्के बिल में कन्वर्टेड मूल्य", english: "Total Value Converted to Invoices" },
+    { hindi: "ग्राहक का नाम या एस्टीमेट सं. (#) यहाँ खोजें...", english: "Search by client name or quotation number (#)..." },
+    { hindi: "सभी श्रेणियां", english: "All Project Categories" },
+    { hindi: "विद्युत विद्युत कार्य", english: "Electrical Scope of Works" },
+    { hindi: "नलसाजी कार्य", english: "Plumbing & Sanitation Works" },
+    { hindi: "भवन निर्माण", english: "Civil Construction works" },
+    { hindi: "पुताई / पेंटिंग", english: "Painting & Wood Finishing" },
+    { hindi: "सजावट", english: "Interior and Architecture work" },
+    { hindi: "सामान्य कार्य", english: "Custom Contractor Work" },
+    { hindi: "कोई एस्टीमेट नहीं मिला", english: "No quotations or project estimates found" },
+    { hindi: "सर्च फ़िल्टर बदलें या नया एस्टीमेट जारी करने के लिए ऊपर \"+ नया एस्टीमेट बनाएँ\" पर क्लिक करें।", english: "Reset filters or click \"+ Create New\" above to draft a project estimate." },
+    { hindi: "डेटा सिंक प्रगति पर है...", english: "Connecting and syncing cloud registers..." },
+    { hindi: "एस्टीमेट बही", english: "Project Estimate" },
+    { hindi: "कच्चे बिल", english: "Pro-forma Estimates" },
+    { hindi: "पक्के बिल", english: "Invoices" },
+    { hindi: "पक्का बिल", english: "Tax Invoice" },
+    { hindi: "ग्राहक बही", english: "Client Ledger" },
+    { hindi: "बही खाता", english: "Ledger Book" },
+    { hindi: "ग्राहक विवरण टिप्पणी", english: "General Client Notes" },
+    { hindi: "ग्राहक रेफरेंस", english: "Lead Generation Source" },
+    { hindi: "अपडेट सेव करें", english: "Save Changes" },
+    { hindi: "पूरी तरह हटाएँ", english: "Delete Account Permanent" },
+    { hindi: "एडिट करें", english: "Edit Details" },
+    { hindi: "प्रस्तावित सामग्री / कार्य", english: "Proposed Project Items" },
+    { hindi: "हम आपके साथ काम करने के लिए उत्सुक हैं!", english: "Looking forward to building this project together!" },
+    { hindi: "कार्य श्रेणी", english: "Project Scope Category" },
+    { hindi: "कुल सामग्रियां", english: "Materials & Operations Count" },
+    { hindi: "श्रेणी सामान", english: "Item Types Included" },
+    { hindi: "प्राप्त एडवांस राशि", english: "Advance Deposits Received" },
+    { hindi: "बकाया बैलेंस", english: "Outstanding Project Balance" },
+    { hindi: "शीट प्रीव्यू", english: "Review Project Quote Sheet" },
+    { hindi: "कुल बिकवाली योग", english: "Total Business Registered (Turnover)" },
+    { hindi: "कुल इनवॉइस गिनती", english: "Total Invoices Filed (Count)" },
+    { hindi: "तैयार ड्राफ्ट बिल", english: "Draft invoices" },
+    { hindi: "इनवॉइस फ़िल्टर एवं खोज उपकरण", english: "Invoice Filtering & Organizing Hub" },
+    { hindi: "सभी भुगतान श्रेणियाँ", english: "All Payment Classes" },
+    { hindi: "सभी टैक्स प्रकार", english: "All Invoice Classifications" },
+    { hindi: "कोई बिल नहीं मिला!", english: "No billing journals found!" },
+    { hindi: "दिए गए मापदंडों के अनुसार कोई इनवॉइस नहीं मिला। कृपया फ़िल्टर बदलें या ऊपर बटन पर क्लिक करके नया पक्का बिल बनाएँ।", english: "No records found for current parameters. Tap the above button to generate/file a new invoice." },
+    { hindi: "या ऊपर बटन पर क्लिक करके नया पक्का बिल बनाएँ।", english: "or click button above to create a new invoice." },
+    { hindi: "बिल दिनांक", english: "Date Issued" },
+    { hindi: "भुगतान तिथि", english: "Payment Deadline" },
+    { hindi: "बिल कुल योग", english: "Grand Total Amount" },
+    { hindi: "शेष ड्यू", english: "Outstanding Balance" },
+    { hindi: "पक्का बिल देखें", english: "View & Print Invoice" },
+    { hindi: "जमा करें", english: "Receive Payment" },
+    { hindi: "क्रेता / ग्राहक", english: "Purchasing Client" },
+    { hindi: "क्रेता / ग्राहक (Client)", english: "Purchasing Client (Client)" },
+    { hindi: "बिल तिथि", english: "Billing Dates" },
+    { hindi: "वित्तीय पत्रक", english: "Financial Highlights" },
+    { hindi: "स्थिति", english: "Settlement Status" },
+    { hindi: "कार्य", english: "Operations/Action" },
+    { hindi: "स्टॉक माल", english: "Inventory Stock" },
+    { hindi: "स्टॉक सूची", english: "Inventory List" },
+    { hindi: "नया आइटम जोड़ें", english: "Add New Product" },
+    { hindi: "स्टॉक इतिहास", english: "Stock Log Book" },
+    { hindi: "न्यूनतम स्टॉक चेतावनी", english: "Low Stock Alert thresholds" },
+    { hindi: "सामग्री का नाम", english: "Product Name" },
+    { hindi: "कुल मात्रा", english: "Available Stock Quantity" },
+    { hindi: "खरीद दर", english: "Buying Price Per Unit" },
+    { hindi: "बिक्री दर", english: "Selling Price Per Unit" },
+    { hindi: "सतर्कता सीमा", english: "Min Stock Alert level" },
+    { hindi: "कारीगर", english: "Workers" },
+    { hindi: "कुल बकाया वसूली", english: "Total Pending Receivable" },
+    { hindi: "बकाया वसूली", english: "Pending Receivable" },
+    { hindi: "सभी एंट्रीज फोन के लोकल बही खाता स्टोरेज में सुरक्षित हैं।", english: "All entries are securely saved in your phone's offline storage." },
+    { hindi: "बही खाता लाइव क्लाउड डेटा से सिंक्रोनाइज्ड है।", english: "Your ledger is synchronized in real-time with the secure cloud database." },
+    { hindi: "सक्रिय सूची", english: "Active List" },
+    { hindi: "मजबूत व्यापार का मजबूत डिजिटल बही खाता।", english: "The highly secure and robust digital ledger for smart businesses." },
+    { hindi: "नियम और सेटिंग्स", english: "Settings & Setup Hub" },
+    { hindi: "अपनी दुकान के विज्ञापनों, बैंक खाता, लोगो, भाषा चयन, पिन सिक्योरिटी और प्लान को नियंत्रित करें।", english: "Manage shop details, advertisements, bank info, language preferences, PIN code safety, and membership plans." }
+  ];
+
+  for (const item of customPairs) {
+    if (!pairs.some(p => p.hindi === item.hindi)) {
+      pairs.push(item);
+    }
+  }
+
+  // Remove exact duplicates to keep performance fast
+  const seen = new Set<string>();
+  const uniquePairs = pairs.filter(pair => {
+    const key = pair.hindi;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  // Sort pairs by length descending so longest phrases match first
+  uniquePairs.sort((a, b) => b.hindi.length - a.hindi.length);
+
+  // Replace each Hindi phrase with its English counterpart
+  for (const pair of uniquePairs) {
+    if (!pair.hindi) continue;
+    // Escape special regex characters in pair.hindi
+    const escaped = pair.hindi.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const regex = new RegExp(escaped, 'g');
+    result = result.replace(regex, pair.english);
+  }
+  
+  return result;
+};
+
+/**
+ * Universal translation function
+ */
 export const translateText = (text: string, lang: 'Hindi' | 'English' | 'Hinglish'): string => {
   if (!text) return '';
   if (typeof text !== 'string') return String(text);
@@ -448,10 +743,14 @@ export const translateText = (text: string, lang: 'Hindi' | 'English' | 'Hinglis
     }
   }
 
-  // 6. Vocabulary fallback mappings for pure words
+  // 6. Vocabulary fallback mappings for pure words or greedy sub-phrase translations
   if (HINDI_RANGE_REGEX.test(mainPart)) {
     if (lang === 'English') {
-      return emojiPart + (HINDI_TO_ENGLISH_VOCAB[mainPart] || mainPart);
+      const exactVocab = HINDI_TO_ENGLISH_VOCAB[mainPart];
+      if (exactVocab) {
+        return emojiPart + exactVocab;
+      }
+      return emojiPart + translateHindiToEnglishGreedy(mainPart);
     }
   } else if (ENGLISH_RANGE_REGEX.test(mainPart)) {
     if (lang === 'Hindi') {

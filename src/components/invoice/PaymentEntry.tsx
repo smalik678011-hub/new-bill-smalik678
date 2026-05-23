@@ -395,7 +395,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
                   {/* Print Receipt */}
                   <button 
                     onClick={handlePrintReceipt}
-                    className="p-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition cursor-pointer shadow-lg shadow-amber-500/10"
+                    className="p-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition cursor-pointer shadow-lg shadow-indigo-600/10"
                     title="Print"
                   >
                     <Printer className="h-3.5 w-3.5" />

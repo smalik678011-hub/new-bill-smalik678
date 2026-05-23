@@ -115,7 +115,7 @@ export default function Header() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center space-x-0.5 sm:space-x-1.5 bg-amber-500 hover:bg-amber-600 text-white px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-amber-600 text-[9px] sm:text-xs font-black transition-all duration-150 focus:outline-none shadow-lg shadow-amber-500/20"
+              className="flex items-center space-x-0.5 sm:space-x-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-indigo-700 text-[9px] sm:text-xs font-black transition-all duration-150 focus:outline-none shadow-lg shadow-indigo-600/20"
               title="Change Language"
             >
               <Globe className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white" />
@@ -179,7 +179,7 @@ export default function Header() {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-1 sm:space-x-1.5 bg-amber-500 hover:bg-amber-600 text-white px-1 sm:px-3 py-1 sm:py-1.5 rounded-full border border-amber-600 text-[10px] sm:text-xs font-black transition-all duration-150 focus:outline-none cursor-pointer"
+            className="flex items-center space-x-1 sm:space-x-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-1 sm:px-3 py-1 sm:py-1.5 rounded-full border border-indigo-700 text-[10px] sm:text-xs font-black transition-all duration-150 focus:outline-none cursor-pointer"
             title="Log Out"
           >
             <LogOut className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white" />

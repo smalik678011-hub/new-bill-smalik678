@@ -324,7 +324,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <span className="text-[10px] text-amber-500 font-extrabold uppercase tracking-widest font-mono">Ledger Dashboard</span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-white font-sans">
-            व्यापार का हिसाब-किताब
+            {t('व्यापार का हिसाब-किताब')}
           </h2>
           <p className="text-xs text-gray-550">
             {supabaseMode ? t('सारे बिल और भुगतान सुरक्षित क्लाउड डेटाबेस से सिंक हैं।') : t('लोकल बही खाता मोड सक्रिय है। इंटरनेट आने पर सुरक्षित हो जाएगा।')}
