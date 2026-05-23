@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
-import { LogIn, Mail, Lock, ShieldCheck, Chrome } from 'lucide-react';
+import { LogIn, Mail, Lock, ShieldCheck, Chrome, ArrowRight } from 'lucide-react';
 
 
 export default function Login() {
@@ -52,11 +52,26 @@ export default function Login() {
     }
   };
 
+  const handleDemoLogin = () => {
+    setLoading(true);
+    // Use a short delay to simulate high-tech verification
+    setTimeout(() => {
+      const demoUser = {
+        id: 'demo-user-123',
+        email: 'demo@billkaro.com',
+        user_metadata: { full_name: 'Demo Account' }
+      };
+      localStorage.setItem('billkaro_demo_user', JSON.stringify(demoUser));
+      toast.success('डेमो मोड (Demo Mode) में लॉगइन सफल! स्वागत है।');
+      navigate('/');
+    }, 400);
+  };
+
   return (
-    <div className="min-h-screen bg-[#0B0F1A] text-gray-100 flex flex-col justify-center items-center p-4 selection:bg-amber-500 selection:text-black">
+    <div className="min-h-screen bg-[#0B0F1A] text-gray-100 flex flex-col justify-center items-center p-4 selection:bg-amber-500 selection:text-white">
       <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden">
         {/* Subtle decorative background glow */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16" />
         
         {/* Brand identity */}
         <div className="text-center space-y-2">
@@ -69,6 +84,30 @@ export default function Login() {
           <p className="text-xs text-gray-200 font-medium">
             मजबूत व्यापार का मजबूत डिजिटल बही खाता।
           </p>
+        </div>
+
+        {/* Demo Access Button - High Visibility & Priority */}
+        <div className="space-y-3">
+          <button
+            onClick={handleDemoLogin}
+            type="button"
+            className="w-full bg-amber-500 hover:bg-amber-600 border border-amber-600 text-white font-black py-4 rounded-2xl text-sm uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] flex flex-col items-center justify-center group relative overflow-hidden cursor-pointer"
+          >
+            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+            <span className="relative z-10 flex items-center space-x-2">
+              <ArrowRight className="h-5 w-5" />
+              <span>डेमो शुरू करें (Explore Demo)</span>
+            </span>
+          </button>
+          <p className="text-[10px] text-gray-400 text-center uppercase tracking-tighter">
+            Instant Access • No Password Required • Cloud Ready
+          </p>
+        </div>
+
+        <div className="relative flex py-2 items-center">
+          <div className="flex-grow border-t border-gray-800"></div>
+          <span className="flex-shrink mx-4 text-gray-600 text-[10px] uppercase font-mono font-black">अथवा (OR)</span>
+          <div className="flex-grow border-t border-gray-800"></div>
         </div>
 
         {/* Login Form */}
@@ -106,7 +145,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-amber-500 hover:bg-amber-600 text-[#0B0F1A] font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-amber-500/25 flex items-center justify-center space-x-2 disabled:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-amber-500/25 flex items-center justify-center space-x-2 disabled:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? (
               <span className="animate-pulse">प्रतीक्षा करें...</span>
@@ -125,14 +164,16 @@ export default function Login() {
           <div className="flex-grow border-t border-gray-700"></div>
         </div>
 
-        {/* Google OAuth Login */}
+        {/* Google OAuth Login - Professional Branding */}
         <button
           onClick={handleGoogleLogin}
           type="button"
-          className="w-full bg-white hover:bg-gray-50 border border-gray-300 text-xs font-extrabold text-gray-900 py-3 rounded-xl flex items-center justify-center space-x-2.5 transition cursor-pointer"
+          className="w-full bg-[#4285F4] hover:bg-[#3367D6] text-white text-xs font-black py-3.5 rounded-xl flex items-center justify-center space-x-3 transition-all shadow-lg hover:shadow-[#4285F4]/30 cursor-pointer border border-[#4285F4]"
         >
-          <Chrome className="h-4 w-4" />
-          <span>Google के साथ आगे बढ़ें</span>
+          <div className="bg-white p-1 rounded-sm">
+            <Chrome className="h-3.5 w-3.5 text-[#4285F4]" />
+          </div>
+          <span>GOOGLE के साथ लॉगइन करें</span>
         </button>
 
         {/* Signup Link */}

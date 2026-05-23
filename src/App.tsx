@@ -28,7 +28,7 @@ function MainAppContent() {
   
   return (
     <AppLayout>
-      <div className="min-h-screen bg-[#0B0F1A] text-gray-100 flex flex-col selection:bg-amber-500 selection:text-black">
+      <div className="min-h-screen bg-[#0B0F1A] text-gray-100 flex flex-col selection:bg-amber-500 selection:text-white">
         {/* Toast notifications */}
         <Toaster position="top-center" reverseOrder={false} />
 

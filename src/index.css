@@ -4,7 +4,7 @@
 @theme {
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  --color-primary: #1e40af;
+  --color-primary: #f59e0b;
   --color-dark: #ffffff;
   --color-card: #ffffff;
 
@@ -32,6 +32,67 @@
   
   --text-4xl: 2.75rem; /* 44px instead of 36px */
   --text-4xl--line-height: 3.25rem;
+
+  /* Standard BillKaro Orange Colors */
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+  --color-amber-800: #92400e;
+  --color-amber-900: #78350f;
+  --color-amber-950: #451a03;
+
+  --color-blue-50: #eff6ff !important;
+  --color-blue-100: #dbeafe !important;
+  --color-blue-200: #bfdbfe !important;
+  --color-blue-300: #93c5fd !important;
+  --color-blue-400: #60a5fa !important;
+  --color-blue-500: #3b82f6 !important;
+  --color-blue-600: #2563eb !important;
+  --color-blue-700: #1d4ed8 !important;
+  --color-blue-800: #1e40af !important;
+  --color-blue-900: #1e3a8a !important;
+  --color-blue-950: #172554 !important;
+
+  --color-rose-50: #fff1f2 !important;
+  --color-rose-100: #ffe4e6 !important;
+  --color-rose-200: #fecdd3 !important;
+  --color-rose-300: #fda4af !important;
+  --color-rose-400: #fb7185 !important;
+  --color-rose-500: #f43f5e !important;
+  --color-rose-600: #e11d48 !important;
+  --color-rose-700: #be123c !important;
+  --color-rose-800: #9f1239 !important;
+  --color-rose-900: #881337 !important;
+  --color-rose-950: #4c0519 !important;
+
+  --color-emerald-50: #ecfdf5 !important;
+  --color-emerald-100: #d1fae5 !important;
+  --color-emerald-200: #a7f3d0 !important;
+  --color-emerald-300: #6ee7b7 !important;
+  --color-emerald-400: #34d399 !important;
+  --color-emerald-500: #10b981 !important;
+  --color-emerald-600: #059669 !important;
+  --color-emerald-700: #047857 !important;
+  --color-emerald-800: #065f46 !important;
+  --color-emerald-900: #064e3b !important;
+  --color-emerald-950: #022c22 !important;
+
+  --color-gray-50: #f9fafb !important;
+  --color-gray-100: #f3f4f6 !important;
+  --color-gray-200: #e5e7eb !important;
+  --color-gray-300: #d1d5db !important;
+  --color-gray-400: #9ca3af !important;
+  --color-gray-500: #6b7280 !important;
+  --color-gray-600: #4b5563 !important;
+  --color-gray-700: #374151 !important;
+  --color-gray-800: #1f2937 !important;
+  --color-gray-900: #111827 !important;
+  --color-gray-950: #030712 !important;
 }
 
 /* Base styling customized for BillKaro */
@@ -54,8 +115,8 @@ div[class*="bg-[#0B0F1A]"] {
 
 /* Selection background color override */
 ::selection {
-  background-color: rgba(30, 64, 175, 0.15) !important;
-  color: #1e40af !important;
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  color: #f59e0b !important;
 }
 
 /* Override all light / dark text variations for clean contrast on white background */
@@ -83,31 +144,25 @@ div[class*="bg-[#0B0F1A]"] {
   color: #6b7280 !important;
 }
 
-/* Professional blue primary overrides */
+/* Professional orange primary overrides - Allowing user customizations */
 .text-amber-500,
 .text-amber-600,
 .text-amber-400,
-.text-amber-700,
-.text-[#F59E0B] {
-  color: #1e40af !important;
+.text-amber-700 {
+  color: #f59e0b !important;
 }
 
 .bg-amber-500,
 .bg-amber-600,
-.bg-amber-400,
-.bg-amber-700,
-.bg-[#F59E0B],
-.from-amber-500,
-.to-amber-600 {
-  background-color: #1e40af !important;
-  background-image: none !important;
+.bg-amber-400 {
+  background-color: #f59e0b !important;
   color: #ffffff !important;
 }
 
 .border-amber-500,
 .border-amber-600,
 .border-amber-400 {
-  border-color: #1e40af !important;
+  border-color: #f59e0b !important;
 }
 
 /* Dynamic Hover effects for buttons */
@@ -116,7 +171,7 @@ div[class*="bg-[#0B0F1A]"] {
 .hover\:from-amber-400:hover,
 .hover\:bg-emerald-400:hover,
 .hover\:bg-cyan-400:hover {
-  background-color: #1d4ed8 !important;
+  background-color: #f59e0b !important;
   background-image: none !important;
   color: #ffffff !important;
 }
@@ -129,8 +184,8 @@ input, select, textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-  border-color: #1e40af !important;
-  box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.15) !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15) !important;
   outline: none !important;
 }
 
@@ -153,23 +208,26 @@ header text {
 /* App Branding logo text colors in header */
 header span[class*="text-amber-500"],
 header h1 [class*="text-"] {
-  color: #1e40af !important;
+  color: #f59e0b !important;
 }
 
-/* Sidebar Styling: professional blue background with white text */
+/* Sidebar Styling: modern dark/orange background */
 aside,
 aside[class*="bg-"] {
-  background-color: #1e40af !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: #0B0F1A !important;
+  border-right: 1px solid #1f2937 !important;
 }
 
 aside span,
 aside h3,
 aside h4,
 aside text,
-aside p,
-aside svg {
+aside p {
   color: #ffffff !important;
+}
+
+aside svg {
+  color: #f59e0b !important;
 }
 
 aside button {
@@ -206,26 +264,23 @@ aside button[class*="hover:bg-red-500/10"]:hover {
   color: #fca5a5 !important;
 }
 
-/* Mobile bottom-nav: solid blue background with white text */
+/* Mobile bottom-nav: dark background with orange accents */
 div[class*="pb-safe"] {
-  background-color: #1e40af !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background-color: #0B0F1A !important;
+  border-top: 1px solid #1f2937 !important;
 }
 
 div[class*="pb-safe"] button {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: #9ca3af !important;
 }
 
 div[class*="pb-safe"] button svg {
-  color: rgba(255, 255, 255, 0.75) !important;
+  color: #9ca3af !important;
 }
 
-div[class*="pb-safe"] button[class*="text-amber-500"] {
-  color: #ffffff !important;
-}
-
-div[class*="pb-safe"] button[class*="text-amber-500"] svg {
-  color: #ffffff !important;
+div[class*="pb-safe"] button[class*="text-amber-500"],
+div[class*="pb-safe"] button.text-amber-500 {
+  color: #f59e0b !important;
 }
 
 /* Card components overlay styling: White background with light blue border or shadow */
@@ -278,7 +333,7 @@ button.bg-[#F59E0B],
 button[class*="bg-amber-"],
 button[class*="bg-emerald-"],
 button[class*="bg-cyan-"] {
-  background-color: #1e40af !important;
+  background-color: #f59e0b !important;
   background-image: none !important;
   color: #ffffff !important;
 }
@@ -286,7 +341,7 @@ button[class*="bg-cyan-"] {
 button.bg-amber-500:hover,
 button.bg-emerald-500:hover,
 button[class*="bg-amber-"]:hover {
-  background-color: #1d4ed8 !important;
+  background-color: #d97706 !important;
 }
 
 /* All text components inside these custom buttons should stay white */

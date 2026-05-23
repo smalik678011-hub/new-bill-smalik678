@@ -48,19 +48,19 @@ export default function Sidebar() {
   ];
 
   const handleLogout = async () => {
+    localStorage.removeItem('billkaro_demo_user');
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      await supabase.auth.signOut();
       toast.success('लॉगआउट सफल रहा!');
       navigate('/signin');
     } catch (err: any) {
-      toast.error('लॉगआउट में त्रुटि हुई!');
+      navigate('/signin');
     }
   };
 
   return (
     <aside 
-      className={`hidden md:flex flex-col h-screen sticky top-0 bg-[#1a3a6b] border-r border-gray-800/20 transition-all duration-300 ${
+      className={`hidden md:flex flex-col h-screen sticky top-0 bg-[#0B0F1A] border-r border-gray-800 transition-all duration-300 ${
         collapsed ? 'w-20' : 'w-72'
       } z-30 select-none`}
     >
@@ -68,18 +68,18 @@ export default function Sidebar() {
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
         {!collapsed && (
           <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-[rgba(255,255,255,0.15)] border border-transparent flex items-center justify-center rounded-xl text-[#FFFFFF]">
-              <Sparkles className="h-4.5 w-4.5 text-[#FFFFFF]" />
+            <div className="h-8 w-8 bg-amber-500 border border-amber-600 flex items-center justify-center rounded-xl text-[#FFFFFF] shadow-lg shadow-amber-500/20">
+              <Sparkles className="h-4.5 w-4.5 text-[#FFFFFF] fill-white" />
             </div>
             <span className="font-extrabold tracking-tight text-[#FFFFFF] text-base font-sans">
-              Bill<span className="text-[#FFFFFF]">Karo</span>
+              Bill<span className="text-amber-500">Karo</span>
             </span>
           </div>
         )}
         
         {collapsed && (
-          <div className="mx-auto h-8 w-8 bg-[rgba(255,255,255,0.15)] border border-transparent flex items-center justify-center rounded-xl text-[#FFFFFF]">
-            <Sparkles className="h-4.5 w-4.5 text-[#FFFFFF]" />
+          <div className="mx-auto h-8 w-8 bg-amber-500 border border-amber-600 flex items-center justify-center rounded-xl text-[#FFFFFF] shadow-lg shadow-amber-500/20">
+            <Sparkles className="h-4.5 w-4.5 text-[#FFFFFF] fill-white" />
           </div>
         )}
 
@@ -92,22 +92,22 @@ export default function Sidebar() {
       </div>
 
       {/* User profile brief & subscription status */}
-      <div className="p-4 border-b border-gray-800 bg-[rgba(255,255,255,0.05)]">
+      <div className="p-4 border-b border-gray-800 bg-amber-500/5">
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-[#FFFFFF] font-black text-sm border-2 border-gray-800">
+          <div className="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-black text-sm border-2 border-amber-500/50 shadow-lg shadow-amber-500/20">
             {profile.ownerName?.charAt(0) || 'B'}
           </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <h4 className="text-xs font-black text-[#FFFFFF] truncate">{profile.ownerName || 'Ledger Owner'}</h4>
-              <p className="text-[10px] text-[#FFFFFF] truncate">{profile.businessName || 'Business Name'}</p>
+              <h4 className="text-xs font-black text-[#FFFFFF] truncate">{profile.ownerName || 'Owner'}</h4>
+              <p className="text-[10px] text-gray-500 truncate">{profile.businessName || 'Business'}</p>
               
               {/* Badge */}
               <div className="flex items-center mt-1">
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold ${
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black ${
                   subscription === 'PRO' || subscription === 'YEARLY' 
-                    ? 'bg-[#F97316] border border-transparent text-[#FFFFFF]' 
-                    : 'bg-gray-800 text-[#FFFFFF] border border-gray-700'
+                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20' 
+                    : 'bg-gray-800 text-gray-400 border border-gray-700'
                 }`}>
                   {subscription === 'PRO' || subscription === 'YEARLY' ? '⭐ PRO MEMBER' : 'FREE ACCOUNT'}
                 </span>
@@ -125,15 +125,15 @@ export default function Sidebar() {
             <button
               key={item.id}
               onClick={() => navigate(item.path)}
-              className={`w-full flex items-center space-x-3 p-2.5 rounded-xl transition-all cursor-pointer ${
+              className={`w-full flex items-center space-x-3 p-2.5 rounded-xl transition-all cursor-pointer group ${
                 isActive 
-                  ? 'bg-[#F97316] text-[#FFFFFF] border border-transparent font-extrabold shadow-md' 
-                  : 'text-[#FFFFFF] hover:bg-[rgba(255,255,255,0.15)] hover:text-[#FFFFFF] border border-transparent'
+                  ? 'bg-amber-500 text-[#FFFFFF] border border-amber-600 font-extrabold shadow-lg shadow-amber-500/20' 
+                  : 'text-[#FFFFFF] hover:bg-amber-500/10 hover:text-amber-500 border border-transparent'
               }`}
             >
-              <item.icon className="h-4.5 w-4.5 text-[#FFFFFF]" />
+              <item.icon className={`h-4.5 w-4.5 transition-colors ${isActive ? 'text-white' : 'text-amber-500 group-hover:text-amber-500'}`} />
               {!collapsed && (
-                <span className="text-xs font-black truncate text-[#FFFFFF]">{t(item.label)}</span>
+                <span className={`text-xs font-black truncate transition-colors ${isActive ? 'text-white' : 'text-white/80 group-hover:text-amber-500'}`}>{t(item.label)}</span>
               )}
             </button>
           );
@@ -144,11 +144,11 @@ export default function Sidebar() {
       <div className="p-4 border-t border-gray-800">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center space-x-3 p-2 hover:bg-[rgba(255,255,255,0.15)] hover:text-[#FFFFFF] rounded-xl transition text-[#FFFFFF] cursor-pointer text-left"
+          className="w-full flex items-center space-x-3 p-2 hover:bg-amber-500/10 hover:text-amber-500 rounded-xl transition text-white/70 cursor-pointer text-left group"
         >
-          <LogOut className="h-4.5 w-4.5 text-[#FFFFFF]" />
+          <LogOut className="h-4.5 w-4.5 text-amber-500 group-hover:text-amber-500" />
           {!collapsed && (
-            <span className="text-xs font-black text-[#FFFFFF]">{t('लॉगआउट (Log Out)')}</span>
+            <span className="text-xs font-black group-hover:text-amber-500">{t('लॉगआउट (Log Out)')}</span>
           )}
         </button>
       </div>

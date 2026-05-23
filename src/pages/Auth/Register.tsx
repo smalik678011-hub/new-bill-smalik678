@@ -106,7 +106,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F1A] text-gray-100 flex flex-col justify-center items-center py-10 px-4 select-none selection:bg-amber-500 selection:text-black">
+    <div className="min-h-screen bg-[#0B0F1A] text-gray-100 flex flex-col justify-center items-center py-10 px-4 select-none selection:bg-amber-500 selection:text-white">
       <div className="w-full max-w-lg bg-gray-900 border border-gray-800 rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden">
         {/* Subtle decorative background glow */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
@@ -250,7 +250,7 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-[#0B0F1A] font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-amber-500/20 flex items-center justify-center space-x-2 disabled:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-amber-500/20 flex items-center justify-center space-x-2 disabled:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? (
               <span className="animate-pulse">रजिस्ट्रेशन प्रगति पर है...</span>

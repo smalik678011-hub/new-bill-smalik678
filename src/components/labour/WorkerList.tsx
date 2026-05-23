@@ -54,7 +54,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
         </div>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-amber-500 hover:bg-amber-400 text-black font-black py-1.5 px-3 rounded-xl text-[11px] flex items-center space-x-1 transition select-none cursor-pointer"
+          className="bg-amber-500 hover:bg-amber-400 text-white font-black py-1.5 px-3 rounded-xl text-[11px] flex items-center space-x-1 transition select-none cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           <span>नया कारीगर</span>
@@ -117,7 +117,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
           <button
             type="submit"
             disabled={saving}
-            className="w-full bg-amber-500 hover:bg-amber-400 text-black py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition disabled:opacity-50 cursor-pointer font-mono"
+            className="w-full bg-amber-500 hover:bg-amber-400 text-white py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition disabled:opacity-50 cursor-pointer font-mono"
           >
             {saving ? 'Saving...' : 'करीगर को रजिस्टर में जोड़ें (Save Worker)'}
           </button>

@@ -53,19 +53,19 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-[#0B0F1A] border-b border-gray-800 sticky top-0 z-50 px-3 sm:px-4 py-2.5 sm:py-3 shadow-md">
-      <div className="flex items-center justify-between">
+    <header className="bg-[#0B0F1A] border-b border-gray-800 sticky top-0 z-50 px-2 sm:px-4 py-2.5 sm:py-3 shadow-md">
+      <div className="flex items-center justify-between gap-1.5 ">
         {/* Brand & Active Dhandha */}
-        <div className="flex items-center space-x-1.5 sm:space-x-2.5 min-w-0">
-          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-black shadow-lg shadow-amber-500/20 text-base sm:text-lg shrink-0">
+        <div className="flex items-center space-x-1.5 sm:space-x-2.5 min-w-0 shrink">
+          <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-white shadow-lg shadow-amber-500/20 text-sm sm:text-lg shrink-0">
             BK
           </div>
           <div className="min-w-0">
-            <h1 className="text-[#F59E0B] font-extrabold text-xs sm:text-base tracking-tight leading-none">
-              BillKaro
+            <h1 className="font-black text-[10px] sm:text-base tracking-tighter leading-none text-white transition-colors truncate">
+              Bill<span className="text-amber-500">Karo</span>
             </h1>
-            <span className="text-[9px] sm:text-[10px] text-gray-400 font-mono font-medium flex items-center mt-0.5 max-w-[65px] sm:max-w-[150px] md:max-w-none truncate">
-              <Building className="h-2.5 w-2.5 mr-1 text-amber-500/80 shrink-0" />
+            <span className="text-[8px] sm:text-[10px] text-gray-400 font-mono font-medium flex items-center mt-0.5 truncate bg-gray-900/40 rounded px-1 max-w-[50px] sm:max-w-none">
+              <Building className="h-2 w-2 sm:h-2.5 sm:w-2.5 mr-0.5 sm:mr-1 text-amber-500/80 shrink-0" />
               <span className="truncate">{profile.businessName || 'Mera Karobar'}</span>
             </span>
           </div>
@@ -74,39 +74,40 @@ export default function Header() {
         {/* Actions & Controllers */}
         <div className="flex items-center space-x-1 sm:space-x-2 min-w-0 shrink-0">
           {/* Subscription Tier Controller */}
-          <div className="flex items-center space-x-0.5 sm:space-x-1 bg-gray-900 p-0.5 sm:p-1 rounded-full border border-gray-800">
+          <div className="flex items-center space-x-0.5 bg-gray-900 p-0.5 sm:p-1 rounded-full border border-gray-800">
             <button
               onClick={() => setSubscription('FREE')}
-              className={`px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold transition-all ${
+              className={`px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-bold transition-all ${
                 subscription === 'FREE'
-                  ? 'bg-gray-600 text-white'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-amber-500 text-white shadow-sm'
+                  : 'text-gray-400 hover:text-amber-500'
               }`}
             >
               FREE
             </button>
             <button
               onClick={() => setSubscription('PRO')}
-              className={`px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold transition-all flex items-center space-x-0.5 ${
+              className={`px-1 sm:px-2 py-0.5 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-bold transition-all flex items-center space-x-0.5 ${
                 subscription === 'PRO'
-                  ? 'bg-amber-500 text-[#0B0F1A]'
-                  : 'text-amber-500/80 hover:text-amber-400'
+                  ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20'
+                  : 'text-amber-500/80 hover:text-amber-500'
               }`}
             >
               <Zap className="h-2 w-2 sm:h-2.5 sm:w-2.5 fill-current" />
-              <span>PRO</span>
+              <span className="hidden xs:inline">PRO</span>
             </button>
             <button
               onClick={() => setSubscription('YEARLY')}
-              className={`px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold transition-all flex items-center space-x-0.5 ${
+              className={`px-1 sm:px-2 py-0.5 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-bold transition-all flex items-center space-x-0.5 ${
                 subscription === 'YEARLY'
-                  ? 'bg-emerald-500 text-[#0B0F1A]'
-                  : 'text-emerald-400 hover:text-emerald-300'
+                  ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20'
+                  : 'text-emerald-400 hover:text-emerald-500'
               }`}
             >
               <ShieldCheck className="h-2 w-2 sm:h-2.5 sm:w-2.5" />
               <span className="hidden sm:inline">{t('साल (₹1499)')}</span>
-              <span className="inline sm:hidden">{t('Year')}</span>
+              <span className="hidden xs:inline sm:hidden">{t('Year')}</span>
+              <span className="inline xs:hidden font-mono">1Y</span>
             </button>
           </div>
 
@@ -114,12 +115,12 @@ export default function Header() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center space-x-1 sm:space-x-1.5 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-800 text-[10px] sm:text-xs font-bold transition-all duration-150 focus:outline-none"
+              className="flex items-center space-x-0.5 sm:space-x-1.5 bg-amber-500 hover:bg-amber-600 text-white px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-amber-600 text-[9px] sm:text-xs font-black transition-all duration-150 focus:outline-none shadow-lg shadow-amber-500/20"
               title="Change Language"
             >
-              <Globe className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-500" />
-              <span className="text-[9px] sm:text-[10px] uppercase tracking-wider">{getLanguageLabel(language)}</span>
-              <ChevronDown className={`h-2.5 w-2.5 sm:h-3 sm:w-3 text-gray-400 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
+              <Globe className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white" />
+              <span className="text-[8px] sm:text-[10px] uppercase tracking-wider">{getLanguageLabel(language)}</span>
+              <ChevronDown className={`h-2 w-2 sm:h-3 sm:w-3 text-white/80 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {langOpen && (
@@ -178,27 +179,27 @@ export default function Header() {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-1 sm:space-x-1.5 bg-gray-900 hover:bg-red-500/10 text-red-400 hover:text-red-300 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-800 hover:border-red-500/30 text-[10px] sm:text-xs font-bold transition-all duration-150 focus:outline-none cursor-pointer"
+            className="flex items-center space-x-1 sm:space-x-1.5 bg-amber-500 hover:bg-amber-600 text-white px-1 sm:px-3 py-1 sm:py-1.5 rounded-full border border-amber-600 text-[10px] sm:text-xs font-black transition-all duration-150 focus:outline-none cursor-pointer"
             title="Log Out"
           >
-            <LogOut className="h-3.5 w-3.5" />
-            <span className="text-[10px] uppercase tracking-wider hidden sm:inline">{t('लॉगआउट')}</span>
+            <LogOut className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white" />
+            <span className="text-[10px] uppercase tracking-wider hidden sm:inline">{t('LOG OUT')}</span>
           </button>
         </div>
       </div>
 
       {/* Mini notification banner if on free */}
       {subscription === 'FREE' && (
-        <div className="mt-2 text-center bg-amber-500/10 border border-amber-500/20 rounded py-1 px-2 flex items-center justify-between">
-          <span className="text-[10px] text-amber-500 flex items-center font-medium">
-            <Award className="h-3 w-3 mr-1 animate-pulse animate-duration-1000 shrink-0" />
-            <span className="truncate ml-1">{t('Free Trial active. Cards may have watermark. Limit: 5 Client maximum.')}</span>
+        <div className="mt-2 text-center bg-gray-900 border border-amber-500/30 rounded py-1 px-2.5 flex items-center justify-between shadow-inner overflow-hidden">
+          <span className="text-[8px] sm:text-[10px] text-gray-300 flex items-center font-medium min-w-0">
+            <Award className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1 text-amber-500 animate-pulse animate-duration-1000 shrink-0" />
+            <span className="truncate">{t('Free Trial active. Limit: 5 Client maximum.')}</span>
           </span>
           <button 
             onClick={() => setSubscription('PRO')}
-            className="text-[9px] bg-amber-500 text-black px-1.5 py-0.5 rounded font-bold hover:bg-amber-400 shrink-0 ml-2"
+            className="text-[8px] sm:text-[9.5px] bg-amber-500 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded font-black hover:bg-amber-600 shrink-0 ml-1.5 shadow-lg shadow-amber-500/20"
           >
-            {t('Upgrade Now')}
+            {t('Upgrade')}
           </button>
         </div>
       )}

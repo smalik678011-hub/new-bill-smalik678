@@ -374,7 +374,7 @@ export default function ClientDetail() {
 
             <button
               onClick={handleSaveEdit}
-              className="w-full bg-amber-500 text-black py-2.5 rounded-xl font-black text-xs uppercase flex items-center justify-center space-x-1.5 hover:bg-amber-600 transition"
+              className="w-full bg-amber-500 text-white py-2.5 rounded-xl font-black text-xs uppercase flex items-center justify-center space-x-1.5 hover:bg-amber-600 transition"
             >
               <Save className="h-4 w-4" />
               <span>अपडेट सेव करें (Save Info)</span>
@@ -384,7 +384,7 @@ export default function ClientDetail() {
           /* Profile Cards Details Info */
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="flex items-start space-x-4">
-              <div className="h-16 w-16 bg-gradient-to-tr from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center text-black font-black text-2xl border-4 border-gray-800 shadow-lg shrink-0">
+              <div className="h-16 w-16 bg-gradient-to-tr from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center text-white font-black text-2xl border-4 border-gray-800 shadow-lg shrink-0">
                 {client?.name?.charAt(0) || 'B'}
               </div>
               
@@ -485,7 +485,7 @@ export default function ClientDetail() {
         {/* Quick action: Generate Invoice/Quotation */}
         <button
           onClick={() => navigate(activeTab === 'invoices' ? '/invoices' : '/quotations')}
-          className="text-[10px] bg-amber-500 text-black py-1 px-2.5 rounded-lg font-black uppercase flex items-center space-x-1 hover:bg-amber-600 transition"
+          className="text-[10px] bg-amber-500 text-white py-1 px-2.5 rounded-lg font-black uppercase flex items-center space-x-1 hover:bg-amber-600 transition"
         >
           <PlusCircle className="h-3.5 w-3.5" />
           <span>नया जोड़ें ({activeTab === 'invoices' ? 'Invoice' : 'Estimate'})</span>

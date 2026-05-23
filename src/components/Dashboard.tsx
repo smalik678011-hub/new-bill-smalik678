@@ -23,8 +23,17 @@ import {
   Sparkles,
   CloudLightning,
   Cloud,
-  Check
+  Check,
+  FileText,
+  X,
+  QrCode,
+  Share2,
+  Copy,
+  Eye
 } from 'lucide-react';
+import { generatePendingPaymentsPDF } from '../lib/pdf';
+import { QRCodeSVG } from 'qrcode.react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface DashboardProps {
   onNavigate: (tab: string) => void;
@@ -39,6 +48,10 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   // 2. State for Real-Time Supabase Sync
   const [supabaseMode, setSupabaseMode] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isBaqiModalOpen, setIsBaqiModalOpen] = useState(false);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [previewClient, setPreviewClient] = useState<any>(null);
+  const [isDownloadingBaqi, setIsDownloadingBaqi] = useState(false);
   const [sbStats, setSbStats] = useState({
     pendingAmount: 0,
     monthlyIncome: 0,
@@ -257,6 +270,26 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
     toast.success('Backup downloaded successfully!');
   };
 
+  const handleDownloadBaqiPDF = async () => {
+    setIsDownloadingBaqi(true);
+    const loader = toast.loading('बाकी रिपोर्ट तैयार की जा रही है...');
+    try {
+      const doc = generatePendingPaymentsPDF({
+        clients: store.clients,
+        invoices: store.invoices,
+        profile: store.profile
+      });
+      doc.save(`LENA_BAQI_REPORT_${new Date().toISOString().split('T')[0]}.pdf`);
+      toast.success('Lena Baqi Report Downloaded!');
+    } catch (e) {
+      console.error(e);
+      toast.error('Failed to generate report.');
+    } finally {
+      toast.dismiss(loader);
+      setIsDownloadingBaqi(false);
+    }
+  };
+
   const getStatusStyle = (status: string) => {
     const norm = status?.toLowerCase();
     if (norm === 'paid') {
@@ -276,6 +309,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       };
     }
   };
+
+  const lowStockItems = store.inventory.filter(item => item.stockCount < item.minimumRequired);
 
   return (
     <div className="space-y-6">
@@ -317,16 +352,44 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         </div>
       </div>
 
+      {/* Low Stock Alert Notification */}
+      {lowStockItems.length > 0 && (
+        <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 flex items-center justify-between shadow-lg shadow-rose-500/5 animate-fadeIn">
+          <div className="flex items-center space-x-3">
+            <div className="h-10 w-10 bg-rose-500/20 text-rose-500 rounded-xl flex items-center justify-center animate-pulse">
+              <AlertCircle className="h-6 w-6" />
+            </div>
+            <div className="min-w-0">
+              <h4 className="text-xs font-black text-rose-500 uppercase tracking-widest font-mono">स्टॉक चेतावनी (Low Stock Alert)</h4>
+              <p className="text-[10px] text-gray-400 mt-0.5 truncate pr-2">
+                {lowStockItems.length} {t('items are running below minimum required stock.')}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => onNavigate('stock')}
+            className="flex-shrink-0 px-4 py-2 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-rose-600 transition shadow-lg shadow-rose-500/20 cursor-pointer"
+          >
+            {t('View Inventory')}
+          </button>
+        </div>
+      )}
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md">
+        <div className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md group hover:border-amber-500/30 transition">
           <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('कुल बकाया (Lena Baqi)')}</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className={'text-xl font-black ' + (pendingAmount > 0 ? 'text-red-400' : 'text-gray-100')}>
               ₹{(pendingAmount ?? 0).toLocaleString('en-IN')}
             </span>
-            <div className={'p-1.5 rounded-xl ' + (pendingAmount > 0 ? 'bg-red-500/10 text-red-400' : 'bg-gray-800 text-gray-500')}>
-              <AlertCircle className="h-4.5 w-4.5" />
-            </div>
+            <button
+              onClick={handleDownloadBaqiPDF}
+              disabled={isDownloadingBaqi || pendingAmount <= 0}
+              className="p-1.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Download PDF Report"
+            >
+              <FileText className="h-4.5 w-4.5" />
+            </button>
           </div>
           <span className="text-[9px] text-gray-550 block mt-1.5">
             {pendingAmount > 0 ? t('⚠️ वसूली बाकी है!') : t('कोई बकाया भुगतान नहीं है।')}
@@ -359,13 +422,13 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           <span className="text-[9px] text-gray-550 block mt-1.5">{t('सारे ग्राहक खता सूची')}</span>
         </div>
 
-        <div onClick={() => onNavigate('invoices')} className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md group hover:border-cyan-500/30 transition cursor-pointer">
+        <div onClick={() => onNavigate('invoices')} className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md group hover:border-amber-500/30 transition cursor-pointer">
           <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('बाकी बिल (Unpaid Bills)')}</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className={'text-xl font-black ' + (unpaidInvoicesCount > 0 ? 'text-amber-500' : 'text-gray-300')}>
               {unpaidInvoicesCount}
             </span>
-            <div className="p-1.5 bg-cyan-500/10 text-cyan-400 rounded-xl group-hover:bg-cyan-500/20 transition">
+            <div className="p-1.5 bg-amber-500/10 text-amber-500 rounded-xl group-hover:bg-amber-500/20 transition">
               <FileSpreadsheet className="h-4.5 w-4.5" />
             </div>
           </div>
@@ -378,42 +441,71 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         <div className="grid grid-cols-3 gap-3">
           <button
             onClick={() => onNavigate('clients')}
-            className="flex flex-col items-center justify-center p-4 bg-gray-900 border border-gray-850 hover:bg-amber-500/5 hover:border-amber-500/35 rounded-2xl transition shadow-sm cursor-pointer group text-center"
+            className="flex flex-col items-center justify-center p-4 bg-amber-500 border border-amber-600 hover:bg-amber-600 rounded-2xl transition shadow-lg shadow-amber-500/20 cursor-pointer group text-center"
           >
-            <div className="h-10 w-10 bg-amber-500/10 text-amber-500 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <PlusCircle className="h-5 w-5" />
             </div>
             <span className="text-xs font-black text-white block">{t('नया ग्राहक')}</span>
-            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">{t('Add Client')}</span>
+            <span className="text-[8px] text-white/80 block font-mono mt-0.5">{t('Add Client')}</span>
           </button>
 
           <button
             onClick={() => onNavigate('invoices')}
-            className="flex flex-col items-center justify-center p-4 bg-gray-900 border border-gray-850 hover:bg-emerald-500/5 hover:border-emerald-500/35 rounded-2xl transition shadow-sm cursor-pointer group text-center"
+            className="flex flex-col items-center justify-center p-4 bg-amber-500 border border-amber-600 hover:bg-amber-600 rounded-2xl transition shadow-lg shadow-amber-500/20 cursor-pointer group text-center"
           >
-            <div className="h-10 w-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <FileSpreadsheet className="h-5 w-5" />
             </div>
             <span className="text-xs font-black text-white block">{t('नया पक्का बिल')}</span>
-            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">{t('Create Invoice')}</span>
+            <span className="text-[8px] text-white/80 block font-mono mt-0.5">{t('Create Invoice')}</span>
           </button>
 
           <button
             onClick={() => onNavigate('labour')}
-            className="flex flex-col items-center justify-center p-4 bg-gray-900 border border-gray-850 hover:bg-cyan-500/5 hover:border-cyan-500/35 rounded-2xl transition shadow-sm cursor-pointer group text-center"
+            className="flex flex-col items-center justify-center p-4 bg-amber-500 border border-amber-600 hover:bg-amber-600 rounded-2xl transition shadow-lg shadow-amber-500/20 cursor-pointer group text-center"
           >
-            <div className="h-10 w-10 bg-cyan-500/10 text-cyan-400 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <CheckCircle2 className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">{t('हाजिरी भरें')}</span>
-            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">{t('Mark Attendance')}</span>
+            <span className="text-xs font-black text-white block">{t('Mark Attendance')}</span>
+            <span className="text-[8px] text-white/80 block font-mono mt-0.5">{t('attendance')}</span>
+          </button>
+
+          <button
+            onClick={() => setIsBaqiModalOpen(true)}
+            className="flex flex-col items-center justify-center p-4 bg-rose-500 border border-rose-600 hover:bg-rose-600 rounded-2xl transition shadow-lg shadow-rose-500/20 cursor-pointer group text-center"
+          >
+            <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
+              <FileText className="h-5 w-5" />
+            </div>
+            <span className="text-xs font-black text-white block">बाकी रिपोर्ट</span>
+            <span className="text-[8px] text-white/80 block font-mono mt-0.5">Lena Baqi</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (!store.profile.upiId) {
+                toast.error('Please set your UPI ID in Profile Settings first!');
+                onNavigate('settings');
+                return;
+              }
+              setIsQRModalOpen(true);
+            }}
+            className="flex flex-col items-center justify-center p-4 bg-emerald-500 border border-emerald-600 hover:bg-emerald-600 rounded-2xl transition shadow-lg shadow-emerald-500/20 cursor-pointer group text-center"
+          >
+            <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
+              <QrCode className="h-5 w-5" />
+            </div>
+            <span className="text-xs font-black text-white block">UPI QR शेयर</span>
+            <span className="text-[8px] text-white/80 block font-mono mt-0.5">Share Payment QR</span>
           </button>
         </div>
       </div>
 
       <button 
         onClick={handleExportReport}
-        className="fixed bottom-6 right-6 bg-amber-500 hover:bg-amber-600 text-black p-4 rounded-full shadow-lg flex items-center space-x-2 font-black z-50 transition-all hover:scale-105"
+        className="fixed bottom-6 right-6 bg-amber-500 hover:bg-amber-600 text-white p-4 rounded-full shadow-lg flex items-center space-x-2 font-black z-50 transition-all hover:scale-105"
       >
         <FileSpreadsheet className="h-5 w-5" />
         <span className="hidden sm:inline">Export Report</span>
@@ -421,7 +513,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
       <button 
         onClick={handleDownloadBackup}
-        className="fixed bottom-24 right-6 bg-gray-800 hover:bg-gray-700 text-white p-4 rounded-full shadow-lg flex items-center space-x-2 font-black z-50 transition-all hover:scale-105"
+        className="fixed bottom-24 right-6 bg-amber-500 hover:bg-amber-600 text-white p-4 rounded-full shadow-lg flex items-center space-x-2 font-black z-50 transition-all hover:scale-105"
       >
         <Clock className="h-5 w-5" />
         <span className="hidden sm:inline">Backup Data</span>
@@ -449,7 +541,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 {c.phone && c.phone !== 'NA' && (
                   <button
                     onClick={() => handleCallClient(c.phone)}
-                    className="bg-amber-500 hover:bg-amber-600 text-black p-2 rounded-xl flex items-center space-x-1.5 transition cursor-pointer text-[10px] font-black"
+                    className="bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-xl flex items-center space-x-1.5 transition cursor-pointer text-[10px] font-black"
                   >
                     <Phone className="h-3 w-3" />
                     <span>कॉल (Call)</span>
@@ -525,6 +617,285 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           </p>
         </div>
       </div>
+
+      {/* Lena Baqi Report Modal */}
+      {isBaqiModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsBaqiModalOpen(false)} />
+          <div className="relative w-full max-w-2xl bg-gray-900 border border-gray-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Header */}
+            <div className="p-5 border-b border-gray-800 flex items-center justify-between bg-gray-900/50 backdrop-blur">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-rose-500/10 rounded-xl text-rose-500 border border-rose-500/20">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-white uppercase tracking-wider">बाकी वसूली लिस्ट (Lena Baqi Report)</h3>
+                  <p className="text-[10px] text-gray-500 font-mono">Summary of all outstanding payments</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsBaqiModalOpen(false)}
+                className="p-2 hover:bg-gray-800 rounded-full transition text-gray-400 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
+              <div className="bg-amber-500/5 border border-amber-500/10 rounded-2xl p-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] text-amber-500/80 font-black uppercase tracking-widest block mb-1">Total Recovery Pending</span>
+                    <h4 className="text-2xl font-black text-amber-500">₹{(pendingAmount ?? 0).toLocaleString('en-IN')}</h4>
+                  </div>
+                  <div className="h-12 w-12 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500 border border-amber-500/20">
+                    <IndianRupee className="h-6 w-6" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="grid grid-cols-4 px-2 text-[10px] font-black text-gray-500 uppercase tracking-widest pb-1">
+                  <div className="col-span-2">ग्राहक का नाम</div>
+                  <div className="text-right">मोबाइल</div>
+                  <div className="text-right">बकाया राशि</div>
+                </div>
+                
+                {store.clients.filter(c => c.totalDue > 0).length === 0 ? (
+                  <div className="text-center py-10 bg-gray-950/50 rounded-2xl border border-dashed border-gray-800">
+                    <Check className="h-10 w-10 text-emerald-500 mx-auto mb-3 opacity-20" />
+                    <p className="text-xs text-gray-500 font-bold">सब उधार चुकता है! (No Pending Dues)</p>
+                  </div>
+                ) : (
+                  store.clients
+                    .filter(c => c.totalDue > 0)
+                    .sort((a, b) => b.totalDue - a.totalDue)
+                    .map(client => {
+                      const clientWeight = (client.totalDue / (pendingAmount || 1)) * 100;
+                      return (
+                        <div key={client.id} className="p-3.5 bg-gray-950/40 border border-gray-800/50 rounded-2xl hover:border-gray-700 transition-all group space-y-3">
+                          <div className="grid grid-cols-4 items-center">
+                            <div className="col-span-2">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-xs font-bold text-gray-100 block">{client.name}</span>
+                                <button 
+                                  onClick={() => setPreviewClient(client)}
+                                  className="p-1.5 hover:bg-gray-800 rounded-lg text-gray-500 hover:text-amber-500 transition-colors cursor-pointer"
+                                  title="Quick View Invoices"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                </button>
+                              </div>
+                              <span className="text-[9px] text-gray-500 font-mono italic">Client ID: {client.id.slice(0, 8)}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-[10px] font-mono text-gray-400">{client.phone || '-'}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-xs font-black text-rose-500">₹{client.totalDue.toLocaleString('en-IN')}</span>
+                            </div>
+                          </div>
+                          
+                          {/* Recovery Weight Progress Bar */}
+                          <div className="space-y-1">
+                            <div className="w-full h-1 bg-gray-900 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-rose-500/60 group-hover:bg-rose-500 transition-all duration-500" 
+                                style={{ width: `${clientWeight}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between items-center text-[8px] font-mono text-gray-600">
+                              <span>Recovery Weight</span>
+                              <span>{clientWeight.toFixed(1)}% of total dues</span>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })
+                )}
+              </div>
+            </div>
+
+            {/* Footer Actions */}
+            <div className="p-5 border-t border-gray-800 bg-gray-900/80 backdrop-blur flex items-center justify-between select-none">
+              <div className="flex items-center space-x-2 text-[10px] text-gray-500 font-mono">
+                <AlertCircle className="h-3 w-3 text-amber-500" />
+                <span>Showing top active recoveries.</span>
+              </div>
+              <button
+                disabled={isDownloadingBaqi || store.clients.filter(c => c.totalDue > 0).length === 0}
+                onClick={handleDownloadBaqiPDF}
+                className="bg-rose-500 hover:bg-rose-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center space-x-2 transition shadow-lg shadow-rose-500/20 cursor-pointer"
+              >
+                <FileText className="h-4 w-4" />
+                <span>Download PDF Report</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* UPI QR Modal */}
+      {isQRModalOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsQRModalOpen(false)} />
+          <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col items-center p-8 text-center animate-scaleIn">
+            <button 
+              onClick={() => setIsQRModalOpen(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition text-gray-400"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="mb-6">
+              <h3 className="text-lg font-black text-gray-900 border-b-4 border-amber-500 inline-block pb-1 tracking-tighter">SCAN & PAY</h3>
+              <p className="text-xs text-gray-500 font-mono mt-2 uppercase tracking-widest truncate max-w-[250px]">{store.profile.businessName || 'Merchant'}</p>
+            </div>
+
+            <div className="bg-white p-4 rounded-3xl border-4 border-gray-100 shadow-inner flex items-center justify-center mb-6 overflow-hidden">
+              <QRCodeSVG 
+                value={`upi://pay?pa=${store.profile.upiId}&pn=${encodeURIComponent(store.profile.businessName || 'Business')}&cu=INR`} 
+                size={220}
+                level="H"
+                includeMargin={true}
+              />
+            </div>
+
+            <div className="space-y-4 w-full">
+              <div className="bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                <span className="text-[10px] text-gray-400 uppercase font-black block mb-1">UPI ID</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-gray-900 break-all">{store.profile.upiId}</span>
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(store.profile.upiId);
+                      toast.success('UPI ID Copied!');
+                    }}
+                    className="p-1.5 text-amber-500 hover:bg-amber-50 rounded-lg transition"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => {
+                    const upiUri = `upi://pay?pa=${store.profile.upiId}&pn=${encodeURIComponent(store.profile.businessName || 'Business')}&cu=INR`;
+                    navigator.clipboard.writeText(upiUri);
+                    toast.success('Payment link copied!');
+                  }}
+                  className="flex items-center justify-center space-x-2 bg-gray-900 text-white py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider hover:bg-black transition cursor-pointer"
+                >
+                  <Copy className="h-4 w-4" />
+                  <span>Copy Link</span>
+                </button>
+                <button
+                  onClick={() => {
+                    const upiUri = `upi://pay?pa=${store.profile.upiId}&pn=${encodeURIComponent(store.profile.businessName || 'Business')}&cu=INR`;
+                    const text = `Hey, please pay using this UPI QR or link: ${upiUri}`;
+                    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+                  }}
+                  className="flex items-center justify-center space-x-2 bg-emerald-500 text-white py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/20 cursor-pointer"
+                >
+                  <Share2 className="h-4 w-4" />
+                  <span>WhatsApp</span>
+                </button>
+              </div>
+            </div>
+
+            <p className="mt-6 text-[9px] text-gray-400 font-medium">Safe and Secure Payments via UPI Infrastructure</p>
+          </div>
+        </div>
+      )}
+
+      {/* Client Dues Quick Preview */}
+      <AnimatePresence>
+        {previewClient && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
+              onClick={() => setPreviewClient(null)} 
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ type: 'spring', duration: 0.4, bounce: 0.3 }}
+              className="relative w-full max-w-sm bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+            >
+              <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="p-1.5 bg-amber-500/10 rounded-lg text-amber-500">
+                    <Eye className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black text-white uppercase tracking-wider">{previewClient.name}</h4>
+                    <p className="text-[9px] text-gray-500 font-mono">Unpaid Invoices Breakdown</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setPreviewClient(null)}
+                  className="p-1.5 hover:bg-gray-800 rounded-full transition text-gray-400 hover:text-white"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                {store.invoices
+                  .filter(inv => inv.clientId === previewClient.id && inv.status !== 'Paid')
+                  .length === 0 ? (
+                    <div className="text-center py-6">
+                      <Check className="h-8 w-8 text-emerald-500 mx-auto opacity-20 mb-2" />
+                      <p className="text-[10px] text-gray-500 font-bold uppercase">No specific unpaid invoices found.</p>
+                    </div>
+                  ) : (
+                    store.invoices
+                      .filter(inv => inv.clientId === previewClient.id && inv.status !== 'Paid')
+                      .map(inv => (
+                        <div key={inv.id} className="p-3 bg-gray-950/50 border border-gray-800/50 rounded-xl flex justify-between items-center group">
+                          <div className="space-y-0.5">
+                            <span className="text-[10px] font-black text-gray-300 block">{inv.invoiceNumber}</span>
+                            <span className="text-[9px] text-gray-600 font-mono">{inv.date}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-xs font-black text-rose-500 block">₹{(inv.totalAmount - (inv.paidAmount || 0)).toLocaleString('en-IN')}</span>
+                            <div className="flex items-center justify-end space-x-1">
+                              <div className={`h-1 w-1 rounded-full ${inv.status === 'Partial' ? 'bg-amber-500' : 'bg-rose-500'}`} />
+                              <span className="text-[8px] text-gray-600 font-black uppercase tracking-tighter">{inv.status}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                  )}
+              </div>
+
+              <div className="p-4 border-t border-gray-800 bg-gray-950/50 space-y-3">
+                <div className="flex justify-between items-center text-[10px] uppercase font-black tracking-widest text-amber-500">
+                  <span>Total Due Amount</span>
+                  <span>₹{previewClient.totalDue.toLocaleString('en-IN')}</span>
+                </div>
+                
+                {previewClient.phone && previewClient.phone !== 'NA' && (
+                  <button
+                    onClick={() => handleCallClient(previewClient.phone)}
+                    className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl flex items-center justify-center space-x-2 transition-all shadow-lg shadow-emerald-500/10 cursor-pointer group"
+                  >
+                    <Phone className="h-4 w-4 group-hover:animate-bounce" />
+                    <span className="text-[11px] font-black uppercase tracking-widest">Call Now</span>
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

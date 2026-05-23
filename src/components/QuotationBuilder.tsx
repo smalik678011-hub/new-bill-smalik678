@@ -298,7 +298,7 @@ export default function QuotationBuilder() {
 
           <button
             type="submit"
-            className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-2 px-4 rounded text-xs transition block uppercase tracking-wider"
+            className="w-full bg-amber-500 hover:bg-amber-400 text-white font-extrabold py-2 px-4 rounded text-xs transition block uppercase tracking-wider"
           >
             एस्टीमेट सहेजें (Save Quotation)
           </button>

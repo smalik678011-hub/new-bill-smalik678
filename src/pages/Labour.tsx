@@ -334,7 +334,7 @@ export default function Labour() {
         <button
           onClick={() => setActiveTab('attendance')}
           className={`flex-1 py-3 text-xs font-black uppercase tracking-wider transition rounded-xl cursor-pointer ${
-            activeTab === 'attendance' ? 'bg-amber-500 text-black font-extrabold' : 'text-gray-450 hover:text-white'
+            activeTab === 'attendance' ? 'bg-amber-500 text-white font-extrabold' : 'text-gray-450 hover:text-white'
           }`}
         >
           📅 हाज़िरी कैलेंडर (Monthly & Bulk)
@@ -342,7 +342,7 @@ export default function Labour() {
         <button
           onClick={() => setActiveTab('workers')}
           className={`flex-1 py-3 text-xs font-black uppercase tracking-wider transition rounded-xl cursor-pointer ${
-            activeTab === 'workers' ? 'bg-amber-500 text-black font-extrabold' : 'text-gray-450 hover:text-white'
+            activeTab === 'workers' ? 'bg-amber-500 text-white font-extrabold' : 'text-gray-450 hover:text-white'
           }`}
         >
           👷 कारीगर प्रबंधक (Manage Workers)
@@ -350,7 +350,7 @@ export default function Labour() {
         <button
           onClick={() => setActiveTab('salary')}
           className={`flex-1 py-3 text-xs font-black uppercase tracking-wider transition rounded-xl cursor-pointer ${
-            activeTab === 'salary' ? 'bg-amber-500 text-black font-extrabold' : 'text-gray-450 hover:text-white'
+            activeTab === 'salary' ? 'bg-amber-500 text-white font-extrabold' : 'text-gray-450 hover:text-white'
           }`}
         >
           💰 हिसाब और सैलरी (Payroll Book)

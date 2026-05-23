@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useAppStore from '../store';
+import { toast } from 'react-hot-toast';
 import { 
-
   AlertTriangle, 
   Plus, 
   Trash2, 
@@ -12,7 +12,8 @@ import {
   CornerDownRight, 
   Package,
   TrendingDown,
-  ArrowRight
+  ArrowRight,
+  Search
 } from 'lucide-react';
 
 export default function StockInventory() {
@@ -20,6 +21,7 @@ export default function StockInventory() {
   const { inventory, addInventoryItem, updateStock, deleteInventoryItem } = useAppStore();
 
   const [showAddForm, setShowAddForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Add Item form states
   const [name, setName] = useState('');
@@ -46,7 +48,7 @@ export default function StockInventory() {
     setStockCount('50');
     setMinRequired('20');
     setShowAddForm(false);
-    alert("New inventory item safely recorded!");
+    toast.success("New inventory item safely recorded!");
   };
 
   const handleStockAdj = (id: string, current: number, delta: number) => {
@@ -77,6 +79,26 @@ export default function StockInventory() {
         <div className="text-[11.5px] text-gray-300 leading-normal">
           <b className="text-amber-500">लोहा, सरिया, मशीन और गैस सिलेंडर:</b> Apne workshop saria levels, consumables stock direct update karein. Stock limit se niche hone par alert flashing red ho jayega!
         </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="relative group">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-amber-500 transition-colors" />
+        <input 
+          type="text"
+          placeholder="सामग्री खोजें (Search materials by name or category...)"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full bg-[#151D30] border border-[#222E4A] hover:border-gray-700 focus:border-amber-500/50 rounded-2xl py-2.5 pl-11 pr-4 text-xs text-white transition-all focus:outline-none placeholder-gray-600"
+        />
+        {searchTerm && (
+          <button 
+            onClick={() => setSearchTerm('')}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors cursor-pointer"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {/* Add Stock material form */}
@@ -172,8 +194,13 @@ export default function StockInventory() {
 
       {/* Grid inventory listing */}
       <div className="space-y-2.5">
-        {inventory.map(item => {
-          const isLow = item.stockCount <= item.minimumRequired;
+        {inventory
+          .filter(item => 
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+            item.category.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .map(item => {
+            const isLow = item.stockCount <= item.minimumRequired;
           const ratio = Math.max(5, Math.min(100, (item.stockCount / (item.minimumRequired * 2 || 100)) * 100));
 
           return (
@@ -226,21 +253,21 @@ export default function StockInventory() {
                   <div className="flex items-center space-x-1">
                     <button
                       onClick={() => handleStockAdj(item.id, item.stockCount, -1)}
-                      className="bg-[#0B0F1A] text-gray-300 font-bold px-2 py-0.5 rounded text-xs hover:text-white"
+                      className="bg-[#0B0F1A] text-gray-300 font-bold px-2 py-0.5 rounded text-xs hover:text-white transition-colors"
                       title="-1 unit"
                     >
                       -
                     </button>
                     <button
                       onClick={() => handleStockAdj(item.id, item.stockCount, 5)}
-                      className="bg-[#0B0F1A] text-gray-300 font-bold px-1.5 py-0.5 rounded text-[10px] hover:text-white"
+                      className="bg-[#0B0F1A] text-gray-300 font-bold px-1.5 py-0.5 rounded text-[10px] hover:text-white transition-colors"
                       title="+5 unit"
                     >
                       +5
                     </button>
                     <button
                       onClick={() => handleStockAdj(item.id, item.stockCount, 1)}
-                      className="bg-[#0B0F1A] text-gray-300 font-bold px-2 py-0.5 rounded text-xs hover:text-white"
+                      className="bg-[#0B0F1A] text-gray-300 font-bold px-2 py-0.5 rounded text-xs hover:text-white transition-colors"
                       title="+1 unit"
                     >
                       +
@@ -249,9 +276,9 @@ export default function StockInventory() {
 
                   <button
                     onClick={() => {
-                      if (confirm("Kya is item ko stock list se alag karna chahte hain?")) deleteInventoryItem(item.id);
+                      if (confirm("Are you sure you want to remove this item from the stock list?")) deleteInventoryItem(item.id);
                     }}
-                    className="text-gray-500 hover:text-red-400 shrink-0 ml-2"
+                    className="text-gray-500 hover:text-red-400 shrink-0 ml-2 transition-colors"
                   >
                     <Trash2 className="h-3 w-3" />
                   </button>

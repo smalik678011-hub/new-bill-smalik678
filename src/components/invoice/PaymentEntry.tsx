@@ -21,6 +21,7 @@ import { Invoice, InvoicePayment } from '../../types';
 import { toast } from 'react-hot-toast';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { generateInvoicePDF, generateReceiptPDF } from '../../lib/pdf';
 import { supabase } from '../../lib/supabase';
 
 
@@ -55,11 +56,11 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
     e.preventDefault();
     const amountVal = parseFloat(payAmount) || 0;
     if (amountVal <= 0) {
-      toast.error('कृपया सही भुगतान राशि दर्ज करें!');
+      toast.error('Please enter a valid payment amount!');
       return;
     }
     if (amountVal > pendingAmount) {
-      toast.error(`जमा राशि बकाया सीमा ₹${pendingAmount} से अधिक नहीं हो सकती!`);
+      toast.error(`Payment cannot exceed the pending balance of ₹${pendingAmount}!`);
       return;
     }
 
@@ -157,7 +158,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
       setPayAmount(Math.max(0, pendingAmount - amountVal).toString());
       setPayNotes('');
     } catch (err: any) {
-      toast.error('भुगतान दर्ज करने में त्रुटि आई!');
+      toast.error('Error recording payment. Please try again.');
       console.error(err);
     }
   };
@@ -169,36 +170,24 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
 
   // PDF Generator for Receipt
   const handleDownloadReceiptPDF = async (receipt: InvoicePayment) => {
-    const element = receiptPrintRef.current;
-    if (!element) return;
-
     const loader = toast.loading('रसीद डाउनलोड की जा रही है...');
     try {
-      element.classList.add('pdf-rendering');
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        backgroundColor: '#FFFFFF',
-        logging: false
+      const doc = generateReceiptPDF({
+        payment: receipt,
+        invoice,
+        client: clientObj,
+        profile
       });
-      element.classList.remove('pdf-rendering');
 
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a5'); // elegant A5 mini sheet size
-      const pdfWidth = 148;
-      const pdfHeight = 210;
-      
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`RECEIPT_${receipt.receiptNumber}_${clientName.replace(/\s+/g, '_')}.pdf`);
+      doc.save(`RECEIPT_${receipt.receiptNumber}_${clientName.replace(/\s+/g, '_')}.pdf`);
       
       toast.dismiss(loader);
-      toast.success('पेमेंट रसीद डाउनलोड हो गई!');
+      toast.success('Payment receipt downloaded!');
     } catch (e: any) {
       toast.dismiss(loader);
-      console.error(e);
-      toast.error('पीडीएफ डाउनलोड करने में समस्या आई!');
+      console.error('Receipt PDF Error:', e);
+      // Fallback to html2canvas if programmatic fails for some reason (unlikely)
+      toast.error('Problem downloading PDF! Please use Print or take a screenshot.');
     }
   };
 
@@ -227,7 +216,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
             </div>
             <button 
               onClick={onClose}
-              className="p-1.5 bg-gray-950/60 hover:bg-gray-850 text-gray-400 hover:text-white rounded-full transition cursor-pointer"
+              className="p-1.5 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-full transition cursor-pointer"
             >
               <X className="h-4.5 w-4.5" />
             </button>
@@ -320,7 +309,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
 
               <button
                 type="submit"
-                className="w-full bg-amber-500 hover:bg-amber-600 active:scale-98 text-black py-2.5 rounded-xl text-xs font-black uppercase tracking-wide transition cursor-pointer flex items-center justify-center space-x-1.5"
+                className="w-full bg-amber-500 hover:bg-amber-600 active:scale-98 text-white py-2.5 rounded-xl text-xs font-black uppercase tracking-wide transition cursor-pointer flex items-center justify-center space-x-1.5"
               >
                 <Plus className="h-4 w-4 stroke-[3]" />
                 <span>भुगतान जमा करें (Record Payment)</span>
@@ -362,7 +351,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
                       <div className="text-xs">
                         <div className="flex items-center space-x-1.5">
                           <span className="font-extrabold text-white">₹{(p.amount ?? 0).toLocaleString('en-IN')}</span>
-                          <span className="bg-gray-900 border border-gray-800 px-1.5 py-0.2 rounded text-[9px] font-mono text-gray-450 uppercase">{p.mode}</span>
+                          <span className="bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.2 rounded text-[9px] font-mono text-indigo-400 uppercase">{p.mode}</span>
                         </div>
                         <div className="text-[10px] text-gray-500 font-mono mt-0.5">
                           Receipt: #{p.receiptNumber} • {p.date}
@@ -390,14 +379,14 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
             <div className="space-y-4 h-full flex flex-col justify-between">
               
               {/* Receipt controller banner bar */}
-              <div className="flex items-center justify-between bg-gray-900 p-2.5 rounded-xl border border-gray-800 text-xs">
+              <div className="flex items-center justify-between bg-gray-900/50 p-2.5 rounded-xl border border-gray-800/60 text-xs">
                 <span className="font-bold text-gray-300">रसीद सं: {selectedReceipt.receiptNumber}</span>
                 <div className="flex items-center space-x-1.5">
                   
                   {/* Download Receipt PDF */}
                   <button 
                     onClick={() => handleDownloadReceiptPDF(selectedReceipt)}
-                    className="p-1.5 bg-gray-950 hover:bg-gray-800 text-gray-300 rounded-lg border border-gray-800 transition cursor-pointer"
+                    className="p-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition cursor-pointer shadow-lg shadow-indigo-600/10"
                     title="PDF"
                   >
                     <Download className="h-3.5 w-3.5" />
@@ -406,7 +395,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
                   {/* Print Receipt */}
                   <button 
                     onClick={handlePrintReceipt}
-                    className="p-1.5 bg-gray-950 hover:bg-gray-800 text-gray-300 rounded-lg border border-gray-800 transition cursor-pointer"
+                    className="p-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition cursor-pointer shadow-lg shadow-amber-500/10"
                     title="Print"
                   >
                     <Printer className="h-3.5 w-3.5" />
@@ -505,7 +494,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
               <button
                 type="button"
                 onClick={() => setSelectedReceipt(null)}
-                className="w-full bg-gray-900 hover:bg-gray-800 text-gray-400 py-1.8 rounded-xl text-[10.5px] uppercase font-bold transition cursor-pointer"
+                className="w-full bg-indigo-600/10 hover:bg-indigo-600 border border-indigo-600/20 text-indigo-400 hover:text-white py-2.5 rounded-xl text-[10.5px] uppercase font-black tracking-widest transition cursor-pointer"
               >
                 रसीद विवरण बंद करें
               </button>
@@ -513,8 +502,8 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
             </div>
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-3 py-10">
-              <Coins className="h-10 w-10 text-gray-700 animate-bounce" />
-              <h5 className="text-xs font-black text-gray-450 uppercase tracking-widest font-mono">रसीद डेस्क (Receipt Desk)</h5>
+              <Coins className="h-10 w-10 text-amber-500 animate-bounce" />
+              <h5 className="text-xs font-black text-amber-500 uppercase tracking-widest font-mono">रसीद डेस्क (Receipt Desk)</h5>
               <p className="text-[10.5px] text-gray-600 max-w-xs leading-relaxed">
                 बाईं ओर की भुगतान तालिका इतिहास से किसी भी भुगतान एंट्री रसीद पर क्लिक करके, उस विशेष जमा की रसीद रसीदपर्ची (Receipt Slip) देखें, प्रिंट करें और डाउनलोड करें।
               </p>

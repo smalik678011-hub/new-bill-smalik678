@@ -130,7 +130,7 @@ export default function SalarySummary({
           <button
             onClick={() => setActiveTab('roster')}
             className={`px-3 py-1.5 rounded-lg text-[10px] uppercase font-black tracking-wider transition cursor-pointer ${
-              activeTab === 'roster' ? 'bg-amber-500 text-black font-black' : 'text-gray-400 hover:text-white'
+              activeTab === 'roster' ? 'bg-amber-500 text-white font-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'
             }`}
           >
             मजदूरी बही (Roster List)
@@ -138,7 +138,7 @@ export default function SalarySummary({
           <button
             onClick={() => setActiveTab('payments')}
             className={`px-3 py-1.5 rounded-lg text-[10px] uppercase font-black tracking-wider transition cursor-pointer ${
-              activeTab === 'payments' ? 'bg-amber-500 text-black font-black' : 'text-gray-400 hover:text-white'
+              activeTab === 'payments' ? 'bg-amber-500 text-white font-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'
             }`}
           >
             भुगतान इतिहास (Payments History)

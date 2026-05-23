@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   Clock
 } from 'lucide-react';
+import { generateQuotationPDF } from '../../lib/pdf';
 import { useAppStore } from '../../store';
 import { Quotation, BillItem } from '../../types';
 import { toast } from 'react-hot-toast';
@@ -50,54 +51,21 @@ export default function QuotationPreview({ quotation, onConvert, onClose }: Quot
 
   // PDF Generator Callback
   const handleDownloadPDF = async () => {
-    const element = printRef.current;
-    if (!element) {
-      toast.error('प्रीव्यू लोड नहीं हो सका!');
-      return;
-    }
-
-    const loader = toast.loading('पीडीएफ रसीद तैयार की जा रही है...');
+    const loader = toast.loading('Preparing estimate PDF...');
     try {
-      // Temporarily add a white background class for clean pixel values
-      element.classList.add('pdf-rendering');
-
-      const canvas = await html2canvas(element, {
-        scale: 2.2, // sharp resolution boost
-        useCORS: true,
-        backgroundColor: '#FFFFFF', // pure clean sheet background
-        logging: false
+      const doc = generateQuotationPDF({
+        quotation,
+        client: clientMatch,
+        profile
       });
 
-      element.classList.remove('pdf-rendering');
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = 210; // A4 Standard width
-      const pdfHeight = 297; // A4 Standard height
-      
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-      heightLeft -= pdfHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-        heightLeft -= pdfHeight;
-      }
-
-      pdf.save(`ESTIMATE_${quotation.quoteNumber}_${clientName.replace(/\s+/g, '_')}.pdf`);
+      doc.save(`ESTIMATE_${quotation.quoteNumber}_${clientName.replace(/\s+/g, '_')}.pdf`);
       toast.dismiss(loader);
-      toast.success('एस्टीमेट पीडीएफ सफलतापूर्वक डाउनलोड किया गया!');
+      toast.success('Estimate PDF downloaded successfully!');
     } catch (err: any) {
       toast.dismiss(loader);
-      console.error(err);
-      toast.error('पीडीएफ रसीद डाउनलोड करने में त्रुटि आई!');
+      console.error('Quotation PDF Error:', err);
+      toast.error('Problem downloading PDF! Please use the Print button.');
     }
   };
 
@@ -109,7 +77,7 @@ export default function QuotationPreview({ quotation, onConvert, onClose }: Quot
   // WhatsApp Messaging Share Template Compiler
   const handleWhatsAppShare = () => {
     if (!clientMatch) {
-      toast.error('ग्राहक विवरण उपलब्ध नहीं है!');
+      toast.error('Client details not available!');
       return;
     }
 
@@ -152,7 +120,7 @@ ${quotation.conditions && quotation.conditions.length > 0
     const whatsappUrl = `https://api.whatsapp.com/send?phone=91${clientPhone.replace(/\D/g, '')}&text=${encodedText}`;
     
     window.open(whatsappUrl, '_blank');
-    toast.success('व्हाट्सएप विवरण शेयर विंडो खोली गई!');
+    toast.success('WhatsApp sharing window opened!');
   };
 
   return (

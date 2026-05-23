@@ -297,7 +297,7 @@ export default function NewQuotation() {
 
           <button
             onClick={() => setViewMode('create')}
-            className="mt-4 sm:mt-0 bg-amber-500 hover:bg-amber-600 active:scale-95 text-black font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 transition cursor-pointer self-start sm:self-auto shadow-md"
+            className="mt-4 sm:mt-0 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 transition cursor-pointer self-start sm:self-auto shadow-md"
           >
             <Plus className="h-4.5 w-4.5 stroke-[2.5]" />
             <span>नया एस्टीमेट बनाएँ (New)</span>

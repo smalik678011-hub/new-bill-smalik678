@@ -31,15 +31,28 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   useEffect(() => {
+    // Check for demo mode session first
+    const demoUser = localStorage.getItem('billkaro_demo_user');
+    if (demoUser) {
+      setSession({ user: JSON.parse(demoUser) });
+      setLoading(false);
+      return;
+    }
+
     // 1. Get current active session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+      if (session) {
+        setSession(session);
+      }
       setLoading(false);
     });
 
     // 2. Listen for active subscription/auth mutations
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      // Only clear session if not in demo mode
+      if (!localStorage.getItem('billkaro_demo_user')) {
+        setSession(session);
+      }
       setLoading(false);
     });
 
@@ -61,13 +74,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   const handleLogout = async () => {
     setShowMoreMenu(false);
+    localStorage.removeItem('billkaro_demo_user');
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      await supabase.auth.signOut();
       toast.success('लॉगआउट सफल रहा!');
       navigate('/signin');
     } catch (err) {
-      toast.error('लॉगआउट में त्रुटि!');
+      // Still navigate and clean up locally even if sign out fails
+      navigate('/signin');
     }
   };
 

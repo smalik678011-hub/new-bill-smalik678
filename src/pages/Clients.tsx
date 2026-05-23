@@ -314,7 +314,7 @@ export default function Clients() {
       {/* Floating Action Button (FAB) (Add new client) */}
       <button
         onClick={() => setShowAddModal(true)}
-        className="fixed bottom-20 right-6 md:bottom-8 md:right-8 z-40 bg-amber-500 hover:bg-amber-600 text-black p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all text-xs font-bold uppercase cursor-pointer border-2 border-gray-900"
+        className="fixed bottom-20 right-6 md:bottom-8 md:right-8 z-40 bg-amber-500 hover:bg-amber-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all text-xs font-bold uppercase cursor-pointer border-2 border-gray-900"
         title="नया ग्राहक जोड़ें"
       >
         <Plus className="h-6 w-6 stroke-[3px]" />

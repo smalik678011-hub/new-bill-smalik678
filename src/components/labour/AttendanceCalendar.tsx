@@ -128,7 +128,7 @@ export default function AttendanceCalendar({
           <button
             onClick={() => setViewMode('date')}
             className={`flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition ${
-              viewMode === 'date' ? 'bg-amber-500 text-black font-black' : 'text-gray-400 hover:text-white'
+              viewMode === 'date' ? 'bg-amber-500 text-white font-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'
             }`}
           >
             तारीख के अनुसार
@@ -136,7 +136,7 @@ export default function AttendanceCalendar({
           <button
             onClick={() => setViewMode('calendar')}
             className={`flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition ${
-              viewMode === 'calendar' ? 'bg-amber-500 text-black font-black' : 'text-gray-400 hover:text-white'
+              viewMode === 'calendar' ? 'bg-amber-500 text-white font-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'
             }`}
           >
             मासिक कैलेंडर
@@ -168,7 +168,7 @@ export default function AttendanceCalendar({
             {workers.length > 0 && (
               <button
                 onClick={() => onBulkMarkPresent(selectedDate)}
-                className="bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500 hover:text-black text-emerald-400 font-extrabold text-[10.5px] uppercase tracking-wider py-2 px-4 rounded-xl transition flex items-center justify-center space-x-1.5 cursor-pointer"
+                className="bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white text-emerald-400 font-extrabold text-[10.5px] uppercase tracking-wider py-2 px-4 rounded-xl transition flex items-center justify-center space-x-1.5 cursor-pointer"
               >
                 <CheckCheck className="h-4 w-4 shrink-0" />
                 <span>सभी को उपस्थित करें (Bulk Present Only)</span>
@@ -202,7 +202,7 @@ export default function AttendanceCalendar({
                       onClick={() => onMarkAttendance(worker.id, selectedDate, 'Present')}
                       className={`py-1.5 px-3 rounded-lg text-[9.5px] font-black uppercase text-center border transition cursor-pointer select-none ${
                         status === 'Present'
-                          ? 'bg-emerald-500 border-emerald-400 text-black font-extrabold'
+                          ? 'bg-emerald-500 border-emerald-400 text-white font-extrabold shadow-sm'
                           : 'bg-[#0B0F1A] border-gray-850 text-gray-400 hover:text-gray-200'
                       }`}
                     >
@@ -212,7 +212,7 @@ export default function AttendanceCalendar({
                       onClick={() => onMarkAttendance(worker.id, selectedDate, 'HalfDay')}
                       className={`py-1.5 px-3 rounded-lg text-[9.5px] font-black uppercase text-center border transition cursor-pointer select-none ${
                         status === 'HalfDay'
-                          ? 'bg-amber-500 border-amber-400 text-black font-extrabold'
+                          ? 'bg-amber-500 border-amber-400 text-white font-extrabold shadow-sm'
                           : 'bg-[#0B0F1A] border-gray-850 text-gray-400 hover:text-gray-200'
                       }`}
                     >

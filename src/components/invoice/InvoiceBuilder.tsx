@@ -418,7 +418,7 @@ useEffect(() => {
                 onClick={() => setGstType('CGST_SGST')}
                 className={`py-1 px-3.5 rounded-lg text-[10px] font-black uppercase transition cursor-pointer ${
                   gstType === 'CGST_SGST' 
-                    ? 'bg-amber-500 text-black' 
+                    ? 'bg-amber-500 text-white' 
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
@@ -429,7 +429,7 @@ useEffect(() => {
                 onClick={() => setGstType('IGST')}
                 className={`py-1 px-3.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition cursor-pointer ${
                   gstType === 'IGST' 
-                    ? 'bg-amber-500 text-black' 
+                    ? 'bg-amber-500 text-white' 
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
@@ -543,7 +543,7 @@ useEffect(() => {
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-black p-2 rounded-xl transition flex items-center justify-center cursor-pointer"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-xl transition flex items-center justify-center cursor-pointer"
                 title="सामग्री जोड़ें"
               >
                 <Plus className="h-4.5 w-4.5 stroke-[2.5]" />
@@ -808,7 +808,7 @@ useEffect(() => {
           
           <button
             type="submit"
-            className="flex-2 bg-amber-500 hover:bg-amber-600 text-black font-black py-3.5 rounded-2xl text-xs uppercase cursor-pointer transition flex items-center justify-center space-x-2 shadow-md"
+            className="flex-2 bg-amber-500 hover:bg-amber-600 text-white font-black py-3.5 rounded-2xl text-xs uppercase cursor-pointer transition flex items-center justify-center space-x-2 shadow-md"
           >
             <CheckCircle className="h-5 w-5 stroke-[2.5]" />
             <span>इनवॉइस सहेजें और प्रीव्यू सहेजें (Save & Preview)</span>

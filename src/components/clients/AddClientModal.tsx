@@ -287,10 +287,10 @@ export default function AddClientModal({ isOpen, onClose, onSuccess }: AddClient
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-amber-500/40 text-black py-3 rounded-2xl font-black text-xs uppercase cursor-pointer flex items-center justify-center space-x-2 transition shadow-lg"
+              className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-amber-500/40 text-white py-3 rounded-2xl font-black text-xs uppercase cursor-pointer flex items-center justify-center space-x-2 transition shadow-lg"
             >
               {loading ? (
-                <div className="h-4 w-4 border-2 border-black/25 border-t-black rounded-full animate-spin" />
+                <div className="h-4 w-4 border-2 border-white/25 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
                   <Save className="h-4 w-4 stroke-[2.5]" />

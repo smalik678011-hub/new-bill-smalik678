@@ -339,7 +339,7 @@ export default function BusinessProfile() {
                       }}
                       className={`py-2 px-3 rounded-lg text-center text-[11px] font-bold transition cursor-pointer ${
                         isActive 
-                          ? 'bg-amber-500 text-black font-extrabold shadow-md' 
+                          ? 'bg-amber-500 text-white font-extrabold shadow-md' 
                           : 'text-gray-400 hover:text-white'
                       }`}
                     >
@@ -559,7 +559,7 @@ export default function BusinessProfile() {
         <button
           type="submit"
           disabled={saving}
-          className="bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-black px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 transition cursor-pointer shadow-lg shadow-amber-500/10 font-mono"
+          className="bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 transition cursor-pointer shadow-lg shadow-amber-500/10 font-mono"
         >
           <Save className="h-4.5 w-4.5" />
           <span>{saving ? 'सहेजा जा रहा है...' : 'प्रोफाइल बुक सुरक्षित करें (Save Profile Update)'}</span>

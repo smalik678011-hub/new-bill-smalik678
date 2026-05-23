@@ -32,14 +32,20 @@ interface MonthlyReportPDFData {
  * Format helper for Currency standard Indian numbering format
  */
 function formatRupees(amount: number = 0): string {
-  return '₹' + (amount ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return 'Rs. ' + (amount ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 /**
- * Helper to split text safely
+ * Helper to split text safely and sanitize for jsPDF standard fonts
  */
+function sanitize(text: string): string {
+  if (!text) return '';
+  // Remove non-ASCII characters to prevent jsPDF crashes with standard fonts
+  return text.replace(/[^\x00-\x7F]/g, '');
+}
+
 function wrapText(doc: jsPDF, text: string, maxWidth: number): string[] {
-  return doc.splitTextToSize(text || '', maxWidth);
+  return doc.splitTextToSize(sanitize(text), maxWidth);
 }
 
 /**
@@ -78,19 +84,19 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(255, 255, 255);
-  doc.text('GST TAX INVOICE (कर एवं पक्का बिल)', 15, 20);
+  doc.text('GST TAX INVOICE', 15, 20);
   doc.setFontSize(9);
-  doc.text(invoice.invoiceNumber, 195, 20, { align: 'right' });
+  doc.text(sanitize(invoice.invoiceNumber), 195, 20, { align: 'right' });
 
   // 1. Seller Information (Left) AND Invoice Meta (Right)
   doc.setTextColor(15, 23, 42);
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(10);
-  doc.text('Billed From (विक्रेता विवरण):', 15, 38);
+  doc.text('Billed From:', 15, 38);
   
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(12);
-  doc.text(bizName, 15, 44);
+  doc.text(sanitize(bizName), 15, 44);
   
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(9);
@@ -104,12 +110,12 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
     addrY += 4.5;
   });
 
-  doc.text(`Owner: ${profile?.ownerName || 'Proprietor'}`, 15, addrY);
-  doc.text(`Phone: ${profile?.phone || 'N/A'}`, 15, addrY + 4.5);
+  doc.text(`Owner: ${sanitize(profile?.ownerName || 'Proprietor')}`, 15, addrY);
+  doc.text(`Phone: ${sanitize(profile?.phone || 'N/A')}`, 15, addrY + 4.5);
   if (profile?.isRegisteredGST && profile.gstNumber) {
     doc.setFont('Helvetica', 'bold');
     doc.setTextColor(15, 23, 42);
-    doc.text(`GSTIN No: ${profile.gstNumber}`, 15, addrY + 9);
+    doc.text(`GSTIN No: ${sanitize(profile.gstNumber)}`, 15, addrY + 9);
   }
 
   // Invoice Metadata (Right block)
@@ -121,9 +127,9 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(80, 85, 90);
-  doc.text(`Invoce Ref No:  ${invoice.invoiceNumber}`, 120, 44);
-  doc.text(`Issue Date:       ${invoice.date}`, 120, 48.5);
-  doc.text(`Due Date:         ${invoice.dueDate}`, 120, 53);
+  doc.text(`Invoce Ref No:  ${sanitize(invoice.invoiceNumber)}`, 120, 44);
+  doc.text(`Issue Date:       ${sanitize(invoice.date)}`, 120, 48.5);
+  doc.text(`Due Date:         ${sanitize(invoice.dueDate)}`, 120, 53);
   
   const statusColor = invoice.status === 'Paid' ? 'PAID' : invoice.status === 'Partial' ? 'PARTIAL' : 'UNPAID';
   doc.setFont('Helvetica', 'bold');
@@ -136,17 +142,17 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   doc.setTextColor(15, 23, 42);
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(10);
-  doc.text('Billed To (खरीददार का विवरण):', 15, 82);
+  doc.text('Billed To:', 15, 82);
 
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(11);
-  doc.text(clientName, 15, 88);
+  doc.text(sanitize(clientName), 15, 88);
 
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(80, 85, 90);
-  doc.text(`Phone No:  ${client?.phone || 'N/A'}`, 15, 93);
-  doc.text(`Type:          ${client?.clientType || 'Regular customer'}`, 15, 97.5);
+  doc.text(`Phone No:  ${sanitize(client?.phone || 'N/A')}`, 15, 93);
+  doc.text(`Type:          ${sanitize(client?.clientType || 'Regular customer')}`, 15, 97.5);
 
   // 3. Billing Items Table Header
   const tableY = 110;
@@ -157,7 +163,7 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(8.5);
   doc.text('S.N.', 12, tableY + 5.5);
-  doc.text('Item Description (सामग्री / कार्य)', 22, tableY + 5.5);
+  doc.text('Item Description', 22, tableY + 5.5);
   doc.text('HSN', 88, tableY + 5.5);
   doc.text('Qty', 106, tableY + 5.5);
   doc.text('Rate', 123, tableY + 5.5);
@@ -198,8 +204,8 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
 
     const linesOffset = (descLines.length - 1) * 4;
 
-    doc.text(item.hsn || '-', 88, currentY + 5);
-    doc.text(`${item.quantity} ${item.unit || 'Kg'}`, 106, currentY + 5);
+    doc.text(sanitize(item.hsn || '-'), 88, currentY + 5);
+    doc.text(`${sanitize(item.quantity.toString())} ${sanitize(item.unit || 'Kg')}`, 106, currentY + 5);
     doc.text((item.rate ?? 0).toLocaleString('en-IN'), 123, currentY + 5);
 
     if (invoice.isGstApplied) {
@@ -237,15 +243,15 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(15, 23, 42);
-  doc.text('PAYMENT BANK SETTINGS (बैंक खाता विवरण):', 17, summaryY + 5.5);
+  doc.text('PAYMENT BANK SETTINGS:', 17, summaryY + 5.5);
 
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(80, 85, 90);
-  doc.text(`Bank Name:    ${profile?.bankName || 'Not configured'}`, 17, summaryY + 11.5);
-  doc.text(`Account No:   ${profile?.accountNumber || 'N/A'}`, 17, summaryY + 17);
-  doc.text(`IFSC Code:    ${profile?.ifscCode || 'N/A'}`, 17, summaryY + 22.5);
-  doc.text(`UPI payment Address: ${profile?.upiId || 'N/A'}`, 17, summaryY + 28);
+  doc.text(`Bank Name:    ${sanitize(profile?.bankName || 'Not configured')}`, 17, summaryY + 11.5);
+  doc.text(`Account No:   ${sanitize(profile?.accountNumber || 'N/A')}`, 17, summaryY + 17);
+  doc.text(`IFSC Code:    ${sanitize(profile?.ifscCode || 'N/A')}`, 17, summaryY + 22.5);
+  doc.text(`UPI payment Address: ${sanitize(profile?.upiId || 'N/A')}`, 17, summaryY + 28);
   doc.setFont('Helvetica', 'bold');
   doc.text('Instruction: Please pay within due period and safe.', 17, summaryY + 35);
 
@@ -302,7 +308,7 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(120, 125, 130);
-  doc.text(`Terms Remarks: ${profile?.signatureText || 'Goods once sold will not be taken back. Thank you.'}`, 15, summaryY + 54);
+  doc.text(`Terms Remarks: ${sanitize(profile?.signatureText || 'Goods once sold will not be taken back. Thank you.')}`, 15, summaryY + 54);
 
   // Sign / Auth
   doc.setFont('Helvetica', 'bold');
@@ -335,18 +341,18 @@ export function generateQuotationPDF(data: QuotationPDFData): jsPDF {
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(255, 255, 255);
-  doc.text('ESTIMATE & BUSINESS QUOTATION (लागत अनुमान पत्र)', 15, 20);
+  doc.text('ESTIMATE & BUSINESS QUOTATION', 15, 20);
   doc.setFontSize(9);
-  doc.text(quotation.quoteNumber, 195, 20, { align: 'right' });
+  doc.text(sanitize(quotation.quoteNumber), 195, 20, { align: 'right' });
 
   // Seller info
   doc.setTextColor(15, 23, 42);
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(10);
-  doc.text('From Merchant Info (अनुमानक):', 15, 38);
+  doc.text('From Merchant Info:', 15, 38);
 
   doc.setFontSize(11);
-  doc.text(bizName, 15, 44);
+  doc.text(sanitize(bizName), 15, 44);
 
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(9);
@@ -359,7 +365,7 @@ export function generateQuotationPDF(data: QuotationPDFData): jsPDF {
     addrY += 4.5;
   });
 
-  doc.text(`Contact Phone: ${profile?.phone || 'N/A'}`, 15, addrY);
+  doc.text(`Contact Phone: ${sanitize(profile?.phone || 'N/A')}`, 15, addrY);
 
   // Quotation particulars info
   doc.setTextColor(15, 23, 42);
@@ -370,9 +376,9 @@ export function generateQuotationPDF(data: QuotationPDFData): jsPDF {
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(80, 85, 90);
-  doc.text(`Quote Ref No:   ${quotation.quoteNumber}`, 120, 44);
-  doc.text(`Date of Quote:  ${quotation.date}`, 120, 48.5);
-  doc.text(`Validity Period: ${quotation.validityDays || 30} Days`, 120, 53);
+  doc.text(`Quote Ref No:   ${sanitize(quotation.quoteNumber)}`, 120, 44);
+  doc.text(`Date of Quote:  ${sanitize(quotation.date)}`, 120, 48.5);
+  doc.text(`Validity Period: ${sanitize((quotation.validityDays || 30).toString())} Days`, 120, 53);
 
   // Client Details panel
   doc.setDrawColor(220, 225, 230);
@@ -380,16 +386,16 @@ export function generateQuotationPDF(data: QuotationPDFData): jsPDF {
 
   doc.setTextColor(15, 23, 42);
   doc.setFont('Helvetica', 'bold');
-  doc.text('Proposed For (ग्राहक विवरण):', 15, 82);
+  doc.text('Proposed For:', 15, 82);
 
   doc.setFontSize(11);
-  doc.text(clientName, 15, 88);
+  doc.text(sanitize(clientName), 15, 88);
 
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(80, 85, 90);
-  doc.text(`Phone No:  ${client?.phone || 'N/A'}`, 15, 93);
-  doc.text(`Project Mode: ${quotation.category || 'General Work'}`, 15, 97.5);
+  doc.text(`Phone No:  ${sanitize(client?.phone || 'N/A')}`, 15, 93);
+  doc.text(`Project Mode: ${sanitize(quotation.category || 'General Work')}`, 15, 97.5);
 
   // Items List Header
   const tableY = 110;
@@ -400,7 +406,7 @@ export function generateQuotationPDF(data: QuotationPDFData): jsPDF {
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(8.5);
   doc.text('S.N.', 12, tableY + 5.5);
-  doc.text('Item / Work Particular (प्रस्तावित कार्य / सामग्री)', 22, tableY + 5.5);
+  doc.text('Item / Work Particular', 22, tableY + 5.5);
   doc.text('Quantity', 105, tableY + 5.5);
   doc.text('Unit Rate', 140, tableY + 5.5);
   doc.text('Sub Total Amount', 170, tableY + 5.5);
@@ -429,7 +435,7 @@ export function generateQuotationPDF(data: QuotationPDFData): jsPDF {
 
     const linesOffset = (descLines.length - 1) * 4;
 
-    doc.text(`${item.quantity} ${item.unit || 'Kg'}`, 105, currentY + 5);
+    doc.text(`${sanitize(item.quantity.toString())} ${sanitize(item.unit || 'Kg')}`, 105, currentY + 5);
     doc.text(formatRupees(item.rate), 140, currentY + 5);
     doc.text(formatRupees(itemTotal), 170, currentY + 5);
 
@@ -510,7 +516,7 @@ export function generateQuotationPDF(data: QuotationPDFData): jsPDF {
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(120, 125, 130);
-  doc.text(`Estimator Notes: ${quotation.notes || 'Please connect if you require custom sizing or updates.'}`, 15, summaryY + 49);
+  doc.text(`Estimator Notes: ${sanitize(quotation.notes || 'Please connect if you require custom sizing or updates.')}`, 15, summaryY + 49);
 
   return doc;
 }
@@ -537,24 +543,24 @@ export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(255, 255, 255);
-  doc.text('PAYMENT RECEIPT (भुगतान पावती रसीद)', 10, 13);
+  doc.text('PAYMENT RECEIPT', 10, 13);
   doc.setFontSize(8);
-  doc.text(payment.receiptNumber, 133, 13, { align: 'right' });
+  doc.text(sanitize(payment.receiptNumber), 133, 13, { align: 'right' });
 
   // From Business
   doc.setTextColor(15, 23, 42);
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('Issued By (प्राप्तकर्ता):', 10, 26);
+  doc.text('Issued By:', 10, 26);
   
   doc.setFontSize(10);
-  doc.text(bizName, 10, 31);
+  doc.text(sanitize(bizName), 10, 31);
   
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(100, 105, 110);
-  doc.text(`Phone No: ${profile?.phone || 'N/AAddress'}`, 10, 36);
-  doc.text(`Owner: ${profile?.ownerName || ''}`, 10, 40);
+  doc.text(`Phone No: ${sanitize(profile?.phone || 'N/A')}`, 10, 36);
+  doc.text(`Owner: ${sanitize(profile?.ownerName || '')}`, 10, 40);
 
   // Right block Meta
   doc.setTextColor(15, 23, 42);
@@ -565,9 +571,9 @@ export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(100, 105, 110);
-  doc.text(`Receipt ID:    ${payment.receiptNumber}`, 90, 31);
-  doc.text(`Received Date: ${payment.date}`, 90, 35.5);
-  doc.text(`Payment Mode:  ${payment.mode || 'Cash'}`, 90, 40);
+  doc.text(`Receipt ID:    ${sanitize(payment.receiptNumber)}`, 90, 31);
+  doc.text(`Received Date: ${sanitize(payment.date)}`, 90, 35.5);
+  doc.text(`Payment Mode:  ${sanitize(payment.mode || 'Cash')}`, 90, 40);
 
   // Line break
   doc.setDrawColor(220, 225, 230);
@@ -577,17 +583,17 @@ export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
   doc.setTextColor(15, 23, 42);
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('Payer (भुगतानकर्ता विवरण):', 10, 54);
+  doc.text('Payer:', 10, 54);
 
   doc.setFontSize(10.5);
-  doc.text(clientName, 10, 60);
+  doc.text(sanitize(clientName), 10, 60);
 
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(100, 105, 110);
-  doc.text(`Payer Phone: ${client?.phone || 'N/A'}`, 10, 65);
+  doc.text(`Payer Phone: ${sanitize(client?.phone || 'N/A')}`, 10, 65);
   if (invoice) {
-    doc.text(`Invoice Ref No: #${invoice.invoiceNumber}`, 10, 69.5);
+    doc.text(`Invoice Ref No: #${sanitize(invoice.invoiceNumber)}`, 10, 69.5);
   }
 
   // Grid box showing amount received
@@ -598,7 +604,7 @@ export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(9.5);
   doc.setTextColor(6, 95, 70);
-  doc.text('AMOUNT RECEIVED (प्राप्त राशि):', 15, 83.5);
+  doc.text('AMOUNT RECEIVED:', 15, 83.5);
 
   doc.setFontSize(15);
   doc.text(formatRupees(payment.amount), 15, 93);
@@ -608,7 +614,7 @@ export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
   doc.setFont('Helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(80, 85, 90);
-  doc.text(`Remarks / Notes: ${payment.notes || 'Acknowledged with thanks.'}`, 10, textY);
+  doc.text(`Remarks / Notes: ${sanitize(payment.notes || 'Acknowledged with thanks.')}`, 10, textY);
   
   if (invoice) {
     doc.text(`Previous Outstanding: ${formatRupees(invoice.totalAmount)}`, 10, textY + 6);
@@ -696,7 +702,7 @@ export function generateMonthlyReportPDF(data: MonthlyReportPDFData): jsPDF {
   doc.setTextColor(15, 23, 42);
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(8);
-  doc.text('TOTAL REVENUE (कुल आय):', 15, 68);
+  doc.text('TOTAL REVENUE:', 15, 68);
   doc.setFontSize(9.5);
   doc.setTextColor(16, 124, 65); // green
   doc.text(formatRupees(totalIncome), 15, 74);
@@ -707,7 +713,7 @@ export function generateMonthlyReportPDF(data: MonthlyReportPDFData): jsPDF {
   doc.setTextColor(15, 23, 42);
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(8);
-  doc.text('TOTAL EXPENSE (खर्च्चा):', 76, 68);
+  doc.text('TOTAL EXPENSE:', 76, 68);
   doc.setFontSize(9.5);
   doc.setTextColor(190, 24, 74); // rose
   doc.text(formatRupees(totalExpense), 76, 74);
@@ -733,9 +739,9 @@ export function generateMonthlyReportPDF(data: MonthlyReportPDFData): jsPDF {
   doc.setFontSize(8.5);
   doc.text('Date', 15, listY + 5.5);
   doc.text('Type', 40, listY + 5.5);
-  doc.text('Project / Description (विवरण)', 65, listY + 5.5);
-  doc.text('Income (जमा राशि)', 135, listY + 5.5);
-  doc.text('Expense (निकासी)', 170, listY + 5.5);
+  doc.text('Project / Description', 65, listY + 5.5);
+  doc.text('Income', 135, listY + 5.5);
+  doc.text('Expense', 170, listY + 5.5);
 
   let currentY = listY + 8;
   doc.setFont('Helvetica', 'normal');
@@ -745,7 +751,7 @@ export function generateMonthlyReportPDF(data: MonthlyReportPDFData): jsPDF {
 
   limitedList.forEach((trans) => {
     doc.setTextColor(80, 85, 90);
-    doc.text(trans.date, 15, currentY + 5.5);
+    doc.text(sanitize(trans.date), 15, currentY + 5.5);
     
     // Type coloring
     doc.setFont('Helvetica', 'bold');
@@ -809,6 +815,183 @@ export function generateMonthlyReportPDF(data: MonthlyReportPDFData): jsPDF {
 
   doc.setFont('Helvetica', 'bold');
   doc.text('Ledger Accountant Sign', 195, 260, { align: 'right' });
+
+  return doc;
+}
+
+/**
+ * Generate PDF for Pending Payments (Lena Baqi) Report
+ */
+export function generatePendingPaymentsPDF(data: {
+  clients: Client[];
+  invoices: Invoice[];
+  profile: any;
+}): jsPDF {
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const { clients, invoices, profile } = data;
+  const bizName = profile?.businessName || 'BillKaro Merchant';
+
+  // Total Calculation
+  const pendingInvoices = invoices.filter(inv => inv.status !== 'Paid');
+  const totalPendingAmount = pendingInvoices.reduce((sum, inv) => sum + (inv.totalAmount - (inv.paidAmount || 0)), 0);
+
+  // Header Background
+  doc.setFillColor(245, 158, 11); // Amber-500
+  doc.rect(0, 0, 210, 35, 'F');
+
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(255, 255, 255);
+  doc.text('PENDING PAYMENTS REPORT', 15, 20);
+  
+  doc.setFontSize(10);
+  doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`, 195, 20, { align: 'right' });
+  doc.text(sanitize(bizName), 195, 26, { align: 'right' });
+
+  // Summary Box
+  doc.setFillColor(255, 251, 235); // Amber-50
+  doc.setDrawColor(252, 211, 77); // Amber-200
+  doc.roundedRect(15, 45, 180, 25, 2, 2, 'FD');
+
+  doc.setTextColor(15, 23, 42);
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.text('Total Outstanding Amount:', 25, 57);
+  
+  doc.setFontSize(16);
+  doc.setTextColor(180, 83, 9); // Amber-800
+  doc.text(formatRupees(totalPendingAmount), 110, 58);
+
+  // Table Header
+  const tableY = 85;
+  doc.setFillColor(241, 245, 249);
+  doc.rect(15, tableY, 180, 10, 'F');
+  
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(15, 23, 42);
+  doc.text('Client Name', 18, tableY + 6.5);
+  doc.text('Phone', 85, tableY + 6.5);
+  doc.text('Last Activity', 125, tableY + 6.5);
+  doc.text('Pending Amount', 165, tableY + 6.5);
+
+  let currentY = tableY + 14;
+  doc.setFont('Helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(51, 65, 85);
+
+  // Group by client and list totals
+  const clientPendingMap = new Map<string, number>();
+  pendingInvoices.forEach(inv => {
+    const amount = inv.totalAmount - (inv.paidAmount || 0);
+    if (amount > 0) {
+      clientPendingMap.set(inv.clientId, (clientPendingMap.get(inv.clientId) || 0) + amount);
+    }
+  });
+
+  Array.from(clientPendingMap.entries())
+    .sort((a, b) => b[1] - a[1]) // Sort by highest pending
+    .forEach(([clientId, amount]) => {
+      const client = clients.find(c => c.id === clientId);
+      if (!client) return;
+
+      const latestInvoice = invoices
+        .filter(inv => inv.clientId === clientId)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+
+      if (currentY > 270) {
+        doc.addPage();
+        doc.setFillColor(241, 245, 249);
+        doc.rect(15, 10, 180, 10, 'F');
+        doc.setFont('Helvetica', 'bold');
+        doc.text('Client Name', 18, 16.5);
+        doc.text('Phone', 85, 16.5);
+        doc.text('Last Activity', 125, 16.5);
+        doc.text('Pending Amount', 165, 16.5);
+        currentY = 25;
+      }
+
+      doc.setFont('Helvetica', 'normal');
+      doc.text(sanitize(client.name), 18, currentY);
+      doc.text(sanitize(client.phone || '-'), 85, currentY);
+      doc.text(sanitize(latestInvoice?.date || '-'), 125, currentY);
+      
+      doc.setFont('Helvetica', 'bold');
+      doc.setTextColor(190, 24, 74); // Rose-600
+      doc.text(formatRupees(amount), 165, currentY);
+      
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(51, 65, 85);
+      
+      doc.setDrawColor(241, 245, 249);
+      doc.line(15, currentY + 3, 195, currentY + 3);
+      currentY += 10;
+    });
+
+  // Section 2: Detailed Unpaid Invoices
+  if (currentY > 240) {
+    doc.addPage();
+    currentY = 25;
+  } else {
+    currentY += 15;
+  }
+
+  doc.setFillColor(30, 41, 59); // Slate-800
+  doc.rect(15, currentY, 180, 8, 'F');
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(255, 255, 255);
+  doc.text('DETAILED UNPAID INVOICES LIST', 18, currentY + 5.5);
+
+  currentY += 15;
+  doc.setFillColor(241, 245, 249);
+  doc.rect(15, currentY, 180, 8, 'F');
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(8);
+  doc.text('Inv #', 18, currentY + 5.5);
+  doc.text('Customer', 45, currentY + 5.5);
+  doc.text('Date', 105, currentY + 5.5);
+  doc.text('Grand Total', 135, currentY + 5.5);
+  doc.text('Balance Due', 165, currentY + 5.5);
+
+  currentY += 12;
+  doc.setFont('Helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(51, 65, 85);
+
+  pendingInvoices
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .forEach(inv => {
+      if (currentY > 275) {
+        doc.addPage();
+        currentY = 25;
+      }
+
+      const client = clients.find(c => c.id === inv.clientId);
+      doc.text(sanitize(inv.invoiceNumber), 18, currentY);
+      doc.text(sanitize(client?.name || 'Unknown'), 45, currentY);
+      doc.text(sanitize(inv.date), 105, currentY);
+      doc.text(formatRupees(inv.totalAmount), 135, currentY);
+      
+      doc.setFont('Helvetica', 'bold');
+      doc.setTextColor(190, 24, 74);
+      doc.text(formatRupees(inv.totalAmount - (inv.paidAmount || 0)), 165, currentY);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(51, 65, 85);
+
+      doc.setDrawColor(248, 250, 252);
+      doc.line(15, currentY + 2.5, 195, currentY + 2.5);
+      currentY += 7;
+    });
+
+  // Footer
+  const pageCount = (doc as any).internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(156, 163, 175);
+    doc.text(`Generated by BillKaro • System Report • Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
+  }
 
   return doc;
 }

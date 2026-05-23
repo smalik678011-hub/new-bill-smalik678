@@ -68,7 +68,7 @@ export default function Settings() {
         <button
           onClick={() => setActiveTab('profile')}
           className={`flex-1 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition cursor-pointer flex items-center justify-center space-x-1.5 ${
-            activeTab === 'profile' ? 'bg-amber-500 text-black font-extrabold shadow-md' : 'text-gray-400 hover:text-white'
+            activeTab === 'profile' ? 'bg-amber-500 text-white font-extrabold shadow-md' : 'text-gray-400 hover:text-white'
           }`}
         >
           <Building className="h-4 w-4 shrink-0" />
@@ -78,7 +78,7 @@ export default function Settings() {
         <button
           onClick={() => setActiveTab('billing')}
           className={`flex-1 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition cursor-pointer flex items-center justify-center space-x-1.5 ${
-            activeTab === 'billing' ? 'bg-amber-500 text-black font-extrabold shadow-md' : 'text-gray-400 hover:text-white'
+            activeTab === 'billing' ? 'bg-amber-500 text-white font-extrabold shadow-md' : 'text-gray-400 hover:text-white'
           }`}
         >
           <CreditCard className="h-4 w-4 shrink-0" />
@@ -88,7 +88,7 @@ export default function Settings() {
         <button
           onClick={() => setActiveTab('security')}
           className={`flex-1 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition cursor-pointer flex items-center justify-center space-x-1.5 ${
-            activeTab === 'security' ? 'bg-amber-500 text-black font-extrabold shadow-md' : 'text-gray-400 hover:text-white'
+            activeTab === 'security' ? 'bg-amber-500 text-white font-extrabold shadow-md' : 'text-gray-400 hover:text-white'
           }`}
         >
           <Lock className="h-4 w-4 shrink-0" />
@@ -167,7 +167,7 @@ export default function Settings() {
                 <div className="flex justify-end pt-2">
                   <button
                     type="submit"
-                    className="bg-amber-500 hover:bg-amber-400 text-black px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 transition cursor-pointer font-mono"
+                    className="bg-amber-500 hover:bg-amber-400 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 transition cursor-pointer font-mono"
                   >
                     <Check className="h-4.5 w-4.5" />
                     <span>सेफ्टी पिन अपडेट करें (Save Security PIN)</span>

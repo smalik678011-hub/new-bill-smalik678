@@ -63,7 +63,17 @@ export default function CardExport({ data, templateId }: CardExportProps) {
         useCORS: true,
         allowTaint: true,
         logging: false,
-        backgroundColor: null
+        backgroundColor: '#000000',
+        onclone: (clonedDoc) => {
+          const all = clonedDoc.getElementsByTagName('*');
+          for (let i = 0; i < all.length; i++) {
+            const node = all[i] as HTMLElement;
+            if (node.style) {
+               const computed = window.getComputedStyle(node);
+               if (computed.color.includes('oklch')) node.style.color = '#ffffff';
+            }
+          }
+        }
       });
 
       const imgData = canvas.toDataURL('image/png');

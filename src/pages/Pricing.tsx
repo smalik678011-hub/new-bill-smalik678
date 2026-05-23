@@ -205,7 +205,7 @@ export default function Pricing() {
             : 'border-amber-500/40 hover:border-amber-500/60'
         }`}>
           {/* Top banner tag */}
-          <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-black text-[9px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full whitespace-nowrap shadow-md">
+          <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-[9px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full whitespace-nowrap shadow-md">
             RECOMMENDED (सबसे लोकप्रिय)
           </span>
 
@@ -259,7 +259,7 @@ export default function Pricing() {
             className={`w-full py-3 rounded-xl text-xs font-black uppercase transition cursor-pointer font-mono ${
               subscription === 'PRO'
                 ? 'bg-[#151206] text-amber-500 border border-amber-500/40'
-                : 'bg-amber-500 text-black hover:bg-amber-400 hover:shadow-lg shadow-amber-500/20'
+                : 'bg-amber-500 text-white hover:bg-amber-400 hover:shadow-lg shadow-amber-500/20'
             }`}
           >
             {loadingPlan === 'PRO' ? (

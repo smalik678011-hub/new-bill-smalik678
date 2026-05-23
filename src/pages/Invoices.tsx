@@ -348,7 +348,7 @@ export default function Invoices() {
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-800/60 pb-5">
         <div>
           <h2 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight flex items-center">
-            <span className="h-8.5 w-8.5 bg-amber-500 text-black flex items-center justify-center rounded-2xl mr-3 font-mono font-black shadow-lg">i</span>
+            <span className="h-8.5 w-8.5 bg-amber-500 text-white flex items-center justify-center rounded-2xl mr-3 font-mono font-black shadow-lg">i</span>
             <span>कर एवं पक्के बिल (Tax Invoices Ledger)</span>
           </h2>
           <p className="text-[11px] text-gray-550 mt-1 uppercase tracking-wider font-medium">Business Ledger & GST Compliant Sales Manager</p>
@@ -357,7 +357,7 @@ export default function Invoices() {
         {activeView === 'LIST' && (
           <button
             onClick={() => setActiveView('CREATE')}
-            className="bg-amber-500 hover:bg-amber-600 active:scale-98 text-black px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition cursor-pointer flex items-center justify-center space-x-2 shadow-md"
+            className="bg-amber-500 hover:bg-amber-600 active:scale-98 text-white px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition cursor-pointer flex items-center justify-center space-x-2 shadow-md"
           >
             <PlusCircle className="h-5 w-5 stroke-[2.5]" />
             <span>नया इनवॉइस बनाएँ (Create Invoice)</span>
@@ -548,8 +548,8 @@ export default function Invoices() {
                       const balanceRemaining = Math.max(0, inv.totalAmount - inv.paidAmount);
 
                       return (
-                        <>
-                          <tr key={inv.id} className="hover:bg-gray-950/40 transition-colors">
+                        <React.Fragment key={inv.id}>
+                          <tr className="hover:bg-gray-950/40 transition-colors">
                           
                           {/* SNo / Invoice Number */}
                           <td className="py-4 pl-4 sm:pl-6 leading-tight">
@@ -696,7 +696,7 @@ export default function Invoices() {
                             </td>
                           </tr>
                         )}
-                      </>
+                      </React.Fragment>
                     );
                   })}
                   </tbody>
