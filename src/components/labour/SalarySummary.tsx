@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Award, DollarSign, Check, X, CreditCard, ChevronDown, Calendar, AlertCircle, TrendingUp, History, ClipboardList } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 
 interface SalarySummaryProps {
@@ -18,6 +19,7 @@ export default function SalarySummary({
   loading
 }: SalarySummaryProps) {
 
+  const { t } = useTranslation();
   
   const [selectedWorker, setSelectedWorker] = useState<any | null>(null);
   const [payAmount, setPayAmount] = useState('');
@@ -94,7 +96,7 @@ export default function SalarySummary({
   const handleOpenPayModal = (worker: any) => {
     setSelectedWorker(worker);
     setPayAmount(String(worker.balancePending));
-    setPayNotes(`Wage paid for month of ${monthsHindi[filterMonth]}`);
+    setPayNotes(`Wage paid for month of ${t(monthsHindi[filterMonth])}`);
   };
 
   const handlePaySubmit = async (e: React.FormEvent) => {
@@ -103,7 +105,7 @@ export default function SalarySummary({
 
     const parsedAmount = parseFloat(payAmount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      alert('कृपया सही पेमेंट राशि भरें!');
+      alert(t('कृपया सही पेमेंट राशि भरें!'));
       return;
     }
 
@@ -133,7 +135,7 @@ export default function SalarySummary({
               activeTab === 'roster' ? 'bg-amber-500 text-white font-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'
             }`}
           >
-            मजदूरी बही (Roster List)
+            {t('मजदूरी बही (Roster List)')}
           </button>
           <button
             onClick={() => setActiveTab('payments')}
@@ -141,19 +143,19 @@ export default function SalarySummary({
               activeTab === 'payments' ? 'bg-amber-500 text-white font-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'
             }`}
           >
-            भुगतान इतिहास (Payments History)
+            {t('भुगतान इतिहास (Payments History)')}
           </button>
         </div>
 
         <div className="flex items-center space-x-2">
-          <span className="text-gray-400 text-[11px] font-bold">महीना:</span>
+          <span className="text-gray-400 text-[11px] font-bold">{t('महीना:')}</span>
           <select
             value={filterMonth}
             onChange={e => setFilterMonth(parseInt(e.target.value))}
             className="bg-gray-950 border border-gray-800 rounded-xl p-1.5 text-[11px] font-bold text-white cursor-pointer"
           >
             {monthsHindi.map((m, idx) => (
-              <option key={idx} value={idx}>{m}</option>
+              <option key={idx} value={idx}>{t(m)}</option>
             ))}
           </select>
 
@@ -171,7 +173,7 @@ export default function SalarySummary({
 
       {loading && (
         <div className="text-center py-6 text-xs text-gray-550 italic font-mono animate-pulse">
-          डेटा सिंक किया जा रहा है...
+          {t('डेटा सिंक किया जा रहा है...')}
         </div>
       )}
 
@@ -246,7 +248,7 @@ export default function SalarySummary({
 
             {workers.length === 0 && (
               <div className="text-center py-10 text-xs text-gray-500">
-                मजदूरी बही खाली है। पहले कारीगर जोड़ें।
+                {t('मजदूरी बही खाली है। पहले कारीगर जोड़ें।')}
               </div>
             )}
           </div>
@@ -257,28 +259,28 @@ export default function SalarySummary({
               <div className="flex items-center space-x-2 border-b border-gray-850 pb-2">
                 <ClipboardList className="h-4 w-4 text-amber-500" />
                 <h5 className="text-[10.5px] uppercase tracking-wider font-extrabold text-[#94a3b8]">
-                  {monthsHindi[filterMonth]} {filterYear} महीना-अन्त सारांश (Month-End Summary)
+                  {t(monthsHindi[filterMonth])} {filterYear} {t('महीना-अन्त सारांश (Month-End Summary)')}
                 </h5>
               </div>
 
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 <div className="bg-[#0B0F1A] p-2.5 rounded-xl border border-gray-850">
-                  <span className="text-[8.5px] uppercase text-gray-400 block font-bold">सक्रिय मजदूर (Active Workers)</span>
+                  <span className="text-[8.5px] uppercase text-gray-400 block font-bold">{t('सक्रिय मजदूर (Active Workers)')}</span>
                   <span className="text-lg font-black font-mono text-white mt-0.5 block">{totalWorkersActive}</span>
                 </div>
 
                 <div className="bg-[#0B0F1A] p-2.5 rounded-xl border border-gray-850">
-                  <span className="text-[8.5px] uppercase text-gray-400 block font-bold">कुल वेतन बना (Gross Payroll)</span>
+                  <span className="text-[8.5px] uppercase text-gray-400 block font-bold">{t('कुल वेतन बना (Gross Payroll)')}</span>
                   <span className="text-lg font-black font-mono text-amber-450 mt-0.5 block">₹{(grandTotalEarned ?? 0).toLocaleString('en-IN')}</span>
                 </div>
 
                 <div className="bg-[#0B0F1A] p-2.5 rounded-xl border border-gray-850">
-                  <span className="text-[8.5px] uppercase text-gray-400 block font-bold">कुल भुगतान हुआ (Gross Paid)</span>
+                  <span className="text-[8.5px] uppercase text-gray-400 block font-bold">{t('कुल भुगतान हुआ (Gross Paid)')}</span>
                   <span className="text-lg font-black font-mono text-emerald-400 mt-0.5 block">₹{(grandTotalPaid ?? 0).toLocaleString('en-IN')}</span>
                 </div>
 
                 <div className="bg-[#0B0F1A] p-2.5 rounded-xl border border-gray-850">
-                  <span className="text-[8.5px] uppercase text-gray-400 block font-bold">शेष भुगतान लंबित (Outstanding Due)</span>
+                  <span className="text-[8.5px] uppercase text-gray-400 block font-bold">{t('शेष भुगतान लंबित (Outstanding Due)')}</span>
                   <span className="text-lg font-black font-mono text-[#F43F5E] mt-0.5 block">₹{(grandTotalPending ?? 0).toLocaleString('en-IN')}</span>
                 </div>
               </div>
@@ -336,7 +338,7 @@ export default function SalarySummary({
             return pmDate.getMonth() === filterMonth && pmDate.getFullYear() === filterYear;
           }).length === 0 && (
             <div className="text-center py-10 text-xs text-gray-500 italic block">
-              इस महीने में कोई सैलरी भुगतान नहीं किया गया।
+              {t('इस महीने में कोई सैलरी भुगतान नहीं किया गया।')}
             </div>
           )}
         </div>
@@ -366,15 +368,15 @@ export default function SalarySummary({
             {/* Micro wage ledger */}
             <div className="bg-gray-950 p-3.5 border border-gray-850 rounded-xl space-y-1.5 text-[10px] font-mono leading-tight">
               <div className="flex justify-between text-gray-450">
-                <span>दहाड़ी का रेट:</span>
+                <span>{t('दहाड़ी का रेट:')}</span>
                 <span>₹{selectedWorker.daily_rate || selectedWorker.dailyRate}/Day</span>
               </div>
               <div className="flex justify-between text-gray-450">
-                <span>कुल कमाया:</span>
+                <span>{t('कुल कमाया:')}</span>
                 <span>₹{(selectedWorker.totalSalaryEarned ?? 0).toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-gray-450 border-b border-gray-850 pb-1.5">
-                <span>पहले चुकाया:</span>
+                <span>{t('पहले चुकाया:')}</span>
                 <span className="text-emerald-400">₹{(selectedWorker.totalPaid ?? 0).toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-rose-400 font-extrabold pt-1.5">
@@ -386,7 +388,7 @@ export default function SalarySummary({
             {/* Inputs */}
             <div className="space-y-3">
               <div>
-                <label className="text-[9.5px] text-gray-400 font-bold block mb-1">पेमेंट की राशि भरें (Payment Amount ₹) *</label>
+                <label className="text-[9.5px] text-gray-400 font-bold block mb-1">{t('पेमेंट की राशि भरें (Payment Amount ₹) *')}</label>
                 <input
                   type="number"
                   required
@@ -399,7 +401,7 @@ export default function SalarySummary({
               </div>
 
               <div>
-                <label className="text-[9.5px] text-gray-400 font-bold block mb-1">भुगतान की तारीख (Payment Date) *</label>
+                <label className="text-[9.5px] text-gray-400 font-bold block mb-1">{t('भुगतान की तारीख (Payment Date) *')}</label>
                 <input
                   type="date"
                   required
@@ -410,7 +412,7 @@ export default function SalarySummary({
               </div>
 
               <div>
-                <label className="text-[9.5px] text-gray-400 font-bold block mb-1">विवरण / नोट (Payment Notes)</label>
+                <label className="text-[9.5px] text-gray-400 font-bold block mb-1">{t('विवरण / नोट (Payment Notes)')}</label>
                 <input
                   type="text"
                   placeholder="e.g. UPI Se Paid / Advance"
@@ -426,7 +428,7 @@ export default function SalarySummary({
               disabled={saving}
               className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold py-2.5 rounded-xl text-xs uppercase transition cursor-pointer"
             >
-              {saving ? 'Syncing...' : 'भुगतान दर्ज करें (Confirm Settle)'}
+              {saving ? 'Syncing...' : t('भुगतान दर्ज करें (Confirm Settle)')}
             </button>
           </form>
         </div>

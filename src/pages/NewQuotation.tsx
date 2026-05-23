@@ -7,22 +7,15 @@ import QuotationPreview from '../components/quotation/QuotationPreview';
 import { 
   Plus, 
   Search, 
-  Filter, 
-  SlidersHorizontal,
   FileText, 
   Briefcase, 
   CheckCircle, 
   Clock, 
-  HelpCircle,
-  TrendingUp,
   Coins,
-  ChevronRight,
-  Sparkles,
-  RefreshCw
+  ChevronRight
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
-
 
 const mapDbQuoteToUi = (q: any): Quotation => {
   return {
@@ -43,7 +36,6 @@ const mapDbQuoteToUi = (q: any): Quotation => {
 };
 
 export default function NewQuotation() {
-
   const store = useAppStore();
 
   const [supabaseMode, setSupabaseMode] = useState(false);
@@ -52,7 +44,7 @@ export default function NewQuotation() {
   const [dbClients, setDbClients] = useState<any[]>([]);
   const [loadingDb, setLoadingDb] = useState(false);
   
-  // UI Screen Modes: 'list' | 'create' | 'edit'
+  // UI Screen Modes: 'list' | 'create'
   const [viewMode, setViewMode] = useState<'list' | 'create'>('list');
   
   // Search and status query state
@@ -158,14 +150,14 @@ export default function NewQuotation() {
             status: 'Pending'
           });
         if (insErr) throw insErr;
-        toast.success('नया कोटेशन/एस्टीमेट सफलतापूर्वक क्लाउड पर सहेजा गया!');
+        toast.success('New quotation created on cloud database!');
         refreshQuotesData();
       } else {
         store.addQuotation({
           ...quoteData,
           isConverted: false
         });
-        toast.success('नया कोटेशन/एस्टीमेट सफलतापूर्वक सहेजा गया!');
+        toast.success('New quotation saved successfully!');
       }
 
       // Clear states and load preview of newly saved quote immediately!
@@ -181,7 +173,7 @@ export default function NewQuotation() {
       }, 150);
 
     } catch (err: any) {
-      toast.error('कोटेशन सहेजने में त्रुटि आई!');
+      toast.error('Failed to save quotation!');
       console.error(err);
     }
   };
@@ -218,11 +210,11 @@ export default function NewQuotation() {
               status: 'Unpaid'
             });
         }
-        toast.success('एस्टीमेट (Estimate) पक्के बिल (Invoice) में बदला गया!');
+        toast.success('Estimate successfully converted to active Invoice!');
         refreshQuotesData();
       } else {
         store.convertQuoteToInvoice(quoteId);
-        toast.success('बधाई हो! कच्चा बिल (Estimate) पक्के बिल (Invoice) में बदला गया और ग्राहक बही अपडेट हुई।');
+        toast.success('Congratulations! Soft estimate converted to active Invoice.');
       }
       
       // Update selectedQuote state to force converted stamp in open preview
@@ -234,7 +226,7 @@ export default function NewQuotation() {
         }
       }, 150);
     } catch (err: any) {
-      toast.error('कच्चे बिल से पक्का बिल बनाने में त्रुटि आई!');
+      toast.error('Failed to convert estimate to invoice!');
       console.error(err);
     }
   };
@@ -260,7 +252,6 @@ export default function NewQuotation() {
   });
 
   // Calculate high value insights
-  const totalEstimationsCount = dbQuotes.length;
   const pendingCount = dbQuotes.filter(q => !q.isConverted).length;
   const totalValuePendingSum = dbQuotes
     .filter(q => !q.isConverted)
@@ -275,7 +266,7 @@ export default function NewQuotation() {
       
       {/* Listing Mode Banner Header */}
       {viewMode === 'list' && (
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-gradient-to-r from-gray-900 via-gray-900 to-gray-950 p-5 rounded-3xl border border-gray-800 shadow-xl relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-gradient-to-r from-gray-900 via-gray-900 to-gray-950 p-5 rounded-3xl border border-gray-800 shadow-xl relative overflow-hidden font-sans">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
           
           <div className="space-y-1">
@@ -284,14 +275,14 @@ export default function NewQuotation() {
                 <Briefcase className="h-4 w-4" />
               </span>
               <span className="text-[9.5px] text-amber-500 font-extrabold uppercase tracking-widest font-mono">
-                कच्चे बिल का बही खाता
+                Estimate Ledger
               </span>
             </div>
             <h2 className="text-xl font-bold tracking-tight text-white font-sans">
-              कोटेशन एवं एस्टीमेट मेकर (Estimations Portal)
+              Quotation & Estimate Maker (Estimations Portal)
             </h2>
-            <p className="text-xs text-gray-500">
-              ग्राहकों को नया कोटेशन जारी करें और सीधे पक्के बिल में बदलें।
+            <p className="text-xs text-gray-400">
+              Issue soft quotes to clients and convert them to invoices with click of a button.
             </p>
           </div>
 
@@ -300,20 +291,20 @@ export default function NewQuotation() {
             className="mt-4 sm:mt-0 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 transition cursor-pointer self-start sm:self-auto shadow-md"
           >
             <Plus className="h-4.5 w-4.5 stroke-[2.5]" />
-            <span>नया एस्टीमेट बनाएँ (New)</span>
+            <span>Create New Estimate</span>
           </button>
         </div>
       )}
 
       {/* Stats Widgets Panel */}
       {viewMode === 'list' && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-sans animate-fadeIn">
           
           {/* Active Estimates pending */}
           <div className="bg-gray-900 p-4 rounded-2xl border border-gray-850 shadow flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-bold">अनुमानित सक्रिय एस्टीमेट</span>
-              <span className="text-xl font-black block text-amber-500">{pendingCount} पेंडिंग</span>
+              <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-bold">Active Estimates Pending</span>
+              <span className="text-xl font-black block text-amber-500">{pendingCount} Pending</span>
             </div>
             <div className="p-3 bg-amber-500/5 border border-amber-500/15 rounded-xl text-amber-500">
               <Clock className="h-5 w-5" />
@@ -323,7 +314,7 @@ export default function NewQuotation() {
           {/* Pending Bids value total */}
           <div className="bg-gray-900 p-4 rounded-2xl border border-gray-850 shadow flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-bold font-sans">अनुमानित कुल शेष मूल्य</span>
+              <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-bold">Estimated Outstanding Value</span>
               <span className="text-xl font-black text-rose-400 block">
                 ₹{(totalValuePendingSum ?? 0).toLocaleString('en-IN')}
               </span>
@@ -336,7 +327,7 @@ export default function NewQuotation() {
           {/* Converted into invoices totals */}
           <div className="bg-gray-900 p-4 rounded-2xl border border-gray-850 shadow flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-bold font-sans">पक्के बिल में कन्वर्टेड मूल्य</span>
+              <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-bold">Converted Invoice Value</span>
               <span className="text-xl font-black text-emerald-400 block">
                 ₹{(convertedValueSum ?? 0).toLocaleString('en-IN')}
               </span>
@@ -359,7 +350,7 @@ export default function NewQuotation() {
 
       {/* Main Listing View interface */}
       {viewMode === 'list' && (
-        <div className="space-y-4">
+        <div className="space-y-4 font-sans animate-fadeIn">
           
           {/* Filters Area */}
           <div className="flex flex-col md:flex-row gap-3">
@@ -369,10 +360,10 @@ export default function NewQuotation() {
               <Search className="absolute left-3.5 top-3 h-4 w-4 text-gray-500" />
               <input 
                 type="text"
-                placeholder="ग्राहक का नाम या एस्टीमेट सं. (#) यहाँ खोजें..."
+                placeholder="Search by client name or estimate number (#)..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="w-full bg-gray-900 border border-gray-850 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-gray-505 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-gray-900 border border-gray-850 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
 
@@ -380,7 +371,7 @@ export default function NewQuotation() {
             <div className="flex bg-[#0B0F1A] border border-gray-850 p-1 rounded-2xl space-x-1.5 md:w-80">
               {(['All', 'Pending', 'Converted'] as const).map((filter) => {
                 const isActive = statusFilter === filter;
-                const labelMap = { All: 'सभी (All)', Pending: 'पेंडिंग', Converted: 'चुक्ता/बिल' };
+                const labelMap = { All: 'All', Pending: 'Pending', Converted: 'Invoiced' };
                 return (
                   <button
                     key={filter}
@@ -388,7 +379,7 @@ export default function NewQuotation() {
                     className={`flex-1 py-1 px-1.5 rounded-xl text-[10px] font-black text-center transition cursor-pointer ${
                       isActive 
                         ? 'bg-amber-500 text-black font-extrabold shadow' 
-                        : 'text-gray-400 hover:text-white hover:bg-gray-850/50'
+                        : 'text-gray-400 hover:text-white hover:bg-gray-855/50'
                     }`}
                   >
                     {labelMap[filter]}
@@ -402,15 +393,15 @@ export default function NewQuotation() {
               <select
                 value={categoryFilter}
                 onChange={e => setCategoryFilter(e.target.value)}
-                className="w-full bg-[#0B0F1A] border border-gray-855 rounded-2xl px-3 py-2.5 text-xs text-gray-300 focus:outline-none"
+                className="w-full bg-[#0B0F1A] border border-gray-855 rounded-2xl px-3 py-2.5 text-xs text-gray-300 focus:outline-none focus:border-amber-500 transition-colors cursor-pointer"
               >
-                <option value="All">-- सभी श्रेणियां (All Work) --</option>
-                <option value="Electrical">Electrical (बिजली)</option>
-                <option value="Plumbing">Plumbing (नलसाजी)</option>
-                <option value="Construction">Construction (भवन)</option>
-                <option value="Painting">Painting (पुताई)</option>
-                <option value="Interior">Interior (सजावट)</option>
-                <option value="Custom">Custom (सामान्य)</option>
+                <option value="All">-- Filter by Work Category --</option>
+                <option value="Electrical">Electrical</option>
+                <option value="Plumbing">Plumbing</option>
+                <option value="Construction">Construction</option>
+                <option value="Painting">Painting</option>
+                <option value="Interior">Interior</option>
+                <option value="Custom">Custom</option>
               </select>
             </div>
 
@@ -420,9 +411,9 @@ export default function NewQuotation() {
           {filteredQuotations.length === 0 ? (
             <div className="bg-gray-900/40 border border-dashed border-gray-800 rounded-3xl p-16 text-center text-gray-500 space-y-3">
               <Briefcase className="h-10 w-10 text-gray-600 mx-auto" />
-              <h4 className="text-xs font-bold text-gray-300">कोई एस्टीमेट नहीं मिला</h4>
-              <p className="text-[10px] text-gray-550 max-w-md mx-auto">
-                सर्च फ़िल्टर बदलें या नया एस्टीमेट जारी करने के लिए ऊपर "+ नया एस्टीमेट बनाएँ" पर क्लिक करें।
+              <h4 className="text-xs font-bold text-gray-300">No estimates found</h4>
+              <p className="text-[10px] text-gray-500 max-w-md mx-auto">
+                Change search filters or click "Create New Estimate" above to issue a quotation.
               </p>
             </div>
           ) : (
@@ -437,7 +428,7 @@ export default function NewQuotation() {
                   ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
                   : 'bg-amber-500/10 text-amber-500 border border-amber-500/20';
                 const statusBadgeDot = isConverted ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse';
-                const statusLabel = isConverted ? '✓ बिल प्रविष्टि' : '⏳ पेंडिंग प्रविष्टि';
+                const statusLabel = isConverted ? '✓ Invoiced' : '⏳ Pending Estimate';
 
                 return (
                   <div 
@@ -458,14 +449,14 @@ export default function NewQuotation() {
                             <span className="text-[9px] text-gray-450 font-mono italic">{quote.date}</span>
                           </div>
                           <h4 className="text-sm font-black text-white hover:text-amber-500 transition-colors truncate">
-                            {clientObj?.name || 'अज्ञात ग्राहक'}
+                            {clientObj?.name || 'Unspecified Client'}
                           </h4>
                         </div>
                       </div>
 
                       {/* Financial Value box */}
                       <div className="text-right shrink-0">
-                        <span className="text-[9px] text-gray-550 block font-bold font-mono">EST TOTAL</span>
+                        <span className="text-[9px] text-gray-500 block font-bold font-mono">EST TOTAL</span>
                         <span className="text-[13.5px] font-black text-white">
                           ₹{(finalSum ?? 0).toLocaleString('en-IN')}
                         </span>
@@ -475,22 +466,22 @@ export default function NewQuotation() {
                     {/* Middle details table mock */}
                     <div className="bg-[#0B0F1A]/30 p-2.5 rounded-xl border border-gray-850 space-y-1.5 text-[11px] font-sans">
                       <div className="flex items-center justify-between text-gray-450">
-                        <span>कार्य श्रेणी (Category):</span>
-                        <span className="font-mono text-gray-300 font-black uppercase text-[10px] bg-gray-950 px-1.5 py-0.5 rounded border border-gray-850">
+                        <span>Category:</span>
+                        <span className="font-mono text-gray-300 font-black uppercase text-[10px] bg-gray-950 px-1.5 py-0.5 rounded border border-gray-855">
                           {quote.category || 'Custom'}
                         </span>
                       </div>
 
                       <div className="flex items-center justify-between text-gray-450">
-                        <span>कुल सामग्रियां (Items Count):</span>
-                        <span className="text-gray-305 font-bold">
-                          {quote.items.length} श्रेणी सामान
+                        <span>Items Count:</span>
+                        <span className="text-gray-300 font-bold">
+                          {quote.items.length} items
                         </span>
                       </div>
 
                       {quote.advanceAmount && quote.advanceAmount > 0 ? (
                         <div className="flex items-center justify-between text-gray-400">
-                          <span>प्राप्त एडवांस राशि ({quote.advanceMode}):</span>
+                          <span>Advance Received ({quote.advanceMode}):</span>
                           <span className="text-emerald-400 font-bold">
                             ₹{(quote.advanceAmount ?? 0).toLocaleString('en-IN')}
                           </span>
@@ -498,9 +489,9 @@ export default function NewQuotation() {
                       ) : null}
 
                       {quote.advanceAmount && quote.advanceAmount > 0 ? (
-                        <div className="flex items-center justify-between text-[11.5px] border-t border-gray-850/40 pt-1 mt-1 font-bold">
-                          <span className="text-amber-500">बकाया बैलेंस (Balance Due):</span>
-                          <span className="text-amber-400">
+                        <div className="flex items-center justify-between text-[11.5px] border-t border-gray-850/45 pt-1 mt-1 font-bold">
+                          <span className="text-amber-500">Dues Remaining:</span>
+                          <span className="text-amber-400 font-bold">
                             ₹{((finalSum ?? 0) - (quote.advanceAmount ?? 0)).toLocaleString('en-IN')}
                           </span>
                         </div>
@@ -517,7 +508,7 @@ export default function NewQuotation() {
                       </span>
 
                       <span className="text-amber-500 font-black flex items-center space-x-0.5 group">
-                        <span>शीट प्रीव्यू (Sheet Preview)</span>
+                        <span>View Sheet Preview</span>
                         <ChevronRight className="h-3.5 w-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                       </span>
                     </div>

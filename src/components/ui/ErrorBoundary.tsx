@@ -77,13 +77,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
             <div className="space-y-2">
               <h2 className="text-lg font-black tracking-tight text-white flex items-baseline justify-center gap-1.5 flex-wrap">
                 <span>Oops! Something went wrong</span>
-                <span className="text-xs text-amber-500 font-bold">(त्रुटि उत्पन्न हुई)</span>
               </h2>
               <p className="text-xs text-slate-400 font-sans">
                 An unexpected error occurred in saving or loading your business ledger dashboard. Don't worry, your offline records are protected!
-              </p>
-              <p className="text-[11px] text-amber-600 font-medium font-sans mt-1">
-                आपके खाते का डेटा पूरी तरह सुरक्षित है। पुनः प्रयास करने के लिए नीचे बटन दबाएं।
               </p>
             </div>
 
@@ -101,7 +97,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
                 className="w-full h-11 text-xs font-black flex items-center justify-center gap-1.5"
               >
                 <RefreshCw className="w-4 h-4" />
-                <span>Reload app / पुन: लोड करें</span>
+                <span>Reload App</span>
               </Button>
 
               <Button

@@ -156,7 +156,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             return {
               id: inv.id,
               invoiceNumber: inv.number || 'INV-TEMP',
-              clientName: matchedClient ? matchedClient.name : 'ग्राहक (Unspecified)',
+              clientName: matchedClient ? matchedClient.name : 'Customer (Unspecified)',
               date: inv.date,
               grandTotal: Number(inv.grand_total || inv.totalAmount || 0),
               status: inv.status || 'Unpaid'
@@ -272,7 +272,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
   const handleDownloadBaqiPDF = async () => {
     setIsDownloadingBaqi(true);
-    const loader = toast.loading('बाकी रिपोर्ट तैयार की जा रही है...');
+    const loader = toast.loading('Generating outstanding balance report...');
     try {
       const doc = generatePendingPaymentsPDF({
         clients: store.clients,
@@ -324,10 +324,10 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <span className="text-[10px] text-amber-500 font-extrabold uppercase tracking-widest font-mono">Ledger Dashboard</span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-white font-sans">
-            {t('व्यापार का हिसाब-किताब')}
+            Business Ledger
           </h2>
           <p className="text-xs text-gray-550">
-            {supabaseMode ? t('सारे बिल और भुगतान सुरक्षित क्लाउड डेटाबेस से सिंक हैं।') : t('लोकल बही खाता मोड सक्रिय है। इंटरनेट आने पर सुरक्षित हो जाएगा।')}
+            {supabaseMode ? 'All bills and payments are securely synchronized with the cloud.' : 'Local offline ledger mode active. Data is saved locally.'}
           </p>
         </div>
 
@@ -340,12 +340,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             {supabaseMode ? (
               <>
                 <Cloud className="h-3 w-3 animate-pulse" />
-                <span>{t('क्लाउड डेटा एक्टिव (Supabase Live)')}</span>
+                <span>Cloud Sync Active</span>
               </>
             ) : (
               <>
                 <CloudLightning className="h-3 w-3" />
-                <span>{t('ऑफ़लाइन डेटा (Local Khata Only)')}</span>
+                <span>Local Offline Ledger</span>
               </>
             )}
           </div>
@@ -360,9 +360,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <AlertCircle className="h-6 w-6" />
             </div>
             <div className="min-w-0">
-              <h4 className="text-xs font-black text-rose-500 uppercase tracking-widest font-mono">स्टॉक चेतावनी (Low Stock Alert)</h4>
+              <h4 className="text-xs font-black text-rose-500 uppercase tracking-widest font-mono">Low Stock Alert</h4>
               <p className="text-[10px] text-gray-400 mt-0.5 truncate pr-2">
-                {lowStockItems.length} {t('items are running below minimum required stock.')}
+                {lowStockItems.length} items are running below minimum required stock.
               </p>
             </div>
           </div>
@@ -370,14 +370,14 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             onClick={() => onNavigate('stock')}
             className="flex-shrink-0 px-4 py-2 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-rose-600 transition shadow-lg shadow-rose-500/20 cursor-pointer"
           >
-            {t('View Inventory')}
+            View Inventory
           </button>
         </div>
       )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md group hover:border-amber-500/30 transition">
-          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('कुल बकाया (Lena Baqi)')}</span>
+          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">Total Outstanding</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className={'text-xl font-black ' + (pendingAmount > 0 ? 'text-red-400' : 'text-gray-100')}>
               ₹{(pendingAmount ?? 0).toLocaleString('en-IN')}
@@ -392,12 +392,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             </button>
           </div>
           <span className="text-[9px] text-gray-550 block mt-1.5">
-            {pendingAmount > 0 ? t('⚠️ वसूली बाकी है!') : t('कोई बकाया भुगतान नहीं है।')}
+            {pendingAmount > 0 ? '⚠️ Dues Pending!' : 'No Outstanding Balances'}
           </span>
         </div>
 
         <div className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md">
-          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('महीने की कमाई (Income)')}</span>
+          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">Monthly Income</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className="text-xl font-black text-emerald-400">
               ₹{(monthlyIncome ?? 0).toLocaleString('en-IN')}
@@ -406,11 +406,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <TrendingUp className="h-4.5 w-4.5" />
             </div>
           </div>
-          <span className="text-[9px] text-gray-550 block mt-1.5">{t('इस महीने आई कुल नगदी')}</span>
+          <span className="text-[9px] text-gray-550 block mt-1.5">Total cash inflow this month</span>
         </div>
 
         <div onClick={() => onNavigate('clients')} className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md group hover:border-amber-500/30 transition cursor-pointer">
-          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('सक्रिय ग्राहक (Active)')}</span>
+          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">Active Clients</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className="text-xl font-black text-amber-500">
               {activeClientsCount}
@@ -419,11 +419,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <Users className="h-4.5 w-4.5" />
             </div>
           </div>
-          <span className="text-[9px] text-gray-550 block mt-1.5">{t('सारे ग्राहक खता सूची')}</span>
+          <span className="text-[9px] text-gray-550 block mt-1.5">All customer ledger accounts</span>
         </div>
 
         <div onClick={() => onNavigate('invoices')} className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md group hover:border-amber-500/30 transition cursor-pointer">
-          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('बाकी बिल (Unpaid Bills)')}</span>
+          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">Unpaid Invoices</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className={'text-xl font-black ' + (unpaidInvoicesCount > 0 ? 'text-amber-500' : 'text-gray-300')}>
               {unpaidInvoicesCount}
@@ -432,12 +432,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <FileSpreadsheet className="h-4.5 w-4.5" />
             </div>
           </div>
-          <span className="text-[9px] text-gray-550 block mt-1.5">{t('अधूरी/बाकी पेमेंट की संख्या')}</span>
+          <span className="text-[9px] text-gray-550 block mt-1.5">Number of outstanding unpaid bills</span>
         </div>
       </div>
 
       <div>
-        <h3 className="text-[11px] font-black text-gray-400 mb-3 uppercase tracking-wider font-mono">{t('त्वरित काम (Quick Actions)')}</h3>
+        <h3 className="text-[11px] font-black text-gray-400 mb-3 uppercase tracking-wider font-mono">Quick Actions</h3>
         <div className="grid grid-cols-3 gap-3">
           <button
             onClick={() => onNavigate('clients')}
@@ -446,8 +446,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <PlusCircle className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">{t('नया ग्राहक')}</span>
-            <span className="text-[8px] text-white/80 block font-mono mt-0.5">{t('Add Client')}</span>
+            <span className="text-xs font-black text-white block">Add Client</span>
           </button>
 
           <button
@@ -457,8 +456,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <FileSpreadsheet className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">{t('नया पक्का बिल')}</span>
-            <span className="text-[8px] text-white/80 block font-mono mt-0.5">{t('Create Invoice')}</span>
+            <span className="text-xs font-black text-white block">New Invoice</span>
           </button>
 
           <button
@@ -468,8 +466,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <CheckCircle2 className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">{t('Mark Attendance')}</span>
-            <span className="text-[8px] text-white/80 block font-mono mt-0.5">{t('attendance')}</span>
+            <span className="text-xs font-black text-white block">Mark Attendance</span>
           </button>
 
           <button
@@ -479,8 +476,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <FileText className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">बाकी रिपोर्ट</span>
-            <span className="text-[8px] text-white/80 block font-mono mt-0.5">Lena Baqi</span>
+            <span className="text-xs font-black text-white block">Owed Report</span>
           </button>
 
           <button
@@ -497,8 +493,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="h-10 w-10 bg-white/20 text-white rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <QrCode className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">UPI QR शेयर</span>
-            <span className="text-[8px] text-white/80 block font-mono mt-0.5">Share Payment QR</span>
+            <span className="text-xs font-black text-white block">Share UPI QR</span>
           </button>
         </div>
       </div>
@@ -544,7 +539,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                     className="bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-xl flex items-center space-x-1.5 transition cursor-pointer text-[10px] font-black"
                   >
                     <Phone className="h-3 w-3" />
-                    <span>कॉल (Call)</span>
+                    <span>Call</span>
                   </button>
                 )}
               </div>
@@ -559,21 +554,21 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <span className="h-6.5 w-6.5 bg-amber-500/10 border border-amber-500/20 flex items-center justify-center rounded-lg text-amber-500">
               <ClipboardCheck className="h-4 w-4" />
             </span>
-            <h4 className="text-xs font-black text-gray-200 uppercase tracking-widest font-mono">हाल के पक्के बिल (Recent Invoices)</h4>
+            <h4 className="text-xs font-black text-gray-200 uppercase tracking-widest font-mono">Recent Invoices</h4>
           </div>
           <button
             onClick={() => onNavigate('invoices')}
             className="text-[10px] font-extrabold text-amber-500 hover:underline cursor-pointer flex items-center space-x-1"
           >
-            <span>सभी देखें</span>
+            <span>View All</span>
             <span>&rarr;</span>
           </button>
         </div>
 
         {recentInvoices.length === 0 ? (
           <div className="text-center py-7 text-gray-500 space-y-1.5">
-            <p className="text-xs font-bold">कोई बिल नहीं मिला (No Bills Set)</p>
-            <p className="text-[10px] text-gray-600">पक्का बिल बनाने के लिए "नया पक्का बिल" चुनें।</p>
+            <p className="text-xs font-bold">No Invoices Found</p>
+            <p className="text-[10px] text-gray-600">Select "New Invoice" to create a bill.</p>
           </div>
         ) : (
           <div className="divide-y divide-gray-800 mt-2">
@@ -611,9 +606,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           <Sliders className="h-4 w-4" />
         </div>
         <div>
-          <h4 className="text-[11px] font-black text-amber-500 uppercase tracking-widest font-mono">मजबूत सुरक्षा और विश्वसनीयता:</h4>
+          <h4 className="text-[11px] font-black text-amber-500 uppercase tracking-widest font-mono">Robust Security & Reliability:</h4>
           <p className="text-[10px] text-gray-400 mt-1 leading-relaxed">
-            BillKaro क्लाउड और लोकल स्टोरेज का शानदार कॉम्बो प्रदान करता है। डेटा खुद-ब-खुद ऑटो-सेव होता रहता है जिससे आपके ग्राहकों का लेन-देन, एस्टीमेट और वेंडर का हिसाब कभी नहीं खोएगा।
+            BillKaro combines cloud synchronization and local storage securely. Your data automatically saves to ensure you never lose track of transactions, estimates, or account histories.
           </p>
         </div>
       </div>
@@ -630,7 +625,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                   <FileText className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-white uppercase tracking-wider">बाकी वसूली लिस्ट (Lena Baqi Report)</h3>
+                  <h3 className="text-sm font-black text-white uppercase tracking-wider">Pending Recovery Report</h3>
                   <p className="text-[10px] text-gray-500 font-mono">Summary of all outstanding payments</p>
                 </div>
               </div>
@@ -658,15 +653,15 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
               <div className="space-y-3">
                 <div className="grid grid-cols-4 px-2 text-[10px] font-black text-gray-500 uppercase tracking-widest pb-1">
-                  <div className="col-span-2">ग्राहक का नाम</div>
-                  <div className="text-right">मोबाइल</div>
-                  <div className="text-right">बकाया राशि</div>
+                  <div className="col-span-2">Client Name</div>
+                  <div className="text-right">Mobile</div>
+                  <div className="text-right">Owed Amount</div>
                 </div>
                 
                 {store.clients.filter(c => c.totalDue > 0).length === 0 ? (
                   <div className="text-center py-10 bg-gray-950/50 rounded-2xl border border-dashed border-gray-800">
                     <Check className="h-10 w-10 text-emerald-500 mx-auto mb-3 opacity-20" />
-                    <p className="text-xs text-gray-500 font-bold">सब उधार चुकता है! (No Pending Dues)</p>
+                    <p className="text-xs text-gray-550 font-bold">All dues cleared! (No Pending Dues)</p>
                   </div>
                 ) : (
                   store.clients

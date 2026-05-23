@@ -189,15 +189,15 @@ export default function Invoices() {
             payments: invoicePayload.payments || []
           });
         if (insErr) throw insErr;
-        toast.success('जीएसटी इनवॉइस / पक्का बिल सुरक्षित सहेज लिया गया (Cloud)!');
+        toast.success('GST Invoice saved securely in cloud!');
         refreshInvoicesData();
       } else {
         addInvoice(invoicePayload);
-        toast.success('जीएसटी इनवॉइस / पक्का बिल सुरक्षित सहेज लिया गया!');
+        toast.success('GST Invoice saved securely!');
       }
       setActiveView('LIST');
     } catch (e: any) {
-      toast.error('इनवॉइस सहेजने में त्रुटि!');
+      toast.error('Error saving invoice!');
       console.error(e);
     }
   };
@@ -221,23 +221,23 @@ export default function Invoices() {
           })
           .eq('id', editingInvoice.id);
         if (updErr) throw updErr;
-        toast.success('इनवॉइस सफलतापूर्वक अपडेट हो चूका है (Cloud)!');
+        toast.success('Invoice updated successfully in cloud!');
         refreshInvoicesData();
       } else {
         updateInvoice(editingInvoice.id, invoicePayload);
-        toast.success('इनवॉइस सफलतापूर्वक अपडेट हो चूका है!');
+        toast.success('Invoice updated successfully!');
       }
       setActiveView('LIST');
       setEditingInvoice(undefined);
     } catch (e: any) {
-      toast.error('इनवॉइस अपडेट करने में त्रुटि!');
+      toast.error('Error updating invoice!');
       console.error(e);
     }
   };
 
   // Handle Delete Invoice
   const handleDelete = async (id: string, number: string) => {
-    const isConfirmed = window.confirm(`क्या आप सचमुच इनवॉइस ${number} को डिलीट करना चाहते हैं? ग्राहक का शेष बकाया भी संशोधित हो जाएगा।`);
+    const isConfirmed = window.confirm(`Are you sure you want to delete invoice ${number}? The client's outstanding balance will also be recalculated.`);
     if (isConfirmed) {
       try {
         if (supabaseMode) {
@@ -246,14 +246,14 @@ export default function Invoices() {
             .delete()
             .eq('id', id);
           if (delErr) throw delErr;
-          toast.success(`इनवॉइस ${number} डिलीट कर दिया गया (Cloud)!`);
+          toast.success(`Invoice ${number} deleted successfully in cloud!`);
           refreshInvoicesData();
         } else {
           deleteInvoice(id);
-          toast.success(`इनवॉइस ${number} डिलीट कर दिया गया!`);
+          toast.success(`Invoice ${number} deleted successfully!`);
         }
       } catch (e: any) {
-        toast.error('इनवॉइस डिलीट करने में गड़बड़ हुई!');
+        toast.error('Error deleting invoice!');
         console.error(e);
       }
     }
@@ -379,7 +379,7 @@ export default function Invoices() {
             className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 py-4.5 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center space-x-2.5 shadow-lg shadow-orange-500/20 active:scale-[0.98] transition-all cursor-pointer text-center"
           >
             <div className="w-5 h-5 rounded-full border border-white/60 flex items-center justify-center text-sm font-light leading-none">+</div>
-            <span>CREATE NEW INVOICE / नया बिल बनाएं</span>
+            <span>Create New Tax Invoice</span>
           </button>
         </div>
       )}
@@ -412,7 +412,7 @@ export default function Invoices() {
             {/* Stat A: Total Outstanding */}
             <div className="bg-gradient-to-br from-[#2D1B00] to-[#3D2400] border border-orange-500/10 p-5 rounded-3xl text-left flex items-start justify-between shadow-md">
               <div className="space-y-1">
-                <span className="text-[10px] text-amber-500 font-extrabold block uppercase tracking-wider font-mono">कुल बकाया बैलेंस (Due)</span>
+                <span className="text-[10px] text-amber-500 font-extrabold block uppercase tracking-wider font-mono">Total Outstanding Due</span>
                 <span className="text-xl sm:text-2xl font-black text-white block font-mono">
                   ₹{(totalOutstanding ?? 0).toLocaleString('en-IN')}
                 </span>
@@ -426,7 +426,7 @@ export default function Invoices() {
             {/* Stat B: Total Collected */}
             <div className="bg-gradient-to-br from-[#052E16] to-[#083923] border border-emerald-500/10 p-5 rounded-3xl text-left flex items-start justify-between shadow-md">
               <div className="space-y-1">
-                <span className="text-[10px] text-emerald-450 font-extrabold block uppercase tracking-wider font-mono">प्राप्त जमा राशि (Collected)</span>
+                <span className="text-[10px] text-emerald-455 font-extrabold block uppercase tracking-wider font-mono">Total Collected Amount</span>
                 <span className="text-xl sm:text-2xl font-black text-white block font-mono">
                   ₹{(totalCollected ?? 0).toLocaleString('en-IN')}
                 </span>
@@ -440,7 +440,7 @@ export default function Invoices() {
             {/* Stat C: Total Invoiced overall */}
             <div className="bg-gray-905 border border-gray-800 p-4 sm:p-5 rounded-3xl text-left flex items-start justify-between">
               <div className="space-y-1">
-                <span className="text-[10px] text-gray-450 block uppercase font-mono tracking-wider font-extrabold">कुल बिकवाली योग (Turnover)</span>
+                <span className="text-[10px] text-gray-450 block uppercase font-mono tracking-wider font-extrabold">Total Billing Turnover</span>
                 <span className="text-lg sm:text-2xl font-black text-white block font-mono">
                   ₹{(totalBilling ?? 0).toLocaleString('en-IN')}
                 </span>
@@ -454,7 +454,7 @@ export default function Invoices() {
             {/* StatD: All Bills count */}
             <div className="bg-gray-905 border border-gray-800 p-4 sm:p-5 rounded-3xl text-left flex items-start justify-between">
               <div className="space-y-1">
-                <span className="text-[10px] text-gray-450 block uppercase font-mono tracking-wider font-extrabold">कुल इनवॉइस गिनती (Count)</span>
+                <span className="text-[10px] text-gray-450 block uppercase font-mono tracking-wider font-extrabold">Invoices Count</span>
                 <span className="text-lg sm:text-2xl font-black text-white block font-mono">
                   {invoicesCount} Bills
                 </span>
@@ -471,7 +471,7 @@ export default function Invoices() {
           <div className="bg-[#111927]/60 border border-gray-800 p-5 rounded-3xl space-y-4">
             <h3 className="text-xs font-black text-orange-500 uppercase tracking-widest font-mono flex items-center">
               <ListFilter className="h-4 w-4 mr-2" />
-              <span>इनवॉइस फ़िल्टर एवं खोज उपकरण (Filter & Sort Desk)</span>
+              <span>Invoices Filter & Search Panel</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3.5">
@@ -481,7 +481,7 @@ export default function Invoices() {
                 <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-500" />
                 <input 
                   type="text"
-                  placeholder="ग्राहक का नाम, बिल संख्या खोजें..."
+                  placeholder="Search client name, invoice number..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   className="w-full bg-[#0B0F1A] border border-gray-800 rounded-2xl pl-10 pr-4 py-3 text-xs text-secondary-white focus:outline-none focus:border-orange-500 transition-colors"
@@ -495,13 +495,13 @@ export default function Invoices() {
                   onChange={e => setStatusFilter(e.target.value)}
                   className="w-full bg-[#0B0F1A] border border-gray-800 rounded-2xl px-4 py-3.2 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                 >
-                  <option value="ALL">सभी भुगतान श्रेणियाँ (All Statuses)</option>
-                  <option value="Paid">Paid Only (चुक्ता बिल)</option>
-                  <option value="Partial">Partial Only (आंशिक भुगतान)</option>
-                  <option value="Unpaid">Unpaid Only (भुगतान प्राप्त नहीं)</option>
-                  <option value="Draft">Draft Only (ड्राफ्ट बिल)</option>
-                  <option value="Sent">Sent Only (भेजे गए बिल)</option>
-                  <option value="Overdue">Overdue Only (समय सीमा समाप्त)</option>
+                  <option value="ALL">All Statuses</option>
+                  <option value="Paid">Paid Only</option>
+                  <option value="Partial">Partial Only</option>
+                  <option value="Unpaid">Unpaid Only</option>
+                  <option value="Draft">Draft Only</option>
+                  <option value="Sent">Sent Only</option>
+                  <option value="Overdue">Overdue Only</option>
                 </select>
               </div>
 
@@ -512,9 +512,9 @@ export default function Invoices() {
                   onChange={e => setGstFilter(e.target.value)}
                   className="w-full bg-[#0B0F1A] border border-gray-800 rounded-2xl px-4 py-3.2 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                 >
-                  <option value="ALL">सभी टैक्स प्रकार (All Bil types)</option>
-                  <option value="GST">GST Bills Only (जीएसटी बिल)</option>
-                  <option value="NON_GST">Non-GST Bills Only (लोकल अन्य बिल)</option>
+                  <option value="ALL">All Bill Types</option>
+                  <option value="GST">GST Bills Only</option>
+                  <option value="NON_GST">Non-GST Bills Only</option>
                 </select>
               </div>
 
@@ -525,10 +525,10 @@ export default function Invoices() {
                   onChange={e => setSortBy(e.target.value)}
                   className="w-full bg-[#0B0F1A] border border-gray-800 rounded-2xl px-4 py-3.2 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                 >
-                  <option value="DATE_DESC">दिनांक: नवीन पहले (Newest Date)</option>
-                  <option value="DATE_ASC">दिनांक: पुराना पहले (Oldest Date)</option>
-                  <option value="AMOUNT_DESC">बिल राशि: घटते क्रम में (Highest ₹)</option>
-                  <option value="AMOUNT_ASC">बिल राशि: बढ़ते क्रम में (Lowest ₹)</option>
+                  <option value="DATE_DESC">Date: Newest to Oldest</option>
+                  <option value="DATE_ASC">Date: Oldest to Newest</option>
+                  <option value="AMOUNT_DESC">Amount: Highest First</option>
+                  <option value="AMOUNT_ASC">Amount: Lowest First</option>
                 </select>
               </div>
 
@@ -545,9 +545,9 @@ export default function Invoices() {
           {sortedInvoices.length === 0 ? (
             <div className="bg-[#111927]/40 border border-gray-800 rounded-3xl p-12 text-center text-gray-500 space-y-2">
               <FileText className="h-12 w-12 mx-auto text-gray-700 animate-pulse" />
-              <h4 className="text-sm font-black text-gray-400 font-sans">कोई बिल नहीं मिला!</h4>
+              <h4 className="text-sm font-black text-gray-400 font-sans">No Invoices Found!</h4>
               <p className="text-xs max-w-sm mx-auto leading-relaxed font-sans">
-                दिए गए मापदंडों के अनुसार कोई इनवॉइस नहीं मिला। कृपया फ़िल्टर बदलें या ऊपर बटन पर क्लिक करके नया पक्का बिल बनाएँ।
+                No invoice matches your filter criteria. Try changing filters or create a new invoice.
               </p>
             </div>
           ) : (
@@ -557,7 +557,7 @@ export default function Invoices() {
               <div className="block md:hidden space-y-3 pb-6">
                 {sortedInvoices.map((inv) => {
                   const clientMatch = dbClients.find(c => c.id === inv.clientId);
-                  const displayClientName = clientMatch?.name || 'अज्ञात ग्राहक';
+                  const displayClientName = clientMatch?.name || 'Unknown Client';
                   const initials = displayClientName.charAt(0).toUpperCase() || 'NA';
                   const balanceRemaining = Math.max(0, inv.totalAmount - inv.paidAmount);
 
@@ -574,7 +574,7 @@ export default function Invoices() {
                           </div>
                           <div className="text-left">
                             <h4 className="text-xs font-black text-white leading-tight">{displayClientName}</h4>
-                            <span className="text-[9px] text-gray-450 font-mono block mt-0.5">{inv.invoiceNumber}</span>
+                            <span className="text-[9px] text-gray-455 font-mono block mt-0.5">{inv.invoiceNumber}</span>
                           </div>
                         </div>
 
@@ -595,21 +595,21 @@ export default function Invoices() {
                       {/* Middle Details Box */}
                       <div className="grid grid-cols-2 gap-2 bg-[#0B0F1A]/50 p-3 rounded-xl border border-gray-800/40 text-left">
                         <div>
-                          <span className="text-[8px] text-gray-500 block uppercase font-mono tracking-wider">बिल दिनांक (Date)</span>
+                          <span className="text-[8px] text-gray-550 block uppercase font-mono tracking-wider">Invoice Date</span>
                           <span className="text-[10px] text-gray-300 font-bold font-mono">{inv.date}</span>
                         </div>
                         <div>
-                          <span className="text-[8px] text-orange-500 block uppercase font-mono tracking-wider">भुगतान तिथि (Due)</span>
+                          <span className="text-[8px] text-orange-500 block uppercase font-mono tracking-wider">Due Date</span>
                           <span className="text-[10px] text-amber-500 font-bold font-mono">{inv.dueDate}</span>
                         </div>
                         <div className="col-span-2 pt-1.5 border-t border-gray-800/30 flex justify-between items-center">
                           <div>
-                            <span className="text-[8px] text-gray-550 block uppercase font-mono tracking-wider">बिल कुल योग (Total)</span>
+                            <span className="text-[8px] text-gray-550 block uppercase font-mono tracking-wider">Grand Total</span>
                             <span className="text-xs font-black text-white font-mono">₹{(inv.totalAmount ?? 0).toLocaleString('en-IN')}</span>
                           </div>
                           {balanceRemaining > 0 && (
                             <div className="text-right">
-                              <span className="text-[8px] text-orange-500 block uppercase font-mono tracking-wider">शेष ड्यू (Balance)</span>
+                              <span className="text-[8px] text-orange-500 block uppercase font-mono tracking-wider">Outstanding Due</span>
                               <span className="text-xs font-black text-amber-450 font-mono">₹{(balanceRemaining ?? 0).toLocaleString('en-IN')}</span>
                             </div>
                           )}
@@ -623,7 +623,7 @@ export default function Invoices() {
                           className="flex-1 py-1.8 bg-gray-950 hover:bg-gray-900 border border-gray-800 rounded-xl text-[9.5px] font-bold text-gray-300 flex items-center justify-center space-x-1 cursor-pointer font-sans"
                         >
                           <Eye className="h-3.5 w-3.5 text-emerald-400" />
-                          <span>पक्का बिल देखें</span>
+                          <span>View Invoice</span>
                         </button>
 
                         <button
@@ -631,7 +631,7 @@ export default function Invoices() {
                           className="flex-1 py-1.8 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 rounded-xl text-[9.5px] font-black text-orange-450 flex items-center justify-center space-x-1 cursor-pointer font-sans"
                         >
                           <CreditCard className="h-3.5 w-3.5" />
-                          <span>जमा करें (Pay)</span>
+                          <span>Record Payment</span>
                         </button>
 
                         <div className="flex items-center space-x-1">
@@ -641,7 +641,7 @@ export default function Invoices() {
                               setActiveView('EDIT');
                             }}
                             className="p-1.8 bg-gray-950 border border-gray-800 rounded-xl text-sky-400 hover:text-sky-305 cursor-pointer"
-                            title="एडिट"
+                            title="Edit"
                           >
                             <Edit2 className="h-3.5 w-3.5" />
                           </button>
@@ -665,19 +665,19 @@ export default function Invoices() {
                   <table className="w-full text-left text-xs text-gray-300">
                     <thead className="bg-[#0D121F] text-gray-400 font-mono text-[9px] uppercase border-b border-gray-800">
                       <tr>
-                        <th className="py-4 pl-4 sm:pl-6">इनवॉइस विवरण (Invoice)</th>
-                        <th className="py-4 font-bold">क्रेता / ग्राहक (Client)</th>
-                        <th className="py-4 font-mono text-center">बिल तिथि (Dates)</th>
-                        <th className="py-4 text-center">टैक्स (GST)</th>
-                        <th className="py-4 text-right font-mono pr-4">वित्तीय पत्रक (Finances)</th>
-                        <th className="py-4 text-center">स्थिति (Status)</th>
-                        <th className="py-4 text-center pr-4 sm:pr-6">कार्य (Actions Panel)</th>
+                        <th className="py-4 pl-4 sm:pl-6">Invoice Number</th>
+                        <th className="py-4 font-bold">Client</th>
+                        <th className="py-4 font-mono text-center">Dates</th>
+                        <th className="py-4 text-center">Tax (GST)</th>
+                        <th className="py-4 text-right font-mono pr-4">Finances</th>
+                        <th className="py-4 text-center">Status</th>
+                        <th className="py-4 text-center pr-4 sm:pr-6">Actions</th>
                       </tr>
                     </thead>
                   <tbody className="divide-y divide-gray-855/35">
                     {sortedInvoices.map((inv) => {
                       const clientMatch = dbClients.find(c => c.id === inv.clientId);
-                      const displayClientName = clientMatch?.name || 'अज्ञात ग्राहक';
+                      const displayClientName = clientMatch?.name || 'Unknown Client';
                       const balanceRemaining = Math.max(0, inv.totalAmount - inv.paidAmount);
 
                       return (
@@ -689,7 +689,7 @@ export default function Invoices() {
                             <span className="font-extrabold text-white text-[13px] block font-mono select-all">
                               {inv.invoiceNumber}
                             </span>
-                            <span className="text-[10px] text-gray-500 font-medium">Unique digital register token</span>
+                            <span className="text-[10px] text-gray-550 font-medium">Unique digital register token</span>
                           </td>
 
                           {/* Customer matched */}
@@ -698,7 +698,7 @@ export default function Invoices() {
                               {displayClientName}
                             </span>
                             {clientMatch?.phone && clientMatch.phone !== 'NA' && (
-                              <span className="text-[10px] text-gray-500 font-mono">+91 {clientMatch.phone}</span>
+                              <span className="text-[10px] text-gray-550 font-mono">+91 {clientMatch.phone}</span>
                             )}
                           </td>
 
@@ -727,11 +727,11 @@ export default function Invoices() {
                               ₹{(inv.totalAmount ?? 0).toLocaleString('en-IN')}
                             </div>
                             <div className="text-[10px] text-emerald-500">
-                              प्राप्त: ₹{(inv.paidAmount ?? 0).toLocaleString('en-IN')}
+                              Collected: ₹{(inv.paidAmount ?? 0).toLocaleString('en-IN')}
                             </div>
                             {balanceRemaining > 0 && (
-                              <div className="text-[10px] text-amber-500">
-                                बकाया: ₹{(balanceRemaining ?? 0).toLocaleString('en-IN')}
+                              <div className="text-[10px] text-amber-500 font-bold">
+                                Due: ₹{(balanceRemaining ?? 0).toLocaleString('en-IN')}
                               </div>
                             )}
                           </td>
@@ -749,7 +749,7 @@ export default function Invoices() {
                               <button
                                 onClick={() => setPreviewingInvoice(inv)}
                                 className="p-2 bg-gray-950 hover:bg-gray-850 text-emerald-400 hover:text-emerald-300 rounded-xl transition border border-gray-850 cursor-pointer"
-                                title="इनवॉइस प्रीव्यू देखें"
+                                title="View Invoice Preview"
                               >
                                 <Eye className="h-4 w-4" />
                               </button>
@@ -770,8 +770,8 @@ export default function Invoices() {
                                   setEditingInvoice(inv);
                                   setActiveView('EDIT');
                                 }}
-                                className="p-2 bg-gray-950 hover:bg-gray-850 text-sky-400 hover:text-sky-300 rounded-xl transition border border-gray-850 cursor-pointer"
-                                title="एडिट करें"
+                                className="p-2 bg-gray-950 hover:bg-gray-550 text-sky-400 hover:text-sky-300 rounded-xl transition border border-gray-850 cursor-pointer"
+                                title="Edit Invoice"
                               >
                                 <Edit2 className="h-4 w-4" />
                               </button>
@@ -798,7 +798,7 @@ export default function Invoices() {
                               <button
                                 onClick={() => handleDelete(inv.id, inv.invoiceNumber)}
                                 className="p-2 bg-gray-950 hover:bg-rose-500/10 text-rose-500 hover:text-rose-400 rounded-xl transition border border-gray-850 cursor-pointer"
-                                title="डिलीट करें"
+                                title="Delete Invoice"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </button>

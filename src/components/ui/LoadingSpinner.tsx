@@ -4,14 +4,12 @@ import React from 'react';
 interface LoadingSpinnerProps {
   fullPage?: boolean;
   message?: string;
-  hindiMessage?: string;
   id?: string;
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   fullPage = false,
   message = 'Please wait...',
-  hindiMessage = 'लोड हो रहा है...',
   id
 }) => {
   const spinnerId = id || 'global-loading';
@@ -28,9 +26,6 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       <div className="flex flex-col gap-0.5 mt-2">
         <p className="text-sm font-bold text-slate-800 dark:text-slate-100 font-sans tracking-tight">
           {message}
-        </p>
-        <p className="text-xs text-amber-600 font-semibold font-sans">
-          {hindiMessage}
         </p>
       </div>
     </div>

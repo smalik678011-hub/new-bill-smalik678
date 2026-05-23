@@ -51,7 +51,7 @@ export default function ClientBreakdown({
         <div className="flex items-center space-x-2">
           <Users className="h-5 w-5 text-amber-500" />
           <h3 className="text-xs font-black uppercase tracking-wider text-gray-200">
-            ग्रहक अनुसार कमाई विश्लेषण (Client Income Breakdown)
+            Client Earnings Analysis
           </h3>
         </div>
         <span className="text-[10px] text-gray-400 font-bold border border-gray-800 px-2.5 py-1 rounded-xl bg-gray-950 font-mono">
@@ -127,7 +127,7 @@ export default function ClientBreakdown({
 
         {clientIncomeList.length === 0 && (
           <div className="text-center py-12 text-xs text-gray-500 bg-gray-950 rounded-2xl border border-dashed border-gray-850 p-4">
-            इस महीने किसी भी ग्राहक के नाम कोई बिल (Invoice) नहीं बनाया गया है।
+            No invoices have been billed to any customer this month.
           </div>
         )}
       </div>

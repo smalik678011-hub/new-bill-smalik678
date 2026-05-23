@@ -66,10 +66,9 @@ export const PWAInstallPrompt: React.FC = () => {
           <div className="flex-1 min-w-0">
             <h4 className="text-xs font-black text-white flex items-center gap-1.5 flex-wrap">
               <span>Install BillKaro App</span>
-              <span className="text-[10px] text-amber-500 font-bold">(ऐप डाउनलोड करें)</span>
             </h4>
             <p className="text-[10px] text-slate-400 font-sans mt-0.5 leading-snug">
-              Fast, bilingual invoice maker ledger directly on your phone home screen!
+              Fast, modern invoice creator ledger directly on your home screen!
             </p>
           </div>
 
@@ -86,7 +85,7 @@ export const PWAInstallPrompt: React.FC = () => {
               onClick={handleClose}
               className="text-[10px] text-slate-500 hover:text-white font-bold cursor-pointer text-center mt-1"
             >
-              Later / बाद में
+              Later
             </button>
           </div>
         </motion.div>

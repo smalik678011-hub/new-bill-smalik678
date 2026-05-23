@@ -35,23 +35,23 @@ export default function Sidebar() {
   const subscription = useAppStore((state) => state.subscription);
 
   const menuItems = [
-    { id: 'dashboard', path: '/', label: 'डैशबोर्ड (Overview)', icon: LayoutDashboard },
-    { id: 'clients', path: '/clients', label: 'ग्राहक खाता (Clients)', icon: Users },
-    { id: 'quotations', path: '/quotations', label: 'एस्टीमेट (Quotations)', icon: ClipboardCheck },
-    { id: 'invoices', path: '/invoices', label: 'पक्का बिल (Invoices)', icon: FileText },
-    { id: 'profit', path: '/profit', label: 'प्राइवेट बचत (Estimate Margin)', icon: Calculator },
-    { id: 'labour', path: '/labour', label: 'हाज़िरी रजिस्टर (Labour Attendance)', icon: UserCheck },
-    { id: 'expenses', path: '/expenses', label: 'कमार्इ-खर्चा (Expense Book)', icon: TrendingUp },
-    { id: 'digital-card', path: '/digital-card', label: 'डिजिटल कार्ड (Visiting Card)', icon: CreditCard },
-    { id: 'stock', path: '/stock', label: 'स्टॉक माल (Inventory)', icon: Package },
-    { id: 'profile', path: '/settings', label: 'सेटिंग्स और प्रोफाइल (Settings)', icon: Building },
+    { id: 'dashboard', path: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'clients', path: '/clients', label: 'Clients', icon: Users },
+    { id: 'quotations', path: '/quotations', label: 'Estimates (Quotations)', icon: ClipboardCheck },
+    { id: 'invoices', path: '/invoices', label: 'Invoices', icon: FileText },
+    { id: 'profit', path: '/profit', label: 'Project Margin', icon: Calculator },
+    { id: 'labour', path: '/labour', label: 'Labour & Attendance', icon: UserCheck },
+    { id: 'expenses', path: '/expenses', label: 'Expenses', icon: TrendingUp },
+    { id: 'digital-card', path: '/digital-card', label: 'Visiting Card', icon: CreditCard },
+    { id: 'stock', path: '/stock', label: 'Inventory (Stock)', icon: Package },
+    { id: 'profile', path: '/settings', label: 'Settings & Profile', icon: Building },
   ];
 
   const handleLogout = async () => {
     localStorage.removeItem('billkaro_demo_user');
     try {
       await supabase.auth.signOut();
-      toast.success('लॉगआउट सफल रहा!');
+      toast.success('Logged out successfully!');
       navigate('/signin');
     } catch (err: any) {
       navigate('/signin');
@@ -148,7 +148,7 @@ export default function Sidebar() {
         >
           <LogOut className="h-4.5 w-4.5 text-amber-500 group-hover:text-amber-500" />
           {!collapsed && (
-            <span className="text-xs font-black group-hover:text-amber-500">{t('लॉगआउट (Log Out)')}</span>
+            <span className="text-xs font-black group-hover:text-amber-500">Log Out</span>
           )}
         </button>
       </div>

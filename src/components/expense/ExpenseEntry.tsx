@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Calendar, FileText, Search, CreditCard, X, Wrench } from 'lucide-react';
-
+import { Plus, Trash2, Calendar, Search, X, Wrench } from 'lucide-react';
 
 interface ExpenseEntryProps {
   expenses: any[];
@@ -16,7 +15,6 @@ export default function ExpenseEntry({
   loading
 }: ExpenseEntryProps) {
 
-  
   const [showForm, setShowForm] = useState(false);
   const [category, setCategory] = useState('Material');
   const [amount, setAmount] = useState('');
@@ -29,7 +27,7 @@ export default function ExpenseEntry({
     e.preventDefault();
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      alert('कृपया सही रकम भरें!');
+      alert('Please enter a valid amount!');
       return;
     }
 
@@ -47,7 +45,6 @@ export default function ExpenseEntry({
   };
 
   const filteredExpenses = expenses.filter(exp => {
-    // Only direct expenses
     if (exp.type && exp.type !== 'Expense') return false;
     
     const term = search.toLowerCase();
@@ -64,7 +61,7 @@ export default function ExpenseEntry({
         <div className="flex items-center space-x-2">
           <Wrench className="h-5 w-5 text-amber-500" />
           <h3 className="text-xs font-black uppercase tracking-wider text-gray-200">
-            दैनिक खर्च बही (Direct Expense Journal)
+            Direct Expense Journal
           </h3>
         </div>
         <button
@@ -72,13 +69,13 @@ export default function ExpenseEntry({
           className="bg-amber-500 hover:bg-amber-400 text-black font-black py-1.5 px-3 rounded-xl text-[11px] flex items-center space-x-1 transition cursor-pointer"
         >
           <Plus className="h-4 w-4" />
-          <span>नया खर्चा दर्ज करें</span>
+          <span>Record Expense</span>
         </button>
       </div>
 
       {loading && (
         <div className="text-center py-4 text-xs text-gray-550 italic animate-pulse font-mono">
-          डेटा सिंक हो रहा है...
+          Syncing expenses...
         </div>
       )}
 
@@ -87,7 +84,7 @@ export default function ExpenseEntry({
         <form onSubmit={handleSubmit} className="bg-gray-950 border border-gray-850 p-4 rounded-2xl space-y-3.5 shadow-inner">
           <div className="flex justify-between items-center pb-1.5 border-b border-gray-900">
             <h4 className="text-[11px] font-black text-amber-500 uppercase flex items-center">
-              📝 नया नगद खर्चा लिखें (New Expense Entry)
+              📝 New Expense Entry
             </h4>
             <button type="button" onClick={() => setShowForm(false)} className="text-gray-500 hover:text-white">
               <X className="h-4 w-4" />
@@ -96,22 +93,22 @@ export default function ExpenseEntry({
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">खर्च की श्रेणी (Category) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Category *</label>
               <select
                 value={category}
                 onChange={e => setCategory(e.target.value)}
                 className="w-full bg-[#0B0F1A] border border-gray-800 rounded-xl p-2.5 text-xs text-secondary focus:outline-none"
               >
-                <option value="Material">Material (सामग्री)</option>
-                <option value="Labour">Labour (मजदूरी / कारीगरी)</option>
-                <option value="Transport">Transport (डीजल / गाड़ी / भाड़ा)</option>
-                <option value="Tool">Tool (औजार / मरम्मत / मशीन)</option>
-                <option value="Other">Other (चाय / नाश्ता / अन्य)</option>
+                <option value="Material">Material</option>
+                <option value="Labour">Labour</option>
+                <option value="Transport">Transport</option>
+                <option value="Tool">Tools & Repair</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">रकम (Amount ₹) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Amount (₹) *</label>
               <div className="relative">
                 <span className="absolute left-2.5 top-2.5 text-xs text-amber-500 font-bold">₹</span>
                 <input
@@ -126,7 +123,7 @@ export default function ExpenseEntry({
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">खर्च की तिथि (Date) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Expense Date *</label>
               <input
                 type="date"
                 required
@@ -137,7 +134,7 @@ export default function ExpenseEntry({
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">विवरण / नोट (Remarks)</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Remarks / Description</label>
               <input
                 type="text"
                 placeholder="e.g. Pappu Saria Aligarh"
@@ -153,7 +150,7 @@ export default function ExpenseEntry({
             disabled={saving}
             className="w-full bg-amber-500 hover:bg-amber-400 text-black py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition disabled:opacity-50 cursor-pointer font-mono"
           >
-            {saving ? 'Saving...' : 'बहीखाता में खर्चा सहेजें (Save Expense)'}
+            {saving ? 'Saving...' : 'Save Expense'}
           </button>
         </form>
       )}
@@ -164,7 +161,7 @@ export default function ExpenseEntry({
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
           <input
             type="text"
-            placeholder="Cement, Aligarh, Material, Date आदि से सर्च करें..."
+            placeholder="Search by Cement, Aligarh, Material, Date etc..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full bg-gray-950 border border-gray-850 text-xs rounded-xl py-2 pl-9 pr-3 text-white placeholder-gray-650 focus:outline-[#f59e0b]"
@@ -209,7 +206,7 @@ export default function ExpenseEntry({
               <button
                 onClick={() => onDeleteExpense(exp.id)}
                 className="text-gray-500 hover:text-red-400 hover:bg-red-500/15 p-2 rounded-xl transition cursor-pointer"
-                title="हटाएं"
+                title="Delete"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -218,8 +215,8 @@ export default function ExpenseEntry({
         ))}
 
         {!loading && filteredExpenses.length === 0 && (
-          <div className="text-center py-10 text-xs text-gray-500 bg-gray-950 rounded-2xl border border-dashed border-gray-850 p-4">
-            कोई खर्चा नहीं मिला। {search ? 'सर्च कीवर्ड बदलें।' : 'नया खर्चा जोड़ने के लिए ऊपर "नया खर्चा दर्ज करें" का बटन दबाएं।'}
+          <div className="text-center py-10 text-xs text-gray-550 bg-gray-950 rounded-2xl border border-dashed border-gray-850 p-4">
+            No expenses found. {search ? 'Try changing your search keywords.' : 'Click "Record Expense" above to post a new transaction.'}
           </div>
         )}
       </div>

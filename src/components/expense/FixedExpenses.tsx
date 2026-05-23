@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Bell, AlertTriangle, CreditCard, CheckCircle2, Calendar, HelpCircle, X, ShieldAlert } from 'lucide-react';
-
+import { Plus, Trash2, Bell, CreditCard, X } from 'lucide-react';
 
 interface FixedExpensesProps {
   fixedExpenses: any[];
@@ -18,7 +17,6 @@ export default function FixedExpenses({
   loading
 }: FixedExpensesProps) {
 
-  
   const [showAddForm, setShowAddForm] = useState(false);
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
@@ -32,7 +30,6 @@ export default function FixedExpenses({
 
     setSaving(true);
     try {
-      // Create readable format for day
       const suffix = dueDateStr === '1' ? 'st' : dueDateStr === '2' ? 'nd' : dueDateStr === '3' ? 'rd' : 'th';
       const formattedDueDate = `${dueDateStr}${suffix} day of month`;
 
@@ -49,12 +46,10 @@ export default function FixedExpenses({
     }
   };
 
-  // Check if a fixed expense is Overdue or Due Soon
   const getDueStatusAndBadge = (fe: any) => {
     const today = new Date();
     const currentDay = today.getDate();
     
-    // Attempt to extract due day digit from strings like "5th day of month" or "10th"
     const digitMatch = (fe.due_date || fe.dueDate || '').match(/\d+/);
     const dueDay = digitMatch ? parseInt(digitMatch[0]) : 5;
 
@@ -71,19 +66,19 @@ export default function FixedExpenses({
     if (currentDay > dueDay) {
       return {
         badgeColor: 'bg-rose-500/10 border-rose-500/25 text-rose-400 animate-pulse',
-        badgeText: '⏳ Overdue (विलंबित)',
+        badgeText: '⏳ Overdue',
         isOverdue: true
       };
     } else if (currentDay === dueDay) {
       return {
         badgeColor: 'bg-amber-500/10 border-amber-500/25 text-amber-400 animate-pulse',
-        badgeText: '⚡ DUE TODAY (आज तिथि है)',
+        badgeText: '⚡ DUE TODAY',
         isOverdue: false
       };
     } else if (dueDay - currentDay <= 3) {
       return {
         badgeColor: 'bg-amber-500/10 border-amber-500/10 text-amber-500',
-        badgeText: '🔔 DUE SOON (निकट है)',
+        badgeText: '🔔 DUE SOON',
         isOverdue: false
       };
     }
@@ -103,7 +98,7 @@ export default function FixedExpenses({
         <div className="flex items-center space-x-2">
           <Bell className="h-5 w-5 text-amber-500" />
           <h3 className="text-xs font-black uppercase tracking-wider text-gray-200">
-            मासिक बँधे खर्चे (Recurring Costs Ledger)
+            Recurring Costs Ledger
           </h3>
         </div>
         <button
@@ -111,13 +106,13 @@ export default function FixedExpenses({
           className="bg-amber-500 hover:bg-amber-400 text-black font-black py-1.5 px-3 rounded-xl text-[11px] flex items-center space-x-1 transition cursor-pointer"
         >
           <Plus className="h-4 w-4" />
-          <span>नया मासिक खर्च जोड़ें</span>
+          <span>Add Recurring Cost</span>
         </button>
       </div>
 
       {loading && (
         <div className="text-center py-4 text-xs text-gray-550 italic animate-pulse font-mono">
-          डेटा सिंक किया जा रहा है...
+          Syncing recurring costs...
         </div>
       )}
 
@@ -126,7 +121,7 @@ export default function FixedExpenses({
         <form onSubmit={handleSubmit} className="bg-gray-950 border border-gray-850 p-4 rounded-2xl space-y-3.5 shadow-inner">
           <div className="flex justify-between items-center pb-1.5 border-b border-gray-900">
             <h4 className="text-[11px] font-black text-amber-500 uppercase flex items-center">
-              ⚙️ नया नियमित खर्च जोड़ें (Add Recurring Fixed Cost)
+              ⚙️ Add Recurring Fixed Cost
             </h4>
             <button type="button" onClick={() => setShowAddForm(false)} className="text-gray-500 hover:text-white">
               <X className="h-4 w-4" />
@@ -135,11 +130,11 @@ export default function FixedExpenses({
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">खर्च का नाम (Expense Name) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Expense Name *</label>
               <input
                 type="text"
                 required
-                placeholder="e.g. Workshop Rent / Bijli"
+                placeholder="e.g. Workshop Rent / Electricity"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 className="w-full bg-[#0B0F1A] border border-gray-800 rounded-xl p-2.5 text-xs text-secondary focus:outline-none"
@@ -147,7 +142,7 @@ export default function FixedExpenses({
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">रकम (Amount ₹) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Amount (₹) *</label>
               <div className="relative">
                 <span className="absolute left-2.5 top-2.5 text-xs text-amber-500 font-bold">₹</span>
                 <input
@@ -162,26 +157,26 @@ export default function FixedExpenses({
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">अंतराल (Frequency) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Frequency *</label>
               <select
                 value={frequency}
                 onChange={e => setFrequency(e.target.value as any)}
                 className="w-full bg-[#0B0F1A] border border-gray-800 rounded-xl p-2.5 text-xs text-white focus:outline-none"
               >
-                <option value="Monthly">Monthly (हर महीने)</option>
-                <option value="Quarterly">Quarterly (हर तिमाही / 3 Month)</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly (Every 3 Months)</option>
               </select>
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">देय तारीख (Due Day of Month) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Due Day of Month *</label>
               <select
                 value={dueDateStr}
                 onChange={e => setDueDateStr(e.target.value)}
                 className="w-full bg-[#0B0F1A] border border-gray-800 rounded-xl p-2.5 text-xs text-white focus:outline-none"
               >
                 {Array.from({ length: 28 }, (_, i) => String(i + 1)).map(dayNum => (
-                  <option key={dayNum} value={dayNum}>{dayNum} तारीख को</option>
+                  <option key={dayNum} value={dayNum}>Day {dayNum}</option>
                 ))}
               </select>
             </div>
@@ -192,7 +187,7 @@ export default function FixedExpenses({
             disabled={saving}
             className="w-full bg-amber-500 hover:bg-amber-400 text-black py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition disabled:opacity-50 cursor-pointer font-mono"
           >
-            {saving ? 'Saving...' : 'बँधा खर्चा सिंक करें (Save Recurring Expense)'}
+            {saving ? 'Saving...' : 'Save Recurring Expense'}
           </button>
         </form>
       )}
@@ -256,7 +251,7 @@ export default function FixedExpenses({
                   <button
                     onClick={() => onDeleteFixedExpense(fe.id)}
                     className="text-gray-500 hover:text-red-400 hover:bg-red-500/15 p-2 rounded-xl transition cursor-pointer"
-                    title="रद्द करें"
+                    title="Delete"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -268,7 +263,7 @@ export default function FixedExpenses({
 
         {fixedExpenses.length === 0 && (
           <div className="text-center py-10 text-xs text-gray-550 bg-gray-950 rounded-2xl border border-dashed border-gray-850">
-            कोई बंधा हुआ मासिक खर्च नहीं है। ऊपर बटन दबाकर बिजली बिल या किराया बही दर्ज करें!
+            No recurring costs found. Click the button above to add fixed costs like workshop rent, salaries, or utility leases!
           </div>
         )}
       </div>

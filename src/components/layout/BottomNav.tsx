@@ -23,10 +23,10 @@ export default function BottomNav({ onMoreClick }: BottomNavProps) {
   const { t } = useTranslation();
 
   const menuItems = [
-    { id: 'dashboard', path: '/', label: 'डैशबोर्ड', sub: 'Home', icon: LayoutDashboard },
-    { id: 'clients', path: '/clients', label: 'ग्राहक खाता', sub: 'Clients', icon: Users },
-    { id: 'invoices', path: '/invoices', label: 'पक्का बिल', sub: 'Invoices', icon: FileText },
-    { id: 'labour', path: '/labour', label: 'हाज़िरी', sub: 'Labour', icon: UserCheck },
+    { id: 'dashboard', path: '/', label: 'Dashboard', sub: 'Home', icon: LayoutDashboard },
+    { id: 'clients', path: '/clients', label: 'Clients', sub: 'Clients', icon: Users },
+    { id: 'invoices', path: '/invoices', label: 'Invoices', sub: 'Invoices', icon: FileText },
+    { id: 'labour', path: '/labour', label: 'Labour', sub: 'Labour', icon: UserCheck },
   ];
 
   return (
@@ -46,7 +46,7 @@ export default function BottomNav({ onMoreClick }: BottomNavProps) {
             >
               <item.icon className={`h-5 w-5 mb-1 ${isActive ? 'stroke-[2.5px]' : 'stroke-[2px]'}`} />
               <span className="text-[9.5px] leading-tight block font-black truncate max-w-full">
-                {t(`${item.label} (${item.sub})`)}
+                {item.label}
               </span>
             </button>
           );
@@ -59,7 +59,7 @@ export default function BottomNav({ onMoreClick }: BottomNavProps) {
         >
           <Menu className="h-5 w-5 mb-1 text-amber-500" />
           <span className="text-[9.5px] font-black leading-tight block">
-            अधिक (More)
+            More
           </span>
         </button>
       </div>

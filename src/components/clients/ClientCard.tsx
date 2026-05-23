@@ -1,10 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Phone, Calendar, ArrowRight, User, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Phone, Calendar, ArrowRight, User } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Client } from '../../types';
-
-
 
 interface ClientCardProps {
   client: Client & {
@@ -30,15 +28,15 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
   let statusDotClass = 'bg-emerald-500';
 
   if (finalDue > 0) {
-    statusText = 'बकायादार (Due)';
+    statusText = 'Pending';
     statusColorClass = 'bg-rose-500/10 text-rose-400 border border-rose-500/20';
     statusDotClass = 'bg-rose-500';
   } else if (finalDue < 0) {
-    statusText = 'एडवांस सप्लायर (Supplier)';
+    statusText = 'Advance';
     statusColorClass = 'bg-purple-500/10 text-purple-400 border border-purple-500/20';
     statusDotClass = 'bg-purple-500';
   } else {
-    statusText = 'चुक्ता हिसाब (Clear)';
+    statusText = 'Cleared';
     statusColorClass = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
     statusDotClass = 'bg-emerald-500';
   }
@@ -46,7 +44,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
   // If there is a deadline and the deadline is crossed and there is positive due, mark as overdrive!
   const todayStr = new Date().toISOString().split('T')[0];
   if (client.deadline && client.deadline < todayStr && finalDue > 0) {
-    statusText = 'डेडलाइन पार (Overdue)';
+    statusText = 'Overdue';
     statusColorClass = 'bg-rose-500/10 text-rose-400 border border-rose-500/20';
     statusDotClass = 'bg-rose-500 animate-ping';
   }
@@ -88,7 +86,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
         {/* Due Balance Display */}
         <div className="text-right">
           <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-mono font-bold block">
-            {finalDue > 0 ? 'बाकी भुगतान' : finalDue < 0 ? 'सुरक्षित जमा' : 'लेनदेन ख़त्म'}
+            {finalDue > 0 ? 'Dues Outstanding' : finalDue < 0 ? 'Advance Deposited' : 'All Balanced'}
           </span>
           <span className={`text-sm font-black ${finalDue > 0 ? 'text-rose-400' : finalDue < 0 ? 'text-purple-400' : 'text-gray-400'}`}>
             {(finalDue ?? 0) === 0 ? '₹0' : '₹' + Math.abs(finalDue ?? 0).toLocaleString('en-IN')}
@@ -100,10 +98,10 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
       <div className="flex flex-col space-y-1 bg-[#0B0F1A]/30 p-2.5 rounded-xl border border-gray-850">
         {client.phone && client.phone !== 'NA' && (
           <div className="flex items-center justify-between text-[11px]">
-            <span className="text-gray-500 font-bold">फ़ोन (Contact):</span>
+            <span className="text-gray-500 font-bold">Contact Phone:</span>
             <button 
               onClick={handleCall}
-              className="text-amber-500 hover:text-amber-400 font-extrabold flex items-center space-x-1 hover:underline"
+              className="text-amber-500 hover:text-amber-400 font-extrabold flex items-center space-x-1 hover:underline cursor-pointer"
             >
               <Phone className="h-3 w-3 mr-0.5" />
               <span>{client.phone}</span>
@@ -113,7 +111,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
 
         {client.deadline && (
           <div className="flex items-center justify-between text-[11px]">
-            <span className="text-gray-500 font-bold">डेडलाइन (Deadline):</span>
+            <span className="text-gray-500 font-bold">Work Deadline:</span>
             <span className="text-gray-350 font-bold flex items-center">
               <Calendar className="h-3 w-3 mr-1 text-amber-500" />
               {client.deadline}
@@ -123,7 +121,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
 
         {client.lastActivityDate && (
           <div className="flex items-center justify-between text-[10px]">
-            <span className="text-gray-550">लास्ट एक्टिविटी (Last Active):</span>
+            <span className="text-gray-500">Last Activity:</span>
             <span className="text-gray-400 font-mono text-right">{client.lastActivityDate}</span>
           </div>
         )}
@@ -132,10 +130,10 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
       {/* Action Footer banner */}
       <div className="flex items-center justify-between pt-2 border-t border-gray-850/60 text-[10.5px]">
         <span className="text-gray-500 text-[10px]">
-          {client.source ? `स्रोत: ${client.source}` : 'खाता प्रविष्टि: Direct'}
+          {client.source ? `Source: ${client.source}` : 'Registry: Direct'}
         </span>
         <span className="text-amber-500 font-black flex items-center space-x-1 group">
-          <span>विवरण देखें (Profile)</span>
+          <span>View Ledger</span>
           <ArrowRight className="h-3 w-3 transform group-hover:translate-x-0.5 transition-transform" />
         </span>
       </div>

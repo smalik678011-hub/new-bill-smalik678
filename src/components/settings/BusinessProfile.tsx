@@ -141,7 +141,7 @@ export default function BusinessProfile() {
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('लोगो साइज़ 2MB से कम होना चाहिए!');
+      toast.error('Logo image size must be less than 2MB!');
       return;
     }
 
@@ -164,7 +164,7 @@ export default function BusinessProfile() {
             .getPublicUrl(filePath);
 
           setForm(prev => ({ ...prev, logoUrl: publicUrl }));
-          toast.success('लोगो का चित्र अपलोड कर दिया गया!');
+          toast.success('Logo uploaded successfully!');
           setUploading(false);
           return;
         } else {
@@ -175,12 +175,12 @@ export default function BusinessProfile() {
       const reader = new FileReader();
       reader.onload = () => {
         setForm(prev => ({ ...prev, logoUrl: reader.result as string }));
-        toast.success('लोगो लोकल मेमोरी में सहेज लिया गया (Offline Base64)!');
+        toast.success('Logo saved locally (Offline Base64)!');
       };
       reader.readAsDataURL(file);
     } catch (err) {
       console.error('Logo upload error:', err);
-      toast.error('लोगो लगाने के प्रयास में गड़बड़ हुई!');
+      toast.error('Failed to upload logo image!');
     } finally {
       setUploading(false);
     }
@@ -238,10 +238,10 @@ export default function BusinessProfile() {
           }
         }
       }
-      toast.success('प्रोफाइल डेटा सफलता पूर्वक अपडेट हो गया!');
+      toast.success('Profile data updated successfully!');
     } catch (err) {
       console.error('Save profile failure:', err);
-      toast.error('प्रोफाइल डेटा सहेजने में विफलता हुई!');
+      toast.error('Failed to save profile details!');
     } finally {
       setSaving(false);
     }
@@ -264,7 +264,7 @@ export default function BusinessProfile() {
         {/* LOGO Uploader container */}
         <div className="flex flex-col items-center justify-center p-4 border border-dashed border-gray-800 rounded-2xl relative bg-[#070912]">
           <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider mb-3">
-            व्यापारिक लोगो (Business Logo)
+            Business Logo
           </span>
 
           <div className="relative h-28 w-28 rounded-2xl bg-[#0F1424] border border-gray-800 flex items-center justify-center overflow-hidden shrink-0 shadow-lg group">
@@ -287,7 +287,7 @@ export default function BusinessProfile() {
           </div>
 
           <label className="mt-4 bg-gray-900 hover:bg-gray-855 border border-gray-855 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider text-gray-300 cursor-pointer transition">
-            लोगो फ़ाइल चुनें (Choose Image)
+            Choose Logo Image
             <input 
               type="file" 
               accept="image/*"
@@ -306,14 +306,14 @@ export default function BusinessProfile() {
           <div className="flex items-center space-x-2 border-b border-gray-900 pb-1.5">
             <Languages className="h-4.5 w-4.5 text-amber-500" />
             <h4 className="text-[11px] font-black uppercase tracking-wider text-amber-500">
-              प्रणाली एवं भाषा प्राथमिकता (System & Language Settings)
+              System Language & Preferences
             </h4>
           </div>
 
           <div className="space-y-3">
             <div>
               <label className="text-[10px] text-gray-400 uppercase font-bold block mb-1.5">
-                एप्लीकेशन की डिफ़ॉल्ट भाषा (In-app Preferred language)
+                Preferred App Language
               </label>
               
               <div className="grid grid-cols-3 gap-2 bg-[#0a0d16] p-1 rounded-xl border border-gray-855">
@@ -331,7 +331,7 @@ export default function BusinessProfile() {
                         localStorage.setItem('billkaro_language', nextLang);
                         toast.success(
                           nextLang === 'Hindi' 
-                            ? 'भाषा बदलकर हिंदी कर दी गई है!' 
+                            ? 'Language preference updated to Hindi!' 
                             : nextLang === 'English' 
                               ? 'Language preference updated to English!' 
                               : 'Language preference updated to Hinglish!'
@@ -343,33 +343,32 @@ export default function BusinessProfile() {
                           : 'text-gray-400 hover:text-white'
                       }`}
                     >
-                      {langOption === 'Hinglish' ? '💬 Hinglish' : langOption === 'Hindi' ? '🇮🇳 हिंदी' : '🇬🇧 English'}
+                      {langOption === 'Hinglish' ? '💬 Hinglish' : langOption === 'Hindi' ? '🇮🇳 Hindi' : '🇬🇧 English'}
                     </button>
                   );
                 })}
               </div>
               <p className="text-[9.5px] text-gray-550 mt-1.5 leading-relaxed">
-                यह सेटिंग आपके इनवॉइस जनरेटर, खतौनी और रसीद स्क्रीन के हिंदी/इंग्लिश अनुवाद को प्रभावित करेगी।
+                Choose the display language for invoices, bill generators, and ledgers.
               </p>
             </div>
           </div>
         </div>
-
       </div>
 
       {/* Main ledger input forms */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* Column Left: Basic dhandha info */}
+        {/* Column Left: Basic business info */}
         <div className="lg:col-span-2 bg-gray-950 p-5 rounded-3xl border border-gray-855 space-y-4">
           <div className="flex items-center space-x-2 pb-2 border-b border-gray-900">
             <Building className="h-4.5 w-4.5 text-amber-500" />
-            <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">कंपनी / दुकान के बुनियादी विवरण (Basic Corporate Info)</h4>
+            <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">Basic Business Information</h4>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">व्यापार का नाम / दुकान का नाम (Business Name) *</label>
+              <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Business Name *</label>
               <input 
                 type="text" 
                 required
@@ -382,7 +381,7 @@ export default function BusinessProfile() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">मालिक / ओनर का नाम (Owner Name) *</label>
+                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Owner Name *</label>
                 <input 
                   type="text" 
                   required
@@ -394,7 +393,7 @@ export default function BusinessProfile() {
               </div>
 
               <div>
-                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">मोबाइल नंबर (Primary Mobile) *</label>
+                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Mobile Number *</label>
                 <input 
                   type="text" 
                   maxLength={10} 
@@ -408,7 +407,7 @@ export default function BusinessProfile() {
             </div>
 
             <div>
-              <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">दुकान / गोदाम का पता (Full Address) *</label>
+              <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Full Address *</label>
               <textarea 
                 rows={2}
                 required
@@ -420,12 +419,12 @@ export default function BusinessProfile() {
             </div>
 
             <div>
-              <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">इनवॉइस बिल पर आने वाले रिमार्क्स (Default Terms/Signature Text)</label>
+              <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Invoice Terms & Remarks Notes</label>
               <input 
                 type="text" 
                 value={form.signatureText}
                 onChange={e => setForm({ ...form, signatureText: e.target.value })}
-                placeholder="e.g. माल की डिलीवरी पर पेमेंट अनिवार्य है। | Thank you!"
+                placeholder="e.g. Payment due upon delivery. Thank you!"
                 className="w-full bg-[#0B0F1A] border border-gray-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
               />
             </div>
@@ -435,8 +434,8 @@ export default function BusinessProfile() {
           <div className="border-t border-gray-900 pt-4 mt-2">
             <div className="flex items-center justify-between p-3 bg-[#0B0F1A] border border-gray-800/60 rounded-2xl">
               <div>
-                <h5 className="text-[11.5px] font-black text-gray-100 uppercase tracking-tight">जीएसटी रजिस्ट्रेशन स्थिति (GST Registration Level)</h5>
-                <p className="text-[9.5px] text-gray-550">क्या यह संस्थान / फ़र्म GST कर चुकाती है?</p>
+                <h5 className="text-[11.5px] font-black text-gray-100 uppercase tracking-tight">GST Registration Status</h5>
+                <p className="text-[9.5px] text-gray-550">Is this firm/business GST registered?</p>
               </div>
               <input 
                 type="checkbox"
@@ -448,7 +447,7 @@ export default function BusinessProfile() {
 
             {form.isRegisteredGST && (
               <div className="mt-3.5 animate-fadeIn">
-                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">15-अंकीय जीएसटी नंबर (GSTIN Number)</label>
+                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">15-Digit GSTIN Number</label>
                 <input 
                   type="text" 
                   maxLength={15}
@@ -469,12 +468,12 @@ export default function BusinessProfile() {
           <div className="bg-gray-950 p-5 rounded-3xl border border-gray-855 space-y-4">
             <div className="flex items-center space-x-2 pb-2 border-b border-gray-900">
               <Smartphone className="h-4.5 w-4.5 text-amber-500" />
-              <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">बैंक खाता विवरण (Bank Credentials)</h4>
+              <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">Bank Account Details</h4>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">बैंक का नाम (Bank Name)</label>
+                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Bank Name</label>
                 <input 
                   type="text" 
                   value={form.bankName}
@@ -485,7 +484,7 @@ export default function BusinessProfile() {
               </div>
 
               <div>
-                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">खाता संख्या (Account Number)</label>
+                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Account Number</label>
                 <input 
                   type="text" 
                   value={form.accountNumber}
@@ -496,7 +495,7 @@ export default function BusinessProfile() {
               </div>
 
               <div>
-                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">आईएफसी कोड (IFSC Code)</label>
+                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">IFSC Code</label>
                 <input 
                   type="text" 
                   maxLength={11}
@@ -513,12 +512,12 @@ export default function BusinessProfile() {
           <div className="bg-gray-950 p-5 rounded-3xl border border-gray-855 space-y-4">
             <div className="flex items-center space-x-2 pb-2 border-b border-gray-900">
               <QrCode className="h-4.5 w-4.5 text-amber-500" />
-              <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">UPI आईडी और क्यूआर (Payment QR)</h4>
+              <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">UPI ID & Payment QR</h4>
             </div>
 
             <div className="space-y-3.5">
               <div>
-                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">गूगल पे/पेटीएम आईडी (UPI ID)</label>
+                <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">UPI ID (GPay / PhonePe / Paytm)</label>
                 <input 
                   type="text" 
                   value={form.upiId}
@@ -544,7 +543,7 @@ export default function BusinessProfile() {
                 </div>
               ) : (
                 <div className="bg-[#0B0F1A]/50 border border-gray-900 border-dashed py-6 px-4 rounded-2xl text-center text-[10px] text-gray-550 italic leading-normal">
-                  ऊपर सही UPI आईडी भरने पर बिल पर छपने वाला पेमेंट क्यूआर कोड यहाँ खुद-ब-खुद जनरेट हो जायेगा!
+                  Fill in your UPI ID above to generate a scannable payment QR code on invoice PDFs!
                 </div>
               )}
             </div>
@@ -562,7 +561,7 @@ export default function BusinessProfile() {
           className="bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 transition cursor-pointer shadow-lg shadow-amber-500/10 font-mono"
         >
           <Save className="h-4.5 w-4.5" />
-          <span>{saving ? 'सहेजा जा रहा है...' : 'प्रोफाइल बुक सुरक्षित करें (Save Profile Update)'}</span>
+          <span>{saving ? 'Saving...' : 'Save Profile Details'}</span>
         </button>
       </div>
 

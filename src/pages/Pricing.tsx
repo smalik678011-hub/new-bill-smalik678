@@ -49,7 +49,7 @@ export default function Pricing() {
   const handleUpgrade = async (plan: 'FREE' | 'PRO' | 'YEARLY', price: number) => {
     if (plan === 'FREE') {
       setSubscription('FREE');
-      toast.success('स्विचड टू फ्री ट्रायल खाता!');
+      toast.success('Switched to basic free trial plan!');
       return;
     }
 
@@ -57,12 +57,11 @@ export default function Pricing() {
     const scriptLoaded = await loadRazorpayScript();
 
     if (!scriptLoaded) {
-      // If scripts were blocked, we proceed with a highly polished sandbox simulation
-      // this ensures the user still gets upgraded and the feature works offline!
+      // If scripts were blocked, we proceed with a sandbox simulation
       setTimeout(() => {
         setSubscription(plan);
         setLoadingPlan(null);
-        toast.success(`भुगतान सफल! आप ${plan} मेम्बर बन गए हैं।`);
+        toast.success(`Payment successful! You are now a ${plan} member.`);
         navigate('/settings');
       }, 1500);
       return;
@@ -75,12 +74,12 @@ export default function Pricing() {
         amount: price * 100, // In Paise
         currency: 'INR',
         name: 'BillKaro Premium',
-        description: `${plan} प्लान एक्टिवेशन`,
+        description: `${plan} Plan Activation`,
         image: profile.logoUrl || 'https://raw.githubusercontent.com/lucide-react/lucide/main/icons/zap.png',
         handler: function (response: any) {
           // Success Callback
           setSubscription(plan);
-          toast.success(`बधाई हो! भुगतान आईडी ${response.razorpay_payment_id} प्राप्त हुई।`);
+          toast.success(`Congratulations! Received Payment ID ${response.razorpay_payment_id}.`);
           navigate('/settings');
         },
         prefill: {
@@ -96,7 +95,7 @@ export default function Pricing() {
         },
         modal: {
           ondismiss: function () {
-            toast.error('भुगतान निरस्त कर दिया गया था!');
+            toast.error('Payment was cancelled!');
             setLoadingPlan(null);
           }
         }
@@ -105,10 +104,9 @@ export default function Pricing() {
       const rzp = new (window as any).Razorpay(options);
       rzp.open();
     } catch (err) {
-      console.warn('Razorpay checkout initialization failed, executing smart offline fallback...', err);
-      // Beautiful offline upgrade fallback
+      console.warn('Razorpay checkout initialization failed, executing fallback...', err);
       setSubscription(plan);
-      toast.success(`सफलतापूर्वक ${plan} प्लान एक्टिवेट कर दिया गया!`);
+      toast.success(`Successfully activated the ${plan} plan!`);
       navigate('/settings');
     } finally {
       setLoadingPlan(null);
@@ -122,13 +120,13 @@ export default function Pricing() {
       {/* Pricing Header Banner */}
       <div className="text-center max-w-2xl mx-auto space-y-3.5 mt-4">
         <span className="bg-amber-400/10 border border-amber-500/25 text-amber-500 font-black uppercase text-[10px] tracking-widest px-3 py-1 rounded-full inline-block animate-pulse">
-          🎯 प्रीमियम बहीखाता (Premium Plans)
+          🎯 PREMIUM PLANS
         </span>
         <h1 className="text-xl md:text-2xl font-black text-gray-100 uppercase tracking-tight">
-          दुकान का हिसाब आसान करें, तुरंत प्रो बनें!
+          Simplify bookkeeping & upgrade to PRO today!
         </h1>
         <p className="text-xs text-gray-400 leading-relaxed text-center">
-          सीमित फ़ीचर्स की चिंता छोड़ें। मामूली शुल्क में प्राप्त करें असीमित ग्राहक एंट्री, पक्का जीएसटी बिल, पेमेंट स्कैन क्यूआर और संपूर्ण हाज़िरी रजिस्टर।
+          Stop worrying about limitations. Get unlimited customer logs, tax-compliant GST bills, instant payment scan QR codes, and roster registers.
         </p>
       </div>
 
@@ -143,7 +141,7 @@ export default function Pricing() {
         }`}>
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <span className="text-[10px] text-gray-500 font-black uppercase tracking-wider block">बेसिक ट्रायल</span>
+              <span className="text-[10px] text-gray-500 font-black uppercase tracking-wider block">Basic Free Edition</span>
               {subscription === 'FREE' && (
                 <span className="bg-gray-800 text-gray-300 text-[8.5px] px-2 py-0.5 rounded font-black border border-gray-700 capitalize">
                   Current
@@ -154,33 +152,33 @@ export default function Pricing() {
             <div>
               <h3 className="text-base font-black text-white flex items-center gap-1.5">
                 <Award className="h-5 w-5 text-gray-400" />
-                <span>मुफ़्त खाता</span>
+                <span>Free Trial Account</span>
               </h3>
               <div className="mt-2.5 flex items-baseline">
                 <span className="text-3xl font-black text-gray-100 font-mono">₹0</span>
-                <span className="text-gray-550 text-xs ml-1 font-bold">/ हमेशा के लिए</span>
+                <span className="text-gray-550 text-xs ml-1 font-bold">/ Forever Free</span>
               </div>
               <p className="text-[11px] text-gray-450 mt-1.5 leading-normal">
-                शुरुआती परीक्षण और छोटे व्यापारों के लिए जिसमें 5 क्लाइंट तक लिख सकते हैं।
+                For beginners & small startup projects looking for a clean, non-sync testing environment.
               </p>
             </div>
 
             <div className="border-t border-gray-900 pt-4 space-y-2.5 text-[11px] text-gray-300">
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span>अधिकतम 5 इनवॉइस लिमिट</span>
+                <span>Maximum 5 Invoices limit</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span>हाज़िरी एवं दैनिक खर्च्चा</span>
+                <span>Attendance & Expense logs</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-500 line-through">
                 <X className="h-3.5 w-3.5 shrink-0" />
-                <span>बिना वॉटरमार्क पीडीएफ़</span>
+                <span>Watermark-free clean PDFs</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-500 line-through">
                 <X className="h-3.5 w-3.5 shrink-0" />
-                <span>दुकान का लोगो व पेमेंट क्यूआर</span>
+                <span>Business Logo & Instant QR code</span>
               </div>
             </div>
           </div>
@@ -194,7 +192,7 @@ export default function Pricing() {
                 : 'bg-gray-900 text-white hover:bg-gray-850'
             }`}
           >
-            {subscription === 'FREE' ? 'सक्रिय खाता (Active)' : 'फ्री पर डाउनग्रेड'}
+            {subscription === 'FREE' ? 'Active Free Plan' : 'Downgrade to Free'}
           </button>
         </div>
 
@@ -206,12 +204,12 @@ export default function Pricing() {
         }`}>
           {/* Top banner tag */}
           <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-[9px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full whitespace-nowrap shadow-md">
-            RECOMMENDED (सबसे लोकप्रिय)
+            RECOMMENDED (MOST POPULAR)
           </span>
 
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <span className="text-[10px] text-amber-500 font-black uppercase tracking-wider block">मासिक बिज़नेस</span>
+              <span className="text-[10px] text-amber-500 font-black uppercase tracking-wider block">Pro Monthly Pack</span>
               {subscription === 'PRO' && (
                 <span className="bg-amber-500 text-black text-[8.5px] px-2 py-0.5 rounded font-black capitalize">
                   Current
@@ -222,33 +220,33 @@ export default function Pricing() {
             <div>
               <h3 className="text-base font-black text-white flex items-center gap-1.5">
                 <Zap className="h-5 w-5 text-amber-500 fill-current" />
-                <span>प्रो मेम्बर (PRO)</span>
+                <span>PRO Membership</span>
               </h3>
               <div className="mt-2.5 flex items-baseline">
                 <span className="text-3xl font-black text-amber-400 font-mono">₹199</span>
-                <span className="text-gray-450 text-xs ml-1 font-bold">/ प्रति महीना</span>
+                <span className="text-gray-450 text-xs ml-1 font-bold">/ Monthly</span>
               </div>
               <p className="text-[11px] text-gray-450 mt-1.5 leading-normal">
-                असीमित एंट्रीज़, ऑटोमैटिक ग्राहक पेमेंट क्यूआर कोड और संपूर्ण कस्टमाइज़ेशन।
+                Unlimited client profiles, automatic digital invoice payment QR code widgets, and full custom branding.
               </p>
             </div>
 
             <div className="border-t border-amber-950/50 pt-4 space-y-2.5 text-[11px] text-gray-200">
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span className="font-bold">असीमित पार्टी/ग्राहक (Unlimited Clients)</span>
+                <span className="font-bold">Unlimited Clients & Parties</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span className="font-bold">बिना वॉटरमार्क पीडीएफ़ (Clean PDFs)</span>
+                <span className="font-bold">Watermark-free Clean PDFs</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span>डिजिटल लोगो एवं दस्तख़त</span>
+                <span>Digital Signature & Logo Embed</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span>यूपीआई क्यूआर (Embedded QR)</span>
+                <span>Instant UPI QR Code Payments</span>
               </div>
             </div>
           </div>
@@ -265,12 +263,12 @@ export default function Pricing() {
             {loadingPlan === 'PRO' ? (
               <span className="flex items-center justify-center space-x-1">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>सहेजा जा रहा है...</span>
+                <span>Processing...</span>
               </span>
             ) : subscription === 'PRO' ? (
-              'सक्रिय प्रो प्लान'
+              'Active PRO Plan'
             ) : (
-              'PRO में अपग्रेड करें'
+              'Upgrade to PRO'
             )}
           </button>
         </div>
@@ -283,7 +281,7 @@ export default function Pricing() {
         }`}>
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <span className="text-[10px] text-emerald-400 font-black uppercase tracking-wider block">वार्षिक सुरक्षा</span>
+              <span className="text-[10px] text-emerald-400 font-black uppercase tracking-wider block">Annual Gold Saver</span>
               {subscription === 'YEARLY' && (
                 <span className="bg-emerald-500 text-black text-[8.5px] px-2 py-0.5 rounded font-black capitalize">
                   Current
@@ -294,33 +292,33 @@ export default function Pricing() {
             <div>
               <h3 className="text-base font-black text-white flex items-center gap-1.5">
                 <ShieldCheck className="h-5 w-5 text-emerald-400" />
-                <span>वार्षिक गोल्ड (Annual)</span>
+                <span>Annual Golden Plan</span>
               </h3>
               <div className="mt-2.5 flex items-baseline">
                 <span className="text-3xl font-black text-emerald-400 font-mono">₹1,499</span>
-                <span className="text-gray-450 text-xs ml-1 font-bold">/ प्रति वर्ष</span>
+                <span className="text-gray-450 text-xs ml-1 font-bold">/ Yearly</span>
               </div>
               <p className="text-[11px] text-gray-450 mt-1.5 leading-normal">
-                40% की भारी बचत! पूरे 12 महीनों तक बिंदास उपयोग करें बिना किसी चिंता के।
+                Save over 40% on annual plans! Build with peace of mind all year round.
               </p>
             </div>
 
             <div className="border-t border-emerald-950/40 pt-4 space-y-2.5 text-[11px] text-gray-200">
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                <span className="font-bold">सभी प्रो फीचर्स शामिल (All PRO Inside)</span>
+                <span className="font-bold">All Pro Features Included</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                <span className="font-bold">₹889 वार्षिक बचत (40% Super Off)</span>
+                <span className="font-bold">₹889/year bulk discount (40% OFF)</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                <span>24/7 फोन हेल्पलाइन कॉल सपोर्ट</span>
+                <span>24/7 Premium Hotline & Call Support</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                <span>भविष्य के नए फीचर्स मुफ़्त</span>
+                <span>Future updates & new add-ons free</span>
               </div>
             </div>
           </div>
@@ -340,9 +338,9 @@ export default function Pricing() {
                 <span>Processing...</span>
               </span>
             ) : subscription === 'YEARLY' ? (
-              'एक्टिव गोल्ड वार्षिक प्लान'
+              'Active Gold Annual Plan'
             ) : (
-              'सालाना गोल्ड खरीदें'
+              'Purchase Yearly Gold'
             )}
           </button>
         </div>
@@ -352,37 +350,37 @@ export default function Pricing() {
       {/* Feature Comparison Table Title */}
       <div className="pt-8 space-y-4 border-t border-gray-900">
         <h3 className="text-sm font-black text-gray-100 uppercase tracking-widest text-center">
-          विस्तृत प्लान तुलना पत्रक (Detailed Plan Comparisons)
+          Detailed Feature Comparison
         </h3>
 
         <div className="bg-[#0b0f1a] rounded-3xl border border-gray-850 overflow-hidden shadow-inner">
           <table className="w-full text-left border-collapse text-xs select-none">
             <thead>
               <tr className="bg-gray-950 text-gray-400 uppercase font-black tracking-wider text-[10px] border-b border-gray-900">
-                <th className="p-4">मुख्य विशेषता (Key Functions)</th>
-                <th className="p-4 text-center">मुफ़्त खाता (Free)</th>
-                <th className="p-4 text-center text-amber-500">प्रो सदस्य (PRO)</th>
-                <th className="p-4 text-center text-emerald-400">वार्षिक गोल्ड (Yearly)</th>
+                <th className="p-4">Key Features</th>
+                <th className="p-4 text-center">Free Tier</th>
+                <th className="p-4 text-center text-amber-500">PRO Tier</th>
+                <th className="p-4 text-center text-emerald-400">Gold Yearly Tier</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#101625] text-gray-300">
               
               <tr>
-                <td className="p-4 font-bold text-gray-200">इनवॉइस बिल लिमिट (Invoice limit)</td>
+                <td className="p-4 font-bold text-gray-200">Invoice Count Limit</td>
                 <td className="p-4 text-center font-mono text-gray-500">5 Bills Only</td>
-                <td className="p-4 text-center font-bold text-amber-500 font-mono">असीमित (Unlimited)</td>
-                <td className="p-4 text-center font-bold text-emerald-400 font-mono">असीमित (Unlimited)</td>
+                <td className="p-4 text-center font-bold text-amber-500 font-mono">Unlimited</td>
+                <td className="p-4 text-center font-bold text-emerald-400 font-mono">Unlimited</td>
               </tr>
 
               <tr>
-                <td className="p-4 font-bold text-gray-200">ग्राहक / पार्टी खतौनी (Clients directory)</td>
+                <td className="p-4 font-bold text-gray-200">Clients & Party Directories</td>
                 <td className="p-4 text-center font-mono">5 Parties max</td>
                 <td className="p-4 text-center font-bold text-amber-500 font-mono">∞ Unlimited</td>
                 <td className="p-4 text-center font-bold text-emerald-400 font-mono">∞ Unlimited</td>
               </tr>
 
               <tr>
-                <td className="p-4 font-bold text-gray-200">रशीद पीडीएफ़ पर वॉटरमार्क (PDF Watermark)</td>
+                <td className="p-4 font-bold text-gray-200">Watermark-free Invoice PDFs</td>
                 <td className="p-4 text-center text-rose-500 flex items-center justify-center">
                   <X className="h-4 w-4" />
                 </td>
@@ -395,7 +393,7 @@ export default function Pricing() {
               </tr>
 
               <tr>
-                <td className="p-4 font-bold text-gray-200">पेमेंट क्यूआर प्रिंट कोड (Payment QR on bill)</td>
+                <td className="p-4 font-bold text-gray-200">Payment Link Instant QR Code</td>
                 <td className="p-4 text-center text-gray-550 italic">No</td>
                 <td className="p-4 text-center text-emerald-500">
                   <Check className="h-4.5 w-4.5 mx-auto" />
@@ -406,7 +404,7 @@ export default function Pricing() {
               </tr>
 
               <tr>
-                <td className="p-4 font-bold text-gray-200">कामगार हाज़िरी रजिस्टर (Wages tracker)</td>
+                <td className="p-4 font-bold text-gray-200">Wages & Workers Attendance Roster</td>
                 <td className="p-4 text-center text-emerald-500">
                   <Check className="h-4.5 w-4.5 mx-auto" />
                 </td>
@@ -419,9 +417,9 @@ export default function Pricing() {
               </tr>
 
               <tr>
-                <td className="p-4 font-bold text-gray-200">कस्टमर केयर सपोर्ट (Support Helpdesk)</td>
-                <td className="p-4 text-center text-gray-500">ईमेल द्वारा</td>
-                <td className="p-4 text-center text-gray-200 font-bold">24 घंटे चैट सपोर्ट</td>
+                <td className="p-4 font-bold text-gray-200">Customer Support Helpdesk</td>
+                <td className="p-4 text-center text-gray-500">Via Email Help desk</td>
+                <td className="p-4 text-center text-gray-200 font-bold">24/7 Chat & Ticket Desk</td>
                 <td className="p-4 text-center text-emerald-400 font-bold font-sans">📞 VIP Direct Call Support</td>
               </tr>
 

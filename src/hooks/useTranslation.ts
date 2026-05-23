@@ -8,6 +8,385 @@ const ENGLISH_RANGE_REGEX = /[a-zA-Z]/;
 
 // Dictionary of purely-English to Hindi/Hinglish and purely-Hindi to English/Hinglish
 const TRANSLATION_DICTIONARY: Record<string, Record<'Hindi' | 'English' | 'Hinglish', string>> = {
+  // Labour & Attendance Suite Translation Keys
+  "कोई कारिगर नहीं मिला।": {
+    Hindi: "कोई कारिगर नहीं मिला।",
+    English: "No workers found.",
+    Hinglish: "Koi worker nahi mila."
+  },
+  "सर्च कीवर्ड बदलें": {
+    Hindi: "सर्च कीवर्ड बदलें",
+    English: "Try another search keyword.",
+    Hinglish: "Search keyword change karein."
+  },
+  "ऊपर \"नया कारीगर\" दबाकर चालू करें।": {
+    Hindi: "ऊपर \"नया कारीगर\" दबाकर चालू करें।",
+    English: "Click \"New Worker\" above to begin.",
+    Hinglish: "Upar \"New Worker\" press karke register karein."
+  },
+  "लेबर और हाज़िरी रजिस्टर": {
+    Hindi: "लेबर और हाज़िरी रजिस्टर",
+    English: "Labour & Attendance Register",
+    Hinglish: "लेबर और हाज़िरी रजिस्टर (Labour & Attendance)"
+  },
+  "Labour Roster Suite": {
+    Hindi: "लेबर और हाज़िरी रजिस्टर",
+    English: "Labour Roster Suite",
+    Hinglish: "Labour Roster Suite"
+  },
+  "कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन (हिसाब-किताब) व्यवस्थित करें।": {
+    Hindi: "कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन (हिसाब-किताब) व्यवस्थित करें।",
+    English: "Track daily attendance, view monthly calendar, and manage worker payroll/salary logs easily.",
+    Hinglish: "Workers की daily attendance लगाएं, monthly calendar देखें और salary (payroll) manage करें।"
+  },
+  "क्लाउड डेटाबेस सक्रिय (Sync Active)": {
+    Hindi: "क्लाउड डेटाबेस सक्रिय (Sync Active)",
+    English: "Cloud Database Active (Sync Active)",
+    Hinglish: "Cloud Database Active (Sync Active)"
+  },
+  "Sync Active": {
+    Hindi: "क्लाउड डेटाबेस सक्रिय",
+    English: "Sync Active",
+    Hinglish: "Sync Active"
+  },
+  "लोकल मोड सक्रिय (Local Offline Book)": {
+    Hindi: "लोकल मोड सक्रिय (Local Offline Book)",
+    English: "Offline Mode Active (Local Offline Book)",
+    Hinglish: "Offline Mode Active (Local Offline Book)"
+  },
+  "Local Offline Book": {
+    Hindi: "लोकल ऑफलाइन बही",
+    English: "Local Offline Book",
+    Hinglish: "Local Offline Book"
+  },
+  "📅 हाज़िरी कैलेंडर (Monthly & Bulk)": {
+    Hindi: "📅 हाज़िरी कैलेंडर (Monthly & Bulk)",
+    English: "📅 Attendance Calendar (Monthly & Bulk)",
+    Hinglish: "📅 Attendance Calendar (Monthly & Bulk)"
+  },
+  "👷 कारीगर प्रबंधक (Manage Workers)": {
+    Hindi: "👷 कारीगर प्रबंधक (Manage Workers)",
+    English: "👷 Manage Workers",
+    Hinglish: "👷 Workers Manager (Manage Workers)"
+  },
+  "💰 हिसाब और सैलरी (Payroll Book)": {
+    Hindi: "💰 हिसाब और सैलरी (Payroll Book)",
+    English: "💰 Salary & Payroll Ledger",
+    Hinglish: "💰 Salary & Payroll (Payroll Book)"
+  },
+  "हाज़िरी एवं कैलेंडर (Attendance Suite)": {
+    Hindi: "हाज़िरी एवं कैलेंडर (Attendance Suite)",
+    English: "Attendance & Calendar Suite",
+    Hinglish: "Attendance & Calendar (Attendance Suite)"
+  },
+  "तारीख के अनुसार": {
+    Hindi: "तारीख के अनुसार",
+    English: "By Selected Date",
+    Hinglish: "Date-wise (तारीख के अनुसार)"
+  },
+  "मासिक कैलेंडर": {
+    Hindi: "मासिक कैलेंडर",
+    English: "Monthly Calendar",
+    Hinglish: "Monthly Calendar (मासिक कैलेंडर)"
+  },
+  "हाज़िरी अपडेट सिंक हो रही है...": {
+    Hindi: "हाज़िरी अपडेट सिंक हो रही है...",
+    English: "Syncing attendance records...",
+    Hinglish: "Attendance update sync ho rahi hai..."
+  },
+  "हाजिरी की तारीख चुनें:": {
+    Hindi: "हाजिरी की तारीख चुनें:",
+    English: "Select Attendance Date:",
+    Hinglish: "Attendance Date चुनें:"
+  },
+  "सभी को उपस्थित करें (Bulk Present Only)": {
+    Hindi: "सभी को उपस्थित करें (Bulk Present Only)",
+    English: "Mark All Present (Bulk Present)",
+    Hinglish: "सभी को Present करें (Bulk Present Only)"
+  },
+  "पूर्ण (P)": {
+    Hindi: "पूर्ण (P)",
+    English: "Present (P)",
+    Hinglish: "Present (P)"
+  },
+  "आधा (½)": {
+    Hindi: "आधा (½)",
+    English: "Half (½)",
+    Hinglish: "Half Day (½)"
+  },
+  "अनु० (A)": {
+    Hindi: "अनु० (A)",
+    English: "Absent (A)",
+    Hinglish: "Absent (A)"
+  },
+  "पहले कारीगर लिस्ट में कारीगर जोड़ें!": {
+    Hindi: "पहले कारीगर लिस्ट में कारीगर जोड़ें!",
+    English: "Please add workers in the Workers List tab first!",
+    Hinglish: "पहले Workers list में workers add करें!"
+  },
+  "पहले कारीगर लिस्ट में कारीगर जोड़ें": {
+    Hindi: "पहले कारीगर लिस्ट में कारीगर जोड़ें",
+    English: "Please add workers in the Workers List tab first",
+    Hinglish: "पहले Workers list में workers add करें"
+  },
+  "पहले Workers लिस्ट में Workers Add!": {
+    Hindi: "पहले कारीगर लिस्ट में कारीगर जोड़ें!",
+    English: "Please add workers in the Workers List tab first!",
+    Hinglish: "पहले Workers list में workers add करें!"
+  },
+  "कारीगर चुनें:": {
+    Hindi: "कारीगर चुनें:",
+    English: "Select Worker:",
+    Hinglish: "Worker चुनें:"
+  },
+  "💡 तारीख पर टैप करें: स्टेटस बदलने के लिए।": {
+    Hindi: "💡 तारीख पर टैप करें: स्टेटस बदलने के लिए।",
+    English: "💡 Tap on any date to cycle attendance status.",
+    Hinglish: "💡 Date par tap karein status change karne ke liye."
+  },
+  "कैलेंडर देखने के लिए कोई कारीगर चुनें!": {
+    Hindi: "कैलेंडर देखने के लिए कोई कारीगर चुनें!",
+    English: "Select a worker to display their calendar!",
+    Hinglish: "Calendar dekhne ke liye koi worker select karein!"
+  },
+  "कैलेंडर देखने के लिए कोई कारीगर चुनें": {
+    Hindi: "कैलेंडर देखने के लिए कोई कारीगर चुनें",
+    English: "Select a worker to display their calendar",
+    Hinglish: "Calendar dekhne ke liye koi worker select karein"
+  },
+  "मजदूर एवं कारीगर लिस्ट": {
+    Hindi: "मजदूर एवं कारीगर लिस्ट",
+    English: "Workers & Staff List",
+    Hinglish: "Workers/Staff List"
+  },
+  "मजदूर एवं कारीगर लिस्ट ({workers.length})": {
+    Hindi: "मजदूर एवं कारीगर लिस्ट ({workers.length})",
+    English: "Workers & Staff Directory ({workers.length})",
+    Hinglish: "Workers & Staff Directory ({workers.length})"
+  },
+  "नया कारीगर": {
+    Hindi: "नया कारीगर",
+    English: "New Worker",
+    Hinglish: "नया कारीगर (New Worker)"
+  },
+  "नया कारीगर सहेजें": {
+    Hindi: "नया कारीगर सहेजें",
+    English: "Save New Worker",
+    Hinglish: "नया Worker सहेजें (Save Worker)"
+  },
+  "नाम (Karigar Name) *": {
+    Hindi: "नाम (Karigar Name) *",
+    English: "Full Name (Worker Name) *",
+    Hinglish: "Full Name (Worker Name) *"
+  },
+  "अपना शुभ नाम डालें": {
+    Hindi: "अपना शुभ नाम डालें",
+    English: "Enter name of worker",
+    Hinglish: "Enter name of worker"
+  },
+  "दैनिक दहाड़ी दर (₹/Day) *": {
+    Hindi: "दैनिक दहाड़ी दर (₹/Day) *",
+    English: "Daily Wages Rate (₹/Day) *",
+    Hinglish: "Daily Wage Rate (₹/Day) *"
+  },
+  "मोबाइल नंबर (Phone No.)": {
+    Hindi: "मोबाइल नंबर (Phone No.)",
+    English: "Mobile Number (Phone No.)",
+    Hinglish: "Mobile Number (Phone No.)"
+  },
+  "करीगर को रजिस्टर में जोड़ें (Save Worker)": {
+    Hindi: "करीगर को रजिस्टर में जोड़ें (Save Worker)",
+    English: "Add Worker to Register",
+    Hinglish: "Worker को Register में जोड़ें (Save Worker)"
+  },
+  "Manoj, Suresh, Rajesh, Phone No. से सर्च करें...": {
+    Hindi: "Manoj, Suresh, Rajesh, Phone No. से सर्च करें...",
+    English: "Search by name or mobile number...",
+    Hinglish: "Name, phone se search karein..."
+  },
+  "रजिस्टर से निकालें": {
+    Hindi: "रजिस्टर से निकालें",
+    English: "Remove from Register",
+    Hinglish: "Remove from Register"
+  },
+  "कारीगर लिस्ट लोड हो रही है...": {
+    Hindi: "कारीगर लिस्ट लोड हो रही है...",
+    English: "Loading worker directory...",
+    Hinglish: "Worker list load ho rahi hai..."
+  },
+  "मजदूरी बही (Roster List)": {
+    Hindi: "मजदूरी बही (Roster List)",
+    English: "Wages & Roster Ledger",
+    Hinglish: "Wages & Roster Ledger (Roster List)"
+  },
+  "भुगतान इतिहास (Payments History)": {
+    Hindi: "भुगतान इतिहास (Payments History)",
+    English: "Salary Payments History",
+    Hinglish: "Salary Payments History"
+  },
+  "महीना:": {
+    Hindi: "महीना:",
+    English: "Select Month:",
+    Hinglish: "Month (महीना):"
+  },
+  "डेटा सिंक किया जा रहा है...": {
+    Hindi: "डेटा सिंक किया जा रहा है...",
+    English: "Syncing payroll data...",
+    Hinglish: "Data sync kiya ja raha hai..."
+  },
+  "मजदूरी बही खाली है। पहले कारीगर जोड़ें।": {
+    Hindi: "मजदूरी बही खाली है। पहले कारीगर जोड़ें।",
+    English: "Payroll roster is empty. Please add workers first.",
+    Hinglish: "Payroll list empty hai. Pehle workers add karein."
+  },
+  "महीना-अन्त सारांश (Month-End Summary)": {
+    Hindi: "महीना-अन्त सारांश (Month-End Summary)",
+    English: "Month-End Payroll Summary",
+    Hinglish: "Month-End Summary"
+  },
+  "सक्रिय मजदूर (Active Workers)": {
+    Hindi: "सक्रिय मजदूर (Active Workers)",
+    English: "Active Workers count",
+    Hinglish: "Active Workers (सक्रिय मजदूर)"
+  },
+  "कुल वेतन बना (Gross Payroll)": {
+    Hindi: "कुल वेतन बना (Gross Payroll)",
+    English: "Gross Payroll Earned",
+    Hinglish: "Gross Payroll (कुल वेतन)"
+  },
+  "कुल भुगतान हुआ (Gross Paid)": {
+    Hindi: "कुल भुगतान हुआ (Gross Paid)",
+    English: "Total Salary Paid",
+    Hinglish: "Total Paid (कुल भुगतान)"
+  },
+  "शेष भुगतान लंबित (Outstanding Due)": {
+    Hindi: "शेष भुगतान लंबित (Outstanding Due)",
+    English: "Net Balanced Outstanding Dues",
+    Hinglish: "Outstanding Due (बकाया वेतन)"
+  },
+  "इस महीने में कोई सैलरी भुगतान नहीं किया गया।": {
+    Hindi: "इस महीने में कोई सैलरी भुगतान नहीं किया गया।",
+    English: "No salary disbursements recorded in this month.",
+    Hinglish: "Is month me koi salary payment nahi kiya gaya."
+  },
+  "दहाड़ी का रेट:": {
+    Hindi: "दहाड़ी का रेट:",
+    English: "Daily Rate:",
+    Hinglish: "Wage Rate:"
+  },
+  "कुल कमाया:": {
+    Hindi: "कुल कमाया:",
+    English: "Total Earned:",
+    Hinglish: "Total Earned"
+  },
+  "पहले चुकाया:": {
+    Hindi: "पहले चुकाया:",
+    English: "Previously Paid:",
+    Hinglish: "Previously Paid (पहले चुकाया)"
+  },
+  "पेमेंट की राशि भरें (Payment Amount ₹) *": {
+    Hindi: "पेमेंट की राशि भरें (Payment Amount ₹) *",
+    English: "Enter Salary Amount (₹) *",
+    Hinglish: "Enter Salary Amount (₹) *"
+  },
+  "भुगतान की तारीख (Payment Date) *": {
+    Hindi: "भुगतान की तारीख (Payment Date) *",
+    English: "Disbursement Date *",
+    Hinglish: "Disbursement Date *"
+  },
+  "विवरण / नोट (Payment Notes)": {
+    Hindi: "विवरण / नोट (Payment Notes)",
+    English: "Remarks / Notes",
+    Hinglish: "Remarks / Notes"
+  },
+  "कृपया सही पेमेंट राशि भरें!": {
+    Hindi: "कृपया सही पेमेंट राशि भरें!",
+    English: "Please enter a valid payment amount!",
+    Hinglish: "Please correct payment amount enter karein!"
+  },
+  "भुगतान दर्ज करें (Confirm Settle)": {
+    Hindi: "भुगतान दर्ज करें (Confirm Settle)",
+    English: "Disburse Payment (Confirm Settle)",
+    Hinglish: "Disburse Payment (Confirm Settle)"
+  },
+
+  "जनवरी (January)": { Hindi: "जनवरी", English: "January", Hinglish: "Jan (जनवरी)" },
+  "फ़रवरी (February)": { Hindi: "फ़रवरी", English: "February", Hinglish: "Feb (फ़रवरी)" },
+  "मार्च (March)": { Hindi: "मार्च", English: "March", Hinglish: "Mar (मार्च)" },
+  "अप्रैल (April)": { Hindi: "अप्रैल", English: "April", Hinglish: "Apr (अप्रैल)" },
+  "मई (May)": { Hindi: "मई", English: "May", Hinglish: "May (मई)" },
+  "जून (June)": { Hindi: "जून", English: "June", Hinglish: "Jun (जून)" },
+  "जुलाई (July)": { Hindi: "जुलाई", English: "July", Hinglish: "Jul (जुलाई)" },
+  "अगस्त (August)": { Hindi: "अगस्त", English: "August", Hinglish: "Aug (अगस्त)" },
+  "सितम्बर (September)": { Hindi: "सितम्बर", English: "September", Hinglish: "Sep (सितम्बर)" },
+  "अक्टूबर (October)": { Hindi: "अक्टूबर", English: "October", Hinglish: "Oct (अक्टूबर)" },
+  "नवम्बर (November)": { Hindi: "नवम्बर", English: "November", Hinglish: "Nov (नवम्बर)" },
+  "दिसम्बर (December)": { Hindi: "दिसम्बर", English: "December", Hinglish: "Dec (दिसम्बर)" },
+
+  "जनवरी (Jan)": { Hindi: "जनवरी", English: "January (Jan)", Hinglish: "Jan" },
+  "फ़रवरी (Feb)": { Hindi: "फ़रवरी", English: "February (Feb)", Hinglish: "Feb" },
+  "मार्च (Mar)": { Hindi: "मार्च", English: "March (Mar)", Hinglish: "Mar" },
+  "अप्रैल (Apr)": { Hindi: "अप्रैल", English: "April (Apr)", Hinglish: "Apr" },
+  "मई (May-Short)": { Hindi: "मई", English: "May (May)", Hinglish: "May" },
+  "जून (Jun)": { Hindi: "जून", English: "June (Jun)", Hinglish: "Jun" },
+  "जुलाई (Jul)": { Hindi: "जुलाई", English: "July (Jul)", Hinglish: "Jul" },
+  "अगस्त (Aug)": { Hindi: "अगस्त", English: "August (Aug)", Hinglish: "Aug" },
+  "सितम्बर (Sep)": { Hindi: "सितम्बर", English: "September (Sep)", Hinglish: "Sep" },
+  "अक्टूबर (Oct)": { Hindi: "अक्टूबर", English: "October (Oct)", Hinglish: "Oct" },
+  "नवम्बर (Nov)": { Hindi: "नवम्बर", English: "November (Nov)", Hinglish: "Nov" },
+  "दिसम्बर (Dec)": { Hindi: "दिसम्बर", English: "December (Dec)", Hinglish: "Dec" },
+
+  // Quick Actions Translations & Symmetries
+  "नया ग्राहक": {
+    Hindi: "नया ग्राहक",
+    English: "New Client",
+    Hinglish: "नया ग्राहक (New Client)"
+  },
+  "Add Client": {
+    Hindi: "नया ग्राहक जोड़ें",
+    English: "Add Client",
+    Hinglish: "नया ग्राहक (Add Client)"
+  },
+  "नया पक्का बिल": {
+    Hindi: "नया पक्का बिल",
+    English: "New Invoice",
+    Hinglish: "नया पक्का बिल (New Invoice)"
+  },
+  "Create Invoice": {
+    Hindi: "नया इनवॉइस बनाएँ",
+    English: "Create Invoice",
+    Hinglish: "नया इनवॉइस (Create Invoice)"
+  },
+  "बाकी रिपोर्ट": {
+    Hindi: "बाकी रिपोर्ट",
+    English: "Pending Report",
+    Hinglish: "बाकी रिपोर्ट (Lena Baqi Report)"
+  },
+  "Lena Baqi": {
+    Hindi: "बाकी वसूल लिस्ट",
+    English: "Outstanding Balances (Lena Baqi)",
+    Hinglish: "Lena Baqi"
+  },
+  "UPI QR शेयर": {
+    Hindi: "UPI QR शेयर",
+    English: "Share UPI QR",
+    Hinglish: "UPI QR शेयर"
+  },
+  "Share Payment QR": {
+    Hindi: "पेमेंट क्यूआर कोड साझा करें",
+    English: "Share Payment QR",
+    Hinglish: "Share Payment QR"
+  },
+  "Mark Attendance": {
+    Hindi: "हाज़िरी भरें",
+    English: "Mark Attendance",
+    Hinglish: "हाज़िरी (Attendance)"
+  },
+  "attendance": {
+    Hindi: "मजदूर हाज़िरी",
+    English: "Attendance",
+    Hinglish: "Attendance"
+  },
   // Authentication & Login/Signup general
   "नया खाता चाहिए?": {
     Hindi: "नया खाता चाहिए?",
@@ -80,6 +459,211 @@ const TRANSLATION_DICTIONARY: Record<string, Record<'Hindi' | 'English' | 'Hingl
   },
 
   // Clients screen & Details
+  "सभी": {
+    Hindi: "सभी",
+    English: "All",
+    Hinglish: "सभी (All)"
+  },
+  "उधार": {
+    Hindi: "उधार",
+    English: "Due",
+    Hinglish: "उधार (Due)"
+  },
+  "चुक्ता": {
+    Hindi: "चुक्ता",
+    English: "Clear",
+    Hinglish: "चुक्ता (Clear)"
+  },
+  "लेट": {
+    Hindi: "लेट",
+    English: "Overdue",
+    Hinglish: "लेट (Overdue)"
+  },
+  "बकायादार (Due)": {
+    Hindi: "बकायादार",
+    English: "Due Balance",
+    Hinglish: "बकायादार (Due)"
+  },
+  "एडवांस सप्लायर (Supplier)": {
+    Hindi: "एडवांस सप्लायर",
+    English: "Supplier (Advance)",
+    Hinglish: "एडवांस सप्लायर (Supplier)"
+  },
+  "चुक्ता हिसाब (Clear)": {
+    Hindi: "चुक्ता हिसाब",
+    English: "Settled Account (Clear)",
+    Hinglish: "चुक्ता हिसाब (Clear)"
+  },
+  "डेडलाइन पार (Overdue)": {
+    Hindi: "डेडलाइन पार",
+    English: "Deadline Crossed (Overdue)",
+    Hinglish: "डेडलाइन पार (Overdue)"
+  },
+  "बाकी भुगतान": {
+    Hindi: "बाकी भुगतान",
+    English: "Balance Due",
+    Hinglish: "बाकी भुगतान (Balance Due)"
+  },
+  "सुरक्षित जमा": {
+    Hindi: "सुरक्षित जमा",
+    English: "Advance Paid",
+    Hinglish: "सुरक्षित जमा (Advance)"
+  },
+  "लेनदेन ख़त्म": {
+    Hindi: "लेनदेन ख़त्म",
+    English: "No Dues",
+    Hinglish: "लेनदेन ख़त्म (Clear)"
+  },
+  "फ़ोन (Contact):": {
+    Hindi: "फ़ोन:",
+    English: "Phone:",
+    Hinglish: "फ़ोन (Phone):"
+  },
+  "डेडलाइन (Deadline):": {
+    Hindi: "डेडलाइन:",
+    English: "Deadline:",
+    Hinglish: "डेडलाइन (Deadline):"
+  },
+  "लास्ट एक्टिविटी (Last Active):": {
+    Hindi: "लास्ट एक्टिविटी:",
+    English: "Last Active:",
+    Hinglish: "लास्ट एक्टिविटी (Last Active):"
+  },
+  "विवरण देखें (Profile)": {
+    Hindi: "विवरण देखें",
+    English: "View Details (Profile)",
+    Hinglish: "विवरण देखें (Profile)"
+  },
+  "खाता प्रविष्टि: Direct": {
+    Hindi: "खाता प्रविष्टि: डायरेक्ट",
+    English: "Ledger Entry: Direct",
+    Hinglish: "खाता प्रविष्टि: Direct"
+  },
+  "स्रोत: ": {
+    Hindi: "स्रोत: ",
+    English: "Source: ",
+    Hinglish: "स्रोत (Source): "
+  },
+  "ग्राहक का नाम, पता या मोबाइल नंबर खोजें...": {
+    Hindi: "ग्राहक का नाम, पता या मोबाइल नंबर खोजें...",
+    English: "Search client by name, address or mobile phone...",
+    Hinglish: "ग्राहक का नाम, पता या Mobile Number खोजें..."
+  },
+  "नया ग्राहक जोड़ें": {
+    Hindi: "नया ग्राहक जोड़ें",
+    English: "Add New Client",
+    Hinglish: "नया ग्राहक जोड़ें (Add Client)"
+  },
+  "नया ग्राहक खाता खोलें": {
+    Hindi: "नया ग्राहक खाता खोलें",
+    English: "Open New Client Account",
+    Hinglish: "नया ग्राहक खाता खोलें (Open Client A/C)"
+  },
+  "Mera Grahak Account Registration Portal": {
+    Hindi: "मेरा ग्राहक खाता रजिस्ट्रेशन पोर्टल",
+    English: "My Client Account Registration Portal",
+    Hinglish: "Mera Grahak Account Registration Portal"
+  },
+  "ग्राहक का नाम (Naam) *": {
+    Hindi: "ग्राहक का नाम *",
+    English: "Client Name *",
+    Hinglish: "ग्राहक का नाम (Client Name) *"
+  },
+  "उदा. राम सिंह चौधरी (ठेकेदार)": {
+    Hindi: "उदा. राम सिंह चौधरी (ठेकेदार)",
+    English: "e.g. Ram Singh Choudhary (Contractor)",
+    Hinglish: "उदा. Ram Singh Choudhary (Contractor)"
+  },
+  "मोबाइल नंबर (Mobile Phone)": {
+    Hindi: "मोबाइल नंबर",
+    English: "Mobile Number",
+    Hinglish: "मोबाइल नंबर (Mobile)"
+  },
+  "उदा. 9876543210": {
+    Hindi: "उदा. 9876543210",
+    English: "e.g. 9876543210",
+    Hinglish: "e.g. 9876543210"
+  },
+  "Regular (नियमित ग्राहक)": {
+    Hindi: "नियमित ग्राहक (Regular)",
+    English: "Regular Customer",
+    Hinglish: "Regular (नियमित ग्राहक)"
+  },
+  "Contractor (ठेकेदार)": {
+    Hindi: "ठेकेदार (Contractor)",
+    English: "Contractor",
+    Hinglish: "Contractor (ठेकेदार)"
+  },
+  "Supplier (कच्चा माल सप्लायर)": {
+    Hindi: "कच्चा माल सप्लायर (Supplier)",
+    English: "Material Supplier",
+    Hinglish: "Supplier (सप्लायर)"
+  },
+  "Individual (फुटकर खरीदार)": {
+    Hindi: "फुटकर खरीदार (Individual)",
+    English: "Retail Buyer (Individual)",
+    Hinglish: "Individual (खरीदार)"
+  },
+  "काम की डेडलाइन (Delivery Deadline)": {
+    Hindi: "काम की डेडलाइन",
+    English: "Project Delivery Deadline",
+    Hinglish: "काम की डेडलाइन (Deadline)"
+  },
+  "रेफरेंस/ग्राहक का स्रोत (Client Source)": {
+    Hindi: "रेफरेंस/ग्राहक का स्रोत",
+    English: "Client Lead Reference Source",
+    Hinglish: "रेफरेंस (Client Source)"
+  },
+  "उदा. JustDial, फेसबुक, सुधीर ठेकेदार": {
+    Hindi: "उदा. JustDial, फेसबुक, सुधीर ठेकेदार",
+    English: "e.g. JustDial, Facebook, Sudhir Contractor",
+    Hinglish: "e.g. JustDial, Facebook, Sudhir Contractor"
+  },
+  "शुरुआती बकाया (Opening Balance)": {
+    Hindi: "शुरुआती बकाया राशि",
+    English: "Opening Balance Outstanding",
+    Hinglish: "शुरुआती बकाया (Opening Balance)"
+  },
+  "उदा. 4500 (यदि पैसे लेने हों)": {
+    Hindi: "उदा. 4500 (यदि पैसे लेने हों)",
+    English: "e.g. 4500 (if payment is due)",
+    Hinglish: "e.g. 4500"
+  },
+  "ग्राहक का मुख्य पता (Full Address)": {
+    Hindi: "ग्राहक का मुख्य पता",
+    English: "Client Address Profile",
+    Hinglish: "ग्राहक का पता (Full Address)"
+  },
+  "उदा. जी टी रोड, अलीगढ़, उत्तर प्रदेश": {
+    Hindi: "उदा. जी टी रोड, अलीगढ़, उत्तर प्रदेश",
+    English: "e.g. GT Road, Aligarh, UP (India)",
+    Hinglish: "e.g. GT Road, Aligarh, UP"
+  },
+  "ग्राहक टिप्पणी / विशेष निर्देश (Detailed Notes)": {
+    Hindi: "ग्राहक टिप्पणी / विशेष निर्देश",
+    English: "Instructions, Notes & Specifications",
+    Hinglish: "ग्राहक टिप्पणी (Detailed Notes)"
+  },
+  "उदा. स्टील सेफ्टी गेट का काम है। 12mm सरिया इस्तेमाल होगा।": {
+    Hindi: "उदा. स्टील सेफ्टी गेट का काम है। 12mm सरिया इस्तेमाल होगा।",
+    English: "e.g. Steel safety gate work using 12mm rod.",
+    Hinglish: "e.g. Steel safety gate work. 12mm rod."
+  },
+  "खाता खोलें और सहेजें (Save Register)": {
+    Hindi: "खाता खोलें और सहेजें",
+    English: "Create Client Account (Save)",
+    Hinglish: "खाता खोलें और सहेजें (Save Register)"
+  },
+  "ग्राहक का प्रकार (Client Type)": {
+    Hindi: "ग्राहक का प्रकार",
+    English: "Client Segment Category",
+    Hinglish: "ग्राहक का प्रकार (Client Type)"
+  },
+  "ग्राहक खाता बुक (My Clients)": {
+    Hindi: "ग्राहक खाता बही",
+    English: "Client Ledger (My Clients)",
+    Hinglish: "ग्राहक खाता बुक (My Clients)"
+  },
   "कोई ग्राहक नहीं मिला। कृपया ऊपर दिए गए सर्च या फ़िल्टर को बदलें।": {
     Hindi: "कोई ग्राहक नहीं मिला। कृपया ऊपर दिए गए सर्च या फ़िल्टर को बदलें।",
     English: "No clients found. Please adjust the search or filter above.",
@@ -163,41 +747,6 @@ const TRANSLATION_DICTIONARY: Record<string, Record<'Hindi' | 'English' | 'Hingl
   },
 
   // Newly requested translations / Common UI labels
-  "लेबर और हाज़िरी रजिस्टर": {
-    Hindi: "लेबर और हाज़िरी रजिस्टर",
-    English: "Labour & Attendance Register",
-    Hinglish: "लेबर और हाज़िरी रजिस्टर (Labour Roster)"
-  },
-  "कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन (हिसाब-किताब) व्यवस्थित करें।": {
-    Hindi: "कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन व्यवस्थित करें।",
-    English: "Mark daily worker attendance, view monthly calendar, and manage salaries.",
-    Hinglish: "कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन (Payroll) व्यवस्थित करें।"
-  },
-  "क्लाउड डेटाबेस सक्रिय (Sync Active)": {
-    Hindi: "क्लाउड डेटाबेस सक्रिय",
-    English: "Cloud Database Active",
-    Hinglish: "क्लाउड डेटाबेस सक्रिय (Sync Active)"
-  },
-  "लोकल मोड सक्रिय (Local Offline Book)": {
-    Hindi: "लोकल मोड सक्रिय",
-    English: "Local Offline Mode Active",
-    Hinglish: "लोकल मोड सक्रिय (Local Offline Book)"
-  },
-  "📅 हाज़िरी कैलेंडर (Monthly & Bulk)": {
-    Hindi: "📅 हाज़िरी कैलेंडर",
-    English: "📅 Attendance Calendar",
-    Hinglish: "📅 हाज़िरी कैलेंडर (Monthly & Bulk)"
-  },
-  "👷 कारीगर प्रबंधक (Manage Workers)": {
-    Hindi: "👷 कारीगर प्रबंधक",
-    English: "👷 Manage Workers",
-    Hinglish: "👷 कारीगर प्रबंधक (Manage Workers)"
-  },
-  "💰 हिसाब और सैलरी (Payroll Book)": {
-    Hindi: "💰 हिसाब और सैलरी",
-    English: "💰 Salary & Payroll",
-    Hinglish: "💰 हिसाब और सैलरी (Payroll Book)"
-  },
   "प्रीमियम विज़िटिंग कार्ड स्टूडियो (Premium Visiting Card Maker)": {
     Hindi: "प्रीमियम विज़िटिंग कार्ड स्टूडियो",
     English: "Premium Visiting Card Maker",
@@ -320,7 +869,28 @@ const TRANSLATION_DICTIONARY: Record<string, Record<'Hindi' | 'English' | 'Hingl
   }
 };
 
+// Precomputed reverse translation maps for absolute language symmetry
+const REVERSE_ENGLISH_MAP: Record<string, Record<'Hindi' | 'English' | 'Hinglish', string>> = {};
+const REVERSE_HINDI_MAP: Record<string, Record<'Hindi' | 'English' | 'Hinglish', string>> = {};
+const REVERSE_HINGLISH_MAP: Record<string, Record<'Hindi' | 'English' | 'Hinglish', string>> = {};
+
+Object.entries(TRANSLATION_DICTIONARY).forEach(([key, langs]) => {
+  if (langs?.English) {
+    REVERSE_ENGLISH_MAP[langs.English.trim().toLowerCase()] = langs;
+  }
+  if (langs?.Hindi) {
+    REVERSE_HINDI_MAP[langs.Hindi.trim().toLowerCase()] = langs;
+  }
+  if (langs?.Hinglish) {
+    REVERSE_HINGLISH_MAP[langs.Hinglish.trim().toLowerCase()] = langs;
+  }
+});
+
 const HINDI_TO_ENGLISH_VOCAB: Record<string, string> = {
+  "नया": "New",
+  "बाकी": "Outstanding",
+  "रिपोर्ट": "Report",
+  "शेयर": "Share",
   "डैशबोर्ड": "Dashboard",
   "ग्राहक": "Client",
   "ग्राहक खाता": "Client Accounts",
@@ -386,6 +956,10 @@ const HINDI_TO_ENGLISH_VOCAB: Record<string, string> = {
 };
 
 const ENGLISH_TO_HINDI_VOCAB: Record<string, string> = {
+  "New": "नया",
+  "Outstanding": "बाकी",
+  "Report": "रिपोर्ट",
+  "Share": "शेयर",
   "Dashboard": "डैशबोर्ड",
   "Clients": "ग्राहक",
   "Client Accounts": "ग्राहक खाता",
@@ -672,10 +1246,20 @@ export const translateText = (text: string, lang: 'Hindi' | 'English' | 'Hinglis
   if (typeof text !== 'string') return String(text);
 
   const cleanInput = text.trim();
+  const cleanInputLower = cleanInput.toLowerCase();
 
-  // 1. Direct dictionary check (first preference)
+  // 1. Direct dictionary check (first preference) and symmetric reverse checks
   if (TRANSLATION_DICTIONARY[cleanInput]) {
     return TRANSLATION_DICTIONARY[cleanInput][lang];
+  }
+  if (REVERSE_ENGLISH_MAP[cleanInputLower]) {
+    return REVERSE_ENGLISH_MAP[cleanInputLower][lang];
+  }
+  if (REVERSE_HINDI_MAP[cleanInputLower]) {
+    return REVERSE_HINDI_MAP[cleanInputLower][lang];
+  }
+  if (REVERSE_HINGLISH_MAP[cleanInputLower]) {
+    return REVERSE_HINGLISH_MAP[cleanInputLower][lang];
   }
 
   // 2. Hinglish mode - returns original string containing both languages (ceiling limit)

@@ -111,69 +111,10 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Floating Language Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center space-x-0.5 sm:space-x-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-indigo-700 text-[9px] sm:text-xs font-black transition-all duration-150 focus:outline-none shadow-lg shadow-indigo-600/20"
-              title="Change Language"
-            >
-              <Globe className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white" />
-              <span className="text-[8px] sm:text-[10px] uppercase tracking-wider">{getLanguageLabel(language)}</span>
-              <ChevronDown className={`h-2 w-2 sm:h-3 sm:w-3 text-white/80 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {langOpen && (
-              <div 
-                className="absolute right-0 mt-2 w-36 rounded-lg bg-[#0F172A] border border-gray-800 shadow-xl z-[100] overflow-hidden py-1 divide-y divide-gray-800/60"
-              >
-                <div className="px-2.5 py-1 text-[9px] text-gray-500 uppercase tracking-widest font-semibold bg-gray-950/40">
-                  Language / भाषा
-                </div>
-                <button
-                  onClick={() => {
-                    setLanguage('English');
-                    setLangOpen(false);
-                  }}
-                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
-                    language === 'English'
-                      ? 'bg-amber-500/10 text-amber-500 font-semibold'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }`}
-                >
-                  <span>English</span>
-                  {language === 'English' && <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />}
-                </button>
-                <button
-                  onClick={() => {
-                    setLanguage('Hindi');
-                    setLangOpen(false);
-                  }}
-                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
-                    language === 'Hindi'
-                      ? 'bg-amber-500/10 text-amber-500 font-semibold'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }`}
-                >
-                  <span>हिंदी (Hindi)</span>
-                  {language === 'Hindi' && <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />}
-                </button>
-                <button
-                  onClick={() => {
-                    setLanguage('Hinglish');
-                    setLangOpen(false);
-                  }}
-                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
-                    language === 'Hinglish'
-                      ? 'bg-amber-500/10 text-amber-500 font-semibold'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }`}
-                >
-                  <span>Hinglish</span>
-                  {language === 'Hinglish' && <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />}
-                </button>
-              </div>
-            )}
+          {/* Static English Badge Indicator */}
+          <div className="flex items-center space-x-1 bg-indigo-600/10 text-indigo-400 px-2.5 py-1 rounded-full border border-indigo-500/10 text-[9px] sm:text-xxs font-black uppercase tracking-wider">
+            <Globe className="h-2.5 w-2.5" />
+            <span>English</span>
           </div>
 
           {/* Logout Button */}

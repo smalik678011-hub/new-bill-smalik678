@@ -1,30 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAppStore } from '../store';
-import useTranslation from '../hooks/useTranslation';
 import ClientCard from '../components/clients/ClientCard';
 import AddClientModal from '../components/clients/AddClientModal';
 import { 
   Users, 
   Search, 
-  SlidersHorizontal, 
   Plus, 
-  Sparkles, 
-  TrendingDown, 
-  AlertCircle, 
-  HelpCircle,
+  RefreshCw,
   Cloud,
-  CloudLightning,
-  RefreshCw
+  CloudLightning
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-
-
 export default function Clients() {
-
   const store = useAppStore();
-  const { t } = useTranslation();
   const [supabaseMode, setSupabaseMode] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -137,7 +127,7 @@ export default function Clients() {
       ? invoices.filter(inv => inv.client_id === clientId)
       : store.invoices.filter(inv => inv.clientId === clientId);
       
-    if (clientInvoices.length === 0) return 'कोई बिलिंग नहीं (No Logs)';
+    if (clientInvoices.length === 0) return 'No Logs';
     
     // Sort and grab date
     const sorted = [...clientInvoices].sort((a,b) => new Date(b.created_at || b.date).getTime() - new Date(a.created_at || a.date).getTime());
@@ -192,23 +182,23 @@ export default function Clients() {
               <Users className="h-4 w-4" />
             </span>
             <span className="text-[9.5px] text-amber-500 font-extrabold uppercase tracking-widest font-mono">
-              खता बुक प्रबंधन
+              Ledger Book Management
             </span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-white font-sans flex items-center">
-            ग्राहक खाता बुक (My Clients)
+            Client Registry Book (My Clients)
           </h2>
-          <p className="text-xs text-gray-550">
+          <p className="text-xs text-gray-400 font-medium">
             {supabaseMode 
-              ? t('बही खाता लाइव क्लाउड डेटा से सिंक्रोनाइज्ड है।') 
-              : t('सभी एंट्रीज फोन के लोकल बही खाता स्टोरेज में सुरक्षित हैं।')}
+              ? "Ledger synchronised securely with live cloud database." 
+              : "All entries saved securely in local browser storage."}
           </p>
         </div>
 
         {/* Dynamic header stats block */}
         <div className="mt-4 sm:mt-0 flex items-center space-x-3">
           <div className="p-3 bg-red-500/5 border border-red-500/10 rounded-2xl text-right">
-            <span className="text-[9px] text-gray-400 block uppercase font-mono font-bold">{t('कुल बकाया वसूली')}</span>
+            <span className="text-[9px] text-gray-400 block uppercase font-mono font-bold">Total Dues Receivable</span>
             <span className="text-sm font-black text-red-400">
               ₹{(totalReceivables ?? 0).toLocaleString('en-IN')}
             </span>
@@ -216,7 +206,7 @@ export default function Clients() {
 
           <button 
             onClick={() => refreshClientData()}
-            className="p-3 bg-gray-950 hover:bg-gray-850 hover:text-white rounded-2xl border border-gray-800 text-gray-400 transition"
+            className="p-3 bg-gray-950 hover:bg-gray-850 hover:text-white rounded-2xl border border-gray-800 text-gray-400 transition cursor-pointer"
             title="Reload register"
           >
             <RefreshCw className="h-4.5 w-4.5" />
@@ -239,13 +229,13 @@ export default function Clients() {
           ) : (
             <>
               <CloudLightning className="h-3 w-3 animate-pulse" />
-              <span>LOCAL PERSISTED CONTAINER STATE</span>
+              <span>LOCAL PERSISTED STORAGE STATE</span>
             </>
           )}
         </div>
 
-        <span className="text-xs text-gray-450 font-black">
-          सक्रिय सूची: {filteredAndMappedClients.length} ग्राहक खाते
+        <span className="text-xs text-gray-405 font-black">
+          Active Registry: {filteredAndMappedClients.length} accounts
         </span>
       </div>
 
@@ -256,7 +246,7 @@ export default function Clients() {
           <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
           <input 
             type="text" 
-            placeholder="ग्राहक का नाम, पता या मोबाइल नंबर खोजें..."
+            placeholder="Search client by name, phone or address..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full bg-gray-900 border border-gray-850 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors"
@@ -267,7 +257,12 @@ export default function Clients() {
         <div className="flex bg-[#0B0F1A] border border-gray-850 p-1 rounded-2xl space-x-1">
           {(['All', 'Due', 'Clear', 'Overdue'] as const).map((filter) => {
             const isActive = statusFilter === filter;
-            const labelMap = { All: 'सभी', Due: 'उधार', Clear: 'चुक्ता', Overdue: 'लेट' };
+            const labelMap = { 
+              All: "All", 
+              Due: "Pending", 
+              Clear: "Cleared", 
+              Overdue: "Late" 
+            };
             return (
               <button
                 key={filter}
@@ -275,7 +270,7 @@ export default function Clients() {
                 className={`flex-1 py-1 px-1.5 rounded-xl text-[10px] font-black text-center transition cursor-pointer ${
                   isActive 
                     ? 'bg-amber-500 text-black font-extrabold shadow' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-850/50'
+                    : 'text-gray-400 hover:text-white hover:bg-gray-855/50'
                 }`}
               >
                 {labelMap[filter]}
@@ -289,14 +284,14 @@ export default function Clients() {
       {loading ? (
         <div className="bg-gray-900 border border-gray-800 rounded-3xl p-16 text-center shadow-lg">
           <div className="h-8 w-8 border-4 border-amber-500/25 border-t-amber-500 rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-xs text-gray-400 font-bold">{t('ग्राहक बही लोड हो रही है...')}</p>
+          <p className="text-xs text-gray-400 font-bold">Loading client registry...</p>
         </div>
       ) : filteredAndMappedClients.length === 0 ? (
         <div className="bg-gray-900/40 border border-dashed border-gray-800 rounded-3xl p-12 text-center text-gray-500 space-y-2">
           <Users className="h-10 w-10 text-gray-600 mx-auto" />
-          <h4 className="text-xs font-bold text-gray-300">{t('कोई ग्राहक खाता नहीं मिला (No Results)')}</h4>
-          <p className="text-[10px] text-gray-550 max-w-sm mx-auto">
-            सर्च की जाँच करें या एक नया ग्राहक खाता खोलने के लिए नीचे दिए गए प्लस (+) बटन पर टैप करें।
+          <h4 className="text-xs font-bold text-gray-300">No client accounts found (No Results)</h4>
+          <p className="text-[10px] text-gray-500 max-w-sm mx-auto">
+            Refine search query, or tap the (+) button to create a new client ledger profile.
           </p>
         </div>
       ) : (
@@ -315,7 +310,7 @@ export default function Clients() {
       <button
         onClick={() => setShowAddModal(true)}
         className="fixed bottom-20 right-6 md:bottom-8 md:right-8 z-40 bg-amber-500 hover:bg-amber-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all text-xs font-bold uppercase cursor-pointer border-2 border-gray-900"
-        title="नया ग्राहक जोड़ें"
+        title="Add New Client"
       >
         <Plus className="h-6 w-6 stroke-[3px]" />
       </button>

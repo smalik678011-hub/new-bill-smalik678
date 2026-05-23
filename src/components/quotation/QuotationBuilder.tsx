@@ -1,26 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Plus, 
   Trash2, 
   X, 
   Calendar, 
-  DollarSign, 
-  PlusCircle, 
   Zap, 
   Droplet, 
   Hammer, 
   Paintbrush, 
   Home, 
   Sliders, 
-  Percent, 
-  FileText,
-  AlertCircle,
-  HelpCircle
+  FileText
 } from 'lucide-react';
 import { useAppStore } from '../../store';
 import { BillItem, Quotation } from '../../types';
 import { toast } from 'react-hot-toast';
-
 
 interface QuotationBuilderProps {
   onSave: (quoteData: Omit<Quotation, 'id' | 'isConverted'> & { advanceAmount?: number; advanceMode?: 'Cash' | 'Online'; category?: string; conditions?: string[] }) => void;
@@ -29,8 +23,7 @@ interface QuotationBuilderProps {
 }
 
 export default function QuotationBuilder({ onSave, onCancel, initialData }: QuotationBuilderProps) {
-
-  const { clients, quotations } = useAppStore();
+  const { clients } = useAppStore();
 
   // Basic Details
   const [selectedClientId, setSelectedClientId] = useState(initialData?.clientId || '');
@@ -57,15 +50,14 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
 
   // Categories list with Icons
   const categoriesList = [
-    { name: 'Electrical', label: 'Electrical (बिजली काम)', icon: Zap, color: 'text-amber-400 bg-amber-450/10 border-amber-500/25' },
-    { name: 'Plumbing', label: 'Plumbing (नलसाजी)', icon: Droplet, color: 'text-sky-400 bg-sky-450/10 border-sky-500/25' },
-    { name: 'Construction', label: 'Construction (निर्माण)', icon: Hammer, color: 'text-red-400 bg-red-400/10 border-red-500/25' },
-    { name: 'Painting', label: 'Painting (पुताई)', icon: Paintbrush, color: 'text-purple-400 bg-purple-400/10 border-purple-500/25' },
-    { name: 'Interior', label: 'Interior (सजावट)', icon: Home, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-500/25' },
-    { name: 'Custom', label: 'Custom (सामान्य)', icon: Sliders, color: 'text-gray-400 bg-gray-400/10 border-gray-500/25' }
+    { name: 'Electrical', icon: Zap, color: 'text-amber-400 bg-amber-450/10 border-amber-550/25' },
+    { name: 'Plumbing', icon: Droplet, color: 'text-sky-400 bg-sky-450/10 border-sky-550/25' },
+    { name: 'Construction', icon: Hammer, color: 'text-red-400 bg-red-400/10 border-red-550/25' },
+    { name: 'Painting', icon: Paintbrush, color: 'text-purple-400 bg-purple-400/10 border-purple-550/25' },
+    { name: 'Interior', icon: Home, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-555/25' },
+    { name: 'Custom', icon: Sliders, color: 'text-gray-400 bg-gray-400/10 border-gray-550/25' }
   ];
 
-  // Quick select handling
   const handleAddCondition = () => {
     if (!newCondition.trim()) return;
     setConditions([...conditions, newCondition.trim()]);
@@ -79,12 +71,12 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
   const handleAddItem = (e: React.FormEvent) => {
     e.preventDefault();
     if (!itemName.trim()) {
-      toast.error('कृपया सामग्री विवरण भरें!');
+      toast.error('Please enter item description!');
       return;
     }
     const rateVal = parseFloat(itemAmount) || 0;
     if (rateVal <= 0) {
-      toast.error('कृपया सही दाम भरें!');
+      toast.error('Please enter a valid rate/amount!');
       return;
     }
 
@@ -115,11 +107,11 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedClientId) {
-      toast.error('कृपया ग्राहक चुनें!');
+      toast.error('Please select a client!');
       return;
     }
     if (items.length === 0) {
-      toast.error('कम से कम एक सामग्री / सेवा विवरण टेबल में जोड़ें!');
+      toast.error('Please add at least one line item!');
       return;
     }
 
@@ -143,15 +135,15 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
   };
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 shadow-xl space-y-6">
+    <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 shadow-xl space-y-6 font-sans">
       
       {/* Visual top row */}
       <div className="flex justify-between items-center pb-4 border-b border-gray-800/80">
         <div>
           <h3 className="text-sm font-black text-amber-500 uppercase tracking-widest font-mono">
-            {initialData ? 'एडिट कोटासन बही' : 'नया एस्टीमेट / कोटेशन बनाएँ'}
+            {initialData ? 'Edit Quotation Ledger' : 'Create New Estimate / Quotation'}
           </h3>
-          <p className="text-[10px] text-gray-500 uppercase tracking-wider">Premium Estimates Creator Module</p>
+          <p className="text-[10px] text-gray-400 uppercase tracking-wider">Premium Estimates Creator Module</p>
         </div>
         <button 
           onClick={onCancel}
@@ -169,15 +161,15 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
           {/* Client selector dropdown */}
           <div className="md:col-span-1">
             <label className="text-[10px] text-gray-400 block mb-1.5 font-bold uppercase tracking-wider">
-              ग्राहक का चयन करें (Client) *
+              Select Client *
             </label>
             <select
               value={selectedClientId}
               onChange={e => setSelectedClientId(e.target.value)}
               required
-              className="w-full bg-[#0B0F1A] border border-gray-850 hover:border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-550 transition-colors"
+              className="w-full bg-[#0B0F1A] border border-gray-850 hover:border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-550 transition-colors cursor-pointer"
             >
-              <option value="">-- ग्राहक चुनें / Choose Client --</option>
+              <option value="">-- Search & Choose Client --</option>
               {clients.map(c => (
                 <option key={c.id} value={c.id}>{c.name} ({c.phone})</option>
               ))}
@@ -187,16 +179,16 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
           {/* Date Picker */}
           <div>
             <label className="text-[10px] text-gray-400 block mb-1.5 font-bold uppercase tracking-wider">
-              आज की तारीख (Estimate Date)
+              Estimate Date
             </label>
             <div className="relative">
-              <Calendar className="absolute left-3.5 top-3 h-4 w-4 text-gray-550" />
+              <Calendar className="absolute left-3.5 top-3 h-4 w-4 text-gray-500" />
               <input 
                 type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
                 required
-                className="w-full bg-[#0B0F1A] border border-gray-855 hover:border-gray-800 rounded-xl pl-10 pr-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-[#0B0F1A] border border-gray-855 hover:border-gray-800 rounded-xl pl-10 pr-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-550"
               />
             </div>
           </div>
@@ -204,25 +196,25 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
           {/* Validity selector */}
           <div>
             <label className="text-[10px] text-gray-400 block mb-1.5 font-bold uppercase tracking-wider">
-              एस्टीमेट की वैधता (Validity Period)
+              Validity Period
             </label>
             <select
               value={validityDays}
               onChange={e => setValidityDays(e.target.value)}
-              className="w-full bg-[#0B0F1A] border border-gray-855 hover:border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
+              className="w-full bg-[#0B0F1A] border border-gray-855 hover:border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-550 cursor-pointer"
             >
-              <option value="7">7 दिन (7 Days Valid)</option>
-              <option value="15">15 दिन (15 Days Valid)</option>
-              <option value="30">30 दिन (1 Month Valid)</option>
-              <option value="60">60 दिन (2 Months Valid)</option>
+              <option value="7">7 Days Valid</option>
+              <option value="15">15 Days Valid</option>
+              <option value="30">30 Days (1 Month)</option>
+              <option value="60">60 Days (2 Months)</option>
             </select>
           </div>
         </div>
 
         {/* Step 2: Category Selector */}
         <div>
-          <label className="text-[10px] text-gray-400 block mb-2 font-bold uppercase tracking-wider">
-            काम के प्रकार चुनें (Work Category Selector)
+          <label className="text-[10px] text-gray-450 block mb-2 font-bold uppercase tracking-wider">
+            Work Category (Work Type Selector)
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
             {categoriesList.map((cat) => {
@@ -251,9 +243,9 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
         <div className="bg-[#0B0F1A]/80 border border-gray-850 rounded-2xl p-4 space-y-4">
           <div className="flex justify-between items-center border-b border-gray-850/60 pb-2">
             <h4 className="text-[11px] font-black text-amber-500 uppercase tracking-widest font-mono">
-              सामग्री एवं कार्य तालिका (Quote Line Items)
+              Quotation Line Items
             </h4>
-            <span className="text-[10px] text-gray-500 font-mono">Total Added: {items.length} items</span>
+            <span className="text-[10px] text-gray-550 font-mono font-bold">Total Added: {items.length} items</span>
           </div>
 
           {/* Table Header and Input Add Row */}
@@ -261,28 +253,28 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
             <div className="sm:col-span-4">
               <input 
                 type="text"
-                placeholder="काम/सामग्री का विवरण"
+                placeholder="Item description / details"
                 value={itemName}
                 onChange={e => setItemName(e.target.value)}
-                className="w-full bg-gray-950 border border-gray-855 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-550 placeholder-gray-600"
+                className="w-full bg-gray-955 border border-gray-850 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-550 placeholder-gray-600"
               />
             </div>
             <div className="sm:col-span-1.5 relative">
               <span className="absolute left-3 top-2 text-gray-500 text-xs font-bold">₹</span>
               <input 
                 type="number"
-                placeholder="दाम / Amount"
+                placeholder="Rate / Amount"
                 value={itemAmount}
                 onChange={e => setItemAmount(e.target.value)}
-                className="w-full bg-gray-950 border border-gray-850 rounded-xl pl-6 pr-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 placeholder-gray-600"
+                className="w-full bg-gray-955 border border-gray-850 rounded-xl pl-6 pr-3 py-2 text-xs text-white focus:outline-none focus:border-amber-550 placeholder-gray-600"
               />
             </div>
             <div className="sm:col-span-0.5">
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="w-full bg-amber-500/10 hover:bg-amber-550 hover:text-black border border-amber-500/25 text-amber-500 p-2 rounded-xl transition flex items-center justify-center cursor-pointer"
-                title="तालिका में जोड़ें"
+                className="w-full bg-amber-500/10 hover:bg-amber-500 hover:text-black border border-amber-500/25 text-amber-500 p-2 rounded-xl transition flex items-center justify-center cursor-pointer"
+                title="Add item line"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -291,24 +283,24 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
 
           {/* Items rendering table */}
           {items.length === 0 ? (
-            <div className="text-center py-6 border border-dashed border-gray-850 rounded-xl text-gray-550 text-[11px]">
-              कोई आइटम नहीं जोड़ा गया है। कृपया ऊपर विवरण और दाम भरकर जोड़ने के लिये '+' आइकॉन पर टैप करें।
+            <div className="text-center py-6 border border-dashed border-gray-850 rounded-xl text-gray-500 text-[11px]">
+              No items added. Add description and rate above and tap '+'.
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto animate-fadeIn">
               <table className="w-full text-left text-xs text-gray-300">
                 <thead>
                   <tr className="border-b border-gray-850/40 text-gray-500 text-[10px] uppercase font-mono">
-                    <th className="py-2.5 font-bold">क्रसं (SNo)</th>
-                    <th className="py-2.5 font-bold pl-2">काम/विवरण (Description of Work)</th>
-                    <th className="py-2.5 font-bold text-right pr-4">कुल राशि (Amount)</th>
-                    <th className="py-2.5 text-center font-bold">हटाएँ</th>
+                    <th className="py-2.5 font-bold">SNo</th>
+                    <th className="py-2.5 font-bold pl-2">Work Description</th>
+                    <th className="py-2.5 font-bold text-right pr-4">Amount</th>
+                    <th className="py-2.5 text-center font-bold">Delete</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-855/35">
                   {items.map((item, index) => (
                     <tr key={index} className="hover:bg-gray-900/30 transition-colors">
-                      <td className="py-2 pl-0.5 font-mono text-gray-550 text-[10px]">{index + 1}</td>
+                      <td className="py-2 pl-0.5 font-mono text-gray-500 text-[10px]">{index + 1}</td>
                       <td className="py-2 pl-2">
                         <span className="font-extrabold text-white text-[11px] block">{item.name}</span>
                         <span className="text-[10px] text-gray-500">Service Estimate @ Lumpsum Rate</span>
@@ -337,58 +329,58 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-[#0B0F1A]/80 border border-gray-850 rounded-2xl p-4 space-y-4">
             <h4 className="text-[11px] font-black text-amber-500 uppercase tracking-widest font-mono border-b border-gray-850/60 pb-2">
-              एडवांस भुगतान प्रविष्टि (Advance Details)
+              Advance Details
             </h4>
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[9px] text-gray-450 block mb-1 font-bold uppercase tracking-wider">
-                  एडवांस राशि (Advance Paid ₹)
+                <label className="text-[9px] text-gray-400 block mb-1 font-bold uppercase tracking-wider">
+                  Advance Received Amount (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-gray-550 text-xs font-bold">₹</span>
+                  <span className="absolute left-3 top-2.5 text-gray-500 text-xs font-bold">₹</span>
                   <input 
                     type="number"
-                    placeholder="उदा. 5000"
+                    placeholder="e.g. 5000"
                     value={advanceAmount}
                     onChange={e => setAdvanceAmount(e.target.value)}
-                    className="w-full bg-gray-950 border border-gray-850 rounded-xl pl-6 pr-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
+                    className="w-full bg-gray-955 border border-gray-850 rounded-xl pl-6 pr-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
 
               <div>
                 <label className="text-[9px] text-gray-450 block mb-1 font-bold uppercase tracking-wider">
-                  भुगतान माध्यम (Payment Mode)
+                  Payment Mode
                 </label>
                 <select
                   value={advanceMode}
                   onChange={e => setAdvanceMode(e.target.value as any)}
-                  className="w-full bg-gray-950 border border-gray-850 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-gray-955 border border-gray-850 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-550 cursor-pointer"
                 >
-                  <option value="Cash">Cash (नकद भुगतान)</option>
-                  <option value="Online">Online (यूपीआई/बैंक ट्रांसफर)</option>
+                  <option value="Cash">Cash payment</option>
+                  <option value="Online">Online (UPI/Bank Transfer)</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <div className="bg-[#0B0F1A]/80 border border-gray-850 rounded-2xl p-4 space-y-3">
+          <div className="bg-[#0B0F1A]/80 border border-gray-855 rounded-2xl p-4 space-y-3 font-sans">
             <h4 className="text-[11px] font-black text-amber-400 uppercase tracking-widest font-mono border-b border-gray-850/60 pb-2">
-              छूट / एडिशनल डिटेल्स (Discount & Memo)
+              Discount Detail (₹)
             </h4>
             <div>
               <label className="text-[9px] text-gray-450 block mb-1 font-bold uppercase tracking-wider">
-                ग्राहक को दी गई छूट (Discount Amount ₹)
+                Discount Amount Given (₹)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-2.5 text-gray-550 text-xs font-bold">₹</span>
+                <span className="absolute left-3 top-2.5 text-gray-500 text-xs font-bold">₹</span>
                 <input 
                   type="number"
                   placeholder="0"
                   value={discount}
                   onChange={e => setDiscount(e.target.value)}
-                  className="w-full bg-gray-950 border border-gray-850 rounded-xl pl-6 pr-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-gray-955 border border-gray-850 rounded-xl pl-6 pr-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
                 />
               </div>
             </div>
@@ -396,46 +388,46 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
         </div>
 
         {/* Step 5: Terms & Conditions List */}
-        <div className="bg-[#0B0F1A]/80 border border-gray-850 rounded-2xl p-4 space-y-4">
+        <div className="bg-[#0B0F1A]/80 border border-gray-855 rounded-2xl p-4 space-y-4 font-sans">
           <div className="border-b border-gray-850/60 pb-2 flex justify-between items-center">
             <h4 className="text-[11px] font-black text-amber-500 uppercase tracking-widest font-mono">
-              एस्टीमेट की शर्तें (Terms & Conditions)
+              Terms & Conditions
             </h4>
-            <span className="text-[9.5px] text-gray-500">शर्ते एडिट या डिलीट कर सकते हैं</span>
+            <span className="text-[9.5px] text-gray-500">Add custom business conditions below</span>
           </div>
 
           {/* Condition addition block */}
           <div className="flex space-x-2">
             <input 
               type="text"
-              placeholder="नई शर्त जोड़ें (e.g., डिलीवरी काम पूरा होने के 7 दिन के अंदर भुगतान अनिवार्य)"
+              placeholder="Add a new term condition (e.g. 50% advance, rest on delivery)"
               value={newCondition}
               onChange={e => setNewCondition(e.target.value)}
-              className="flex-1 bg-gray-950 border border-gray-855 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-550 placeholder-gray-650"
+              className="flex-1 bg-gray-955 border border-gray-850 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-550 placeholder-gray-600"
             />
             <button
               type="button"
               onClick={handleAddCondition}
-              className="bg-amber-500 text-black px-3.5 rounded-xl text-xs font-bold font-mono transition cursor-pointer flex items-center space-x-1"
+              className="bg-amber-500 hover:bg-amber-600 text-black px-4 rounded-xl text-xs font-extrabold transition cursor-pointer flex items-center space-x-1"
             >
-              <Plus className="h-4 w-4" />
-              <span>जोड़ें</span>
+              <Plus className="h-4 w-4 stroke-[2.5]" />
+              <span>Add</span>
             </button>
           </div>
 
           {/* Render list of conditions */}
           <div className="space-y-1.5 pt-1">
             {conditions.map((cond, idx) => (
-              <div key={idx} className="flex justify-between items-center bg-gray-900/60 border border-gray-855/35 px-3 py-2 rounded-xl hover:border-gray-800 transition">
+              <div key={idx} className="flex justify-between items-center bg-gray-900/60 border border-gray-850 px-3 py-2 rounded-xl hover:border-gray-800 transition">
                 <div className="flex items-start space-x-2">
-                  <span className="text-[10px] text-amber-550 font-black mt-0.5">{idx + 1}.</span>
+                  <span className="text-[10px] text-amber-500 font-extrabold mt-0.5">{idx + 1}.</span>
                   <p className="text-xs text-gray-300 leading-relaxed font-sans">{cond}</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleRemoveCondition(idx)}
-                  className="text-gray-550 hover:text-rose-400 p-0.5 transition cursor-pointer shrink-0 ml-3"
-                  title="शर्त सूची से हटाएं"
+                  className="text-gray-500 hover:text-rose-450 p-0.5 transition cursor-pointer shrink-0 ml-3"
+                  title="Remove instruction"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -447,31 +439,31 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
         {/* Step 6: Live Billing Summary calculations */}
         <div className="bg-[#1C160C] border border-amber-500/20 p-5 rounded-3xl space-y-2.5">
           <h4 className="text-[10px] font-black text-amber-500 uppercase tracking-widest font-mono flex items-center justify-between">
-            <span>सटीक वित्तीय योग (Ledger Calculator)</span>
+            <span>Ledger Calculator</span>
             <span className="text-gray-500 italic lowercase font-normal font-sans">rates are subject to conditions</span>
           </h4>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-sans mt-2">
             
             {/* Subtotal */}
-            <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
-              <span className="text-gray-500 text-[10px] block uppercase font-mono">कुल योग (Subtotal)</span>
+            <div className="p-3 bg-gray-955/40 rounded-xl border border-gray-850">
+              <span className="text-gray-550 text-[10px] block uppercase font-mono">Subtotal</span>
               <span className="text-sm font-extrabold text-white mt-1 block">
                 ₹{(subtotal ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
             {/* Discount */}
-            <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
-              <span className="text-gray-500 text-[10px] block uppercase font-mono">छूट (Discount)</span>
+            <div className="p-3 bg-gray-955/40 rounded-xl border border-gray-850">
+              <span className="text-gray-550 text-[10px] block uppercase font-mono">Discount</span>
               <span className="text-sm font-extrabold text-rose-400 mt-1 block">
                 - ₹{(discountVal ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
             {/* Advance amount paid */}
-            <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
-              <span className="text-gray-500 text-[10px] block uppercase font-mono">सुरक्षित एडवांस ({advanceMode})</span>
+            <div className="p-3 bg-gray-955/40 rounded-xl border border-gray-850">
+              <span className="text-gray-550 text-[10px] block uppercase font-mono">Secured Advance ({advanceMode})</span>
               <span className="text-sm font-extrabold text-emerald-400 mt-1 block">
                 ₹{(advanceVal ?? 0).toLocaleString('en-IN')}
               </span>
@@ -479,7 +471,7 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
 
             {/* Final Balance Outstanding */}
             <div className="p-3 bg-[#241E15] rounded-xl border border-amber-500/30">
-              <span className="text-amber-500 text-[10.5px] block uppercase font-mono font-black">अंतिम देय राशि (Balance)</span>
+              <span className="text-amber-500 text-[10.5px] block uppercase font-mono font-black">Balance Outstanding</span>
               <span className="text-[15px] font-black text-amber-400 mt-0.5 block font-mono">
                 ₹{(balanceOutstanding ?? 0).toLocaleString('en-IN')}
               </span>
@@ -492,9 +484,9 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 bg-gray-950 hover:bg-gray-850 border border-gray-850 text-gray-400 font-black py-3 rounded-2xl text-xs uppercase cursor-pointer transition text-center"
+            className="flex-1 bg-gray-955 hover:bg-gray-850 border border-gray-850 text-gray-400 font-extrabold py-3 rounded-2xl text-xs uppercase cursor-pointer transition text-center"
           >
-            वापस जाएँ (Cancel)
+            Cancel
           </button>
           
           <button
@@ -502,7 +494,7 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
             className="flex-2 bg-amber-500 hover:bg-amber-600 text-black font-black py-3 rounded-2xl text-xs uppercase cursor-pointer transition flex items-center justify-center space-x-2"
           >
             <FileText className="h-4.5 w-4.5 stroke-[2.5]" />
-            <span>एस्टीमेट सहेजें और प्रीव्यू देखें (Save & Preview)</span>
+            <span>Save & Preview Estimate</span>
           </button>
         </div>
 

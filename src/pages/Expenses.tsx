@@ -26,10 +26,10 @@ export default function Expenses() {
   const [filterYear, setFilterYear] = useState(new Date().getFullYear());
   const [activeTab, setActiveTab] = useState<'pldash' | 'direct' | 'fixed' | 'client'>('pldash');
 
-  const monthsHindi = [
-    'जनवरी (Jan)', 'फ़रवरी (Feb)', 'मार्च (Mar)', 'अप्रैल (Apr)',
-    'मई (May)', 'जून (Jun)', 'जुलाई (Jul)', 'अगस्त (Aug)',
-    'सितम्बर (Sep)', 'अक्टूबर (Oct)', 'नवम्बर (Nov)', 'दिसम्बर (Dec)'
+  const monthsList = [
+    'January (Jan)', 'February (Feb)', 'March (Mar)', 'April (Apr)',
+    'May (May)', 'June (Jun)', 'July (Jul)', 'August (Aug)',
+    'September (Sep)', 'October (Oct)', 'November (Nov)', 'December (Dec)'
   ];
 
   const refreshData = async (silent = false) => {
@@ -133,11 +133,11 @@ export default function Expenses() {
         }]);
 
       if (error) {
-        toast.error('खर्च्चा जोड़ने में समस्या आयी!');
+        toast.error('Could not add expense!');
         console.error(error);
         return;
       }
-      toast.success('नया दैनिक खर्च्चा बही में जोड़ लिया गया है!');
+      toast.success('New daily expense added to registry!');
       refreshData(true);
     } else {
       store.addTransaction({
@@ -147,12 +147,12 @@ export default function Expenses() {
         date,
         notes: note
       });
-      toast.success('लोकल बही में खर्चा नोट कर लिया गया!');
+      toast.success('Expense recorded in local offline ledger!');
     }
   };
 
   const handleDeleteExpense = async (id: string) => {
-    const isConfirmed = confirm('क्या आप वाकई इस खर्चे को डिलीट करना चाहते हैं?');
+    const isConfirmed = confirm('Are you sure you want to delete this expense entry?');
     if (!isConfirmed) return;
 
     if (supabaseMode) {
@@ -162,14 +162,14 @@ export default function Expenses() {
         .eq('id', id);
 
       if (error) {
-        toast.error('खर्चा डिलीट करने में गड़बड़ हुई!');
+        toast.error('Could not delete expense!');
         return;
       }
-      toast.success('खर्चा रजिस्टर से हटा दिया गया!');
+      toast.success('Expense deleted from registry successfully!');
       refreshData(true);
     } else {
       store.deleteTransaction(id);
-      toast.success('लोकल खर्चे से हटा दिया गया है!');
+      toast.success('Deleted from local offline expense list!');
     }
   };
 
@@ -187,11 +187,11 @@ export default function Expenses() {
         }]);
 
       if (error) {
-        toast.error('मासिक खर्चा जोड़ने में गड़बड़ हुई!');
+        toast.error('Could not save fixed recurring cost!');
         console.error(error);
         return;
       }
-      toast.success(`नया नियमित खर्च "${name}" जोड़ दिया गया है!`);
+      toast.success(`New recurring cost "${name}" added successfully!`);
       refreshData(true);
     } else {
       store.addRecurringExpense({
@@ -200,7 +200,7 @@ export default function Expenses() {
         dueDate,
         category: 'Other'
       });
-      toast.success(`लोकल रजिस्टर में "${name}" जोड़ दिया गया है!`);
+      toast.success(`Local recurring cost "${name}" registered!`);
     }
   };
 
@@ -214,19 +214,19 @@ export default function Expenses() {
         .eq('id', id);
 
       if (error) {
-        toast.error('स्टेटस अपडेट नहीं हो पाया!');
+        toast.error('Could not update cost status!');
         return;
       }
-      toast.success(`सफलतापूर्वक: खर्चा ${nextStatus === 'Paid' ? 'Paid' : 'Pending'} मार्क हो गया!`);
+      toast.success(`Successfully marked expense as ${nextStatus === 'Paid' ? 'Paid' : 'Pending'}!`);
       refreshData(true);
     } else {
       store.toggleRecurringPaid(id);
-      toast.success(`लोकल नियमित खर्चा ${nextStatus === 'Paid' ? 'Paid' : 'Pending'} मार्क हो गया!`);
+      toast.success(`Local recurring expense marked as ${nextStatus === 'Paid' ? 'Paid' : 'Pending'}!`);
     }
   };
 
   const handleDeleteFixedExpense = async (id: string) => {
-    const isConfirmed = confirm('क्या आप इस बंधे खर्चे को हमेशा के लिए डिलीट करना चाहते हैं?');
+    const isConfirmed = confirm('Are you sure you want to permanently delete this recurring expense?');
     if (!isConfirmed) return;
 
     if (supabaseMode) {
@@ -236,14 +236,14 @@ export default function Expenses() {
         .eq('id', id);
 
       if (error) {
-        toast.error('डिलीट करने में त्रुटि!');
+        toast.error('Could not delete recurring expense!');
         return;
       }
-      toast.success('बंधा खर्चा हटा दिया गया!');
+      toast.success('Recurring expense removed successfully!');
       refreshData(true);
     } else {
       store.deleteRecurringExpense(id);
-      toast.success('लोकल रजिस्टर से बंधा खर्चा हटा दिया गया!');
+      toast.success('Recurring expense removed from local database!');
     }
   };
 
@@ -259,10 +259,10 @@ export default function Expenses() {
           </div>
           <div>
             <h1 className="text-sm font-black text-gray-100 flex items-center gap-1.5 uppercase tracking-wide">
-              खर्चा और मुनाफ़ा रजिस्टर <span className="text-xs text-amber-500 font-mono">(Expense & Profit Ledger)</span>
+              Expense & Profit Ledger <span className="text-xs text-amber-500 font-mono">(Expense & Profit Ledger)</span>
             </h1>
             <p className="text-xs text-gray-450 mt-0.5">
-              सभी प्रत्यक्ष खर्चे, किराया/मशीनें/बिजली के बँधे मासिक खर्चे लिखें, और नेट मुनाफ़े (P&L) का विश्लेषण करें।
+              Record daily direct expenses, monthly fixed charges (like electricity, rent, machinery etc.), and calculate your net profit/loss (P&L).
             </p>
           </div>
         </div>
@@ -276,12 +276,12 @@ export default function Expenses() {
           {supabaseMode ? (
             <>
               <Wifi className="h-3.5 w-3.5 shrink-0" />
-              <span>क्लाउड डेटाबेस सक्रिय (Sync Active)</span>
+              <span>Cloud Sync Active</span>
             </>
           ) : (
             <>
               <WifiOff className="h-3.5 w-3.5 shrink-0" />
-              <span>लोकल मोड सक्रिय (Local Offline Book)</span>
+              <span>Local Offline Mode</span>
             </>
           )}
         </div>
@@ -298,7 +298,7 @@ export default function Expenses() {
               activeTab === 'pldash' ? 'bg-amber-500 text-black font-extrabold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            📊 P&L चार्ट और रिपोर्ट
+            📊 P&L Charts & Reports
           </button>
           <button
             onClick={() => setActiveTab('direct')}
@@ -306,7 +306,7 @@ export default function Expenses() {
               activeTab === 'direct' ? 'bg-amber-500 text-black font-extrabold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            💰 नगद खर्च (Expense)
+            💰 Cash Expenses (Direct)
           </button>
           <button
             onClick={() => setActiveTab('fixed')}
@@ -314,7 +314,7 @@ export default function Expenses() {
               activeTab === 'fixed' ? 'bg-amber-500 text-black font-extrabold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            📅 बँधे मासिक खर्चे (Fixed)
+            📅 Fixed Monthly Charges
           </button>
           <button
             onClick={() => setActiveTab('client')}
@@ -322,19 +322,19 @@ export default function Expenses() {
               activeTab === 'client' ? 'bg-amber-500 text-black font-extrabold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            👤 ग्राहक वार रिपोर्ट
+            👤 Client Income Ledger
           </button>
         </div>
 
         {/* Global Date Selectors */}
         <div className="flex items-center space-x-2.5 w-full lg:w-auto justify-end">
-          <span className="text-gray-400 text-xs font-bold">महीने की रिपोर्ट देखें:</span>
+          <span className="text-gray-400 text-xs font-bold">View Month Report:</span>
           <select
             value={filterMonth}
             onChange={e => setFilterMonth(parseInt(e.target.value))}
             className="bg-gray-950 border border-gray-800 rounded-xl py-2 px-3 text-xs font-bold text-white cursor-pointer focus:outline-none"
           >
-            {monthsHindi.map((m, idx) => (
+            {monthsList.map((m, idx) => (
               <option key={idx} value={idx}>{m}</option>
             ))}
           </select>

@@ -60,7 +60,7 @@ export async function initializePayment(
     // Simulate payment transaction with an elite visual feedback loop
     setTimeout(async () => {
       await updateUserPlan(userId, plan);
-      toast.success(`Sandbox पेमेंट स्वीकृत! आप ${plan} मेम्बर बन गए हैं।`);
+      toast.success(`Sandbox payment approved! You are now a ${plan} member.`);
       onSuccess({ razorpay_payment_id: 'SANDBOX_PAY_' + Math.floor(100000 + Math.random() * 900000) });
     }, 1200);
     return;
@@ -72,16 +72,16 @@ export async function initializePayment(
       amount: price * 100, // Price in paise
       currency: 'INR',
       name: 'BillKaro Premium',
-      description: `${plan} प्लान सब्सक्रिप्शन एक्टिवेशन`,
+      description: `${plan} Plan Subscription Activation`,
       image: profile?.logoUrl || 'https://raw.githubusercontent.com/lucide-react/lucide/main/icons/zap.png',
       handler: async function (response: RazorpayResponse) {
         const isVerified = verifyPayment(response);
         if (isVerified) {
           await updateUserPlan(userId, plan);
-          toast.success(`भुगतान स्वीकृत! भुगतान आईडी: ${response.razorpay_payment_id}`);
+          toast.success(`Payment Approved! Payment ID: ${response.razorpay_payment_id}`);
           onSuccess(response);
         } else {
-          toast.error('भुगतान सत्यापन विफल हो गया!');
+          toast.error('Payment verification failed!');
         }
       },
       prefill: {
@@ -98,7 +98,7 @@ export async function initializePayment(
       },
       modal: {
         ondismiss: function () {
-          toast.error('भुगतान प्रक्रिया निरस्त कर दी गई!');
+          toast.error('Payment cancelled!');
           if (onCancel) onCancel();
         }
       }

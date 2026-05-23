@@ -16,35 +16,23 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const profile = useAppStore((state) => state.profile);
   const updateProfile = useAppStore((state) => state.updateProfile);
 
-  // 1. On app load — read language from localStorage first
-  // 2. If no localStorage value found — default to English
-  // 3. LanguageContext must initialize with the saved/default language
-  const [language, setLanguageState] = useState<LanguageType>(() => {
-    const stored = localStorage.getItem('billkaro_language');
-    if (stored === 'Hindi' || stored === 'English' || stored === 'Hinglish') {
-      return stored as LanguageType;
-    }
-    localStorage.setItem('billkaro_language', 'English');
-    return 'English';
-  });
+  // Lock to English
+  const language: LanguageType = 'English';
 
-  // Persists the corrected state instantly and updates profile store to match
   useEffect(() => {
-    localStorage.setItem('billkaro_language', language);
-    if (profile.language !== language) {
-      updateProfile({ language });
+    localStorage.setItem('billkaro_language', 'English');
+    if (profile.language !== 'English') {
+      updateProfile({ language: 'English' });
     }
-  }, [language, updateProfile]);
+  }, [profile.language, updateProfile]);
 
   const setLanguage = (newLang: LanguageType) => {
-    setLanguageState(newLang);
-    localStorage.setItem('billkaro_language', newLang);
-    updateProfile({ language: newLang });
+    // Locked to English
   };
 
   const t = useMemo(() => {
-    return (text: string): string => translateText(text, language);
-  }, [language]);
+    return (text: string): string => translateText(text, 'English');
+  }, []);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

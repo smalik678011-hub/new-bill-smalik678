@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Plus, Trash2, Phone, DollarSign, Search, UserCheck, X, Award } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 
 export interface WorkerProps {
@@ -11,6 +12,7 @@ export interface WorkerProps {
 
 export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loading }: WorkerProps) {
 
+  const { t } = useTranslation();
   const [showAddForm, setShowAddForm] = useState(false);
   const [name, setName] = useState('');
   const [dailyRate, setDailyRate] = useState('500');
@@ -49,7 +51,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
         <div className="flex items-center space-x-2">
           <Users className="h-5 w-5 text-amber-500" />
           <h3 className="text-xs font-black uppercase tracking-wider text-gray-200">
-            मजदूर एवं कारीगर लिस्ट ({workers.length})
+            {t('मजदूर एवं कारीगर लिस्ट')} ({workers.length})
           </h3>
         </div>
         <button
@@ -57,7 +59,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
           className="bg-amber-500 hover:bg-amber-400 text-white font-black py-1.5 px-3 rounded-xl text-[11px] flex items-center space-x-1 transition select-none cursor-pointer"
         >
           <Plus className="h-4 w-4" />
-          <span>नया कारीगर</span>
+          <span>{t('नया कारीगर')}</span>
         </button>
       </div>
 
@@ -66,7 +68,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
         <form onSubmit={handleSubmit} className="bg-gray-950 border border-gray-850 p-4 rounded-2xl space-y-3.5 shadow-inner animate-fadeIn">
           <div className="flex justify-between items-center pb-1.5 border-b border-gray-900">
             <h4 className="text-[11px] font-black text-amber-500 uppercase flex items-center">
-              <UserCheck className="h-3.5 w-3.5 mr-1" /> नया कारीगर सहेजें
+              <UserCheck className="h-3.5 w-3.5 mr-1" /> {t('नया कारीगर सहेजें')}
             </h4>
             <button type="button" onClick={() => setShowAddForm(false)} className="text-gray-500 hover:text-white">
               <X className="h-4 w-4" />
@@ -75,7 +77,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">नाम (Karigar Name) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">{t('नाम (Karigar Name) *')}</label>
               <input
                 type="text"
                 required
@@ -87,7 +89,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">दैनिक दहाड़ी दर (₹/Day) *</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">{t('दैनिक दहाड़ी दर (₹/Day) *')}</label>
               <div className="relative">
                 <span className="absolute left-2.5 top-2.5 text-xs text-amber-500 font-bold">₹</span>
                 <input
@@ -102,7 +104,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">मोबाइल नंबर (Phone No.)</label>
+              <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">{t('मोबाइल नंबर (Phone No.)')}</label>
               <input
                 type="text"
                 maxLength={10}
@@ -119,7 +121,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
             disabled={saving}
             className="w-full bg-amber-500 hover:bg-amber-400 text-white py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition disabled:opacity-50 cursor-pointer font-mono"
           >
-            {saving ? 'Saving...' : 'करीगर को रजिस्टर में जोड़ें (Save Worker)'}
+            {saving ? 'Saving...' : t('करीगर को रजिस्टर में जोड़ें (Save Worker)')}
           </button>
         </form>
       )}
@@ -130,7 +132,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
           <input
             type="text"
-            placeholder="Manoj, Suresh, Rajesh, Phone No. से सर्च करें..."
+            placeholder={t('Manoj, Suresh, Rajesh, Phone No. से सर्च करें...')}
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             className="w-full bg-gray-950 border border-gray-850 text-xs rounded-xl py-2 pl-9 pr-3 text-white placeholder-gray-650 focus:outline-none focus:border-amber-500"
@@ -171,7 +173,7 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
             <button
               onClick={() => onDeleteWorker(worker.id)}
               className="text-gray-500 hover:text-red-400 hover:bg-red-500/10 p-2 rounded-xl transition cursor-pointer shrink-0"
-              title="रजिस्टर से निकालें"
+              title={t('रजिस्टर से निकालें')}
             >
               <Trash2 className="h-4 w-4" />
             </button>
@@ -180,13 +182,13 @@ export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loadi
 
         {loading && (
           <div className="text-center py-6 text-xs text-gray-550 italic font-mono animate-pulse">
-            कारीगर लिस्ट लोड हो रही है...
+            {t('कारीगर लिस्ट लोड हो रही है...')}
           </div>
         )}
 
         {!loading && filteredWorkers.length === 0 && (
-          <div className="text-center py-8 text-xs text-gray-500 bg-gray-950 rounded-2xl border border-dashed border-gray-850 p-4">
-            कोई कारिगर नहीं मिला। {searchQuery ? 'सर्च कीवर्ड बदलें' : 'ऊपर "नया कारीगर" दबाकर चालू करें।'}
+          <div className="text-center py-8 text-xs text-gray-500 bg-gray-950 rounded-2xl border border-dashed border-gray-850 p-4 font-bold">
+            {t('कोई कारिगर नहीं मिला।') + ' ' + (searchQuery ? t('सर्च कीवर्ड बदलें') : t('ऊपर "नया कारीगर" दबाकर चालू करें।'))}
           </div>
         )}
       </div>

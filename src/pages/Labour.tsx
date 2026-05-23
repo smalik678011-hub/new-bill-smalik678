@@ -6,11 +6,13 @@ import WorkerList from '../components/labour/WorkerList';
 import AttendanceCalendar from '../components/labour/AttendanceCalendar';
 import SalarySummary from '../components/labour/SalarySummary';
 import { UserCheck, ShieldAlert, Wifi, WifiOff } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 
 export default function Labour() {
 
   const store = useAppStore();
+  const { t } = useTranslation();
 
   const [workers, setWorkers] = useState<any[]>([]);
   const [attendance, setAttendance] = useState<any[]>([]);
@@ -127,21 +129,21 @@ export default function Labour() {
         .select();
 
       if (error) {
-        toast.error('कारीगर जोड़ने में समस्या आयी!');
+        toast.error('Could not add worker!');
         console.error(error);
         return;
       }
-      toast.success(`${name} को रजिस्टर में जोड़ लिया गया है!`);
+      toast.success(`${name} added to registry successfully!`);
       refreshData(true);
     } else {
       // Local fall
       store.addLabour({ name, dailyRate, phone });
-      toast.success(`${name} को लोकल बही में जोड़ लिया गया है!`);
+      toast.success(`${name} added to local ledger successfully!`);
     }
   };
 
   const handleDeleteWorker = async (id: string) => {
-    const isConfirmed = confirm('क्या आप वाकई इस कारीगर को बही से हटाना चाहते हैं? सभी अटेंडेंस भी डिलीट हो जाएगी!');
+    const isConfirmed = confirm('Are you sure you want to remove this worker? All associated attendance records will be deleted.');
     if (!isConfirmed) return;
 
     if (supabaseMode) {
@@ -151,14 +153,14 @@ export default function Labour() {
         .eq('id', id);
 
       if (error) {
-        toast.error('कारीगर हटाने में गड़बड़ हुई!');
+        toast.error('Could not remove worker!');
         return;
       }
-      toast.success('कारीगर रजिस्टर से सफलतापूर्वक हटा दिया गया!');
+      toast.success('Worker removed from registry successfully!');
       refreshData(true);
     } else {
       store.deleteLabour(id);
-      toast.success('कारीगर लोकल रजिस्टर से हटा दिया गया है!');
+      toast.success('Worker removed from local register successfully!');
     }
   };
 
@@ -195,21 +197,21 @@ export default function Labour() {
           if (insErr) throw insErr;
         }
 
-        toast.success('हाज़िरी सिंक हो गयी!');
+        toast.success('Attendance status synced successfully!');
         refreshData(true);
       } catch (err) {
         console.error(err);
-        toast.error('हाज़िरी सिंक करने में गड़बड़ हुई!');
+        toast.error('Could not sync attendance status!');
       }
     } else {
       store.setAttendance(workerId, date, status);
-      toast.success('लोकल हाज़िरी अपडेट हो गयी है!');
+      toast.success('Local attendance status updated successfully!');
     }
   };
 
   const handleBulkMarkPresent = async (date: string) => {
     if (workers.length === 0) {
-      toast.error('हाज़िरी लगाने के लिए कोई कारीगर नहीं है!');
+      toast.error('No workers available to mark attendance!');
       return;
     }
 
@@ -239,17 +241,17 @@ export default function Labour() {
               }]);
           }
         }
-        toast.success(`सभी ${workers.length} कारीगरों को उपस्थित मार्क किया गया!`);
+        toast.success(`All ${workers.length} workers marked as Present!`);
         refreshData();
       } else {
         workers.forEach(worker => {
           store.setAttendance(worker.id, date, 'Present');
         });
-        toast.success(`सभी ${workers.length} कारीगरों की हाज़िरी लगा दी गयी है!`);
+        toast.success(`Attendance recorded for all ${workers.length} workers!`);
       }
     } catch (err) {
       console.error(err);
-      toast.error('सबकी हाज़िरी लगाने में कोई त्रुटि हुई!');
+      toast.error('Could not mark attendance for workers!');
       setLoading(false);
     }
   };
@@ -268,11 +270,11 @@ export default function Labour() {
         }]);
 
       if (error) {
-        toast.error('सैलरी भुगतान दर्ज करने में गड़बड़ हुई!');
+        toast.error('Could not record wage payment!');
         console.error(error);
         return;
       }
-      toast.success('वेतन भुगतान क्लाउड बहीखाते में सहेजा गया!');
+      toast.success('Wage payment saved in cloud ledger!');
       refreshData(true);
     } else {
       // Local
@@ -283,7 +285,7 @@ export default function Labour() {
         date,
         notes
       });
-      toast.success('भुगतान लोकल ट्रांजेक्शन बुक में लिख दिया गया है!');
+      toast.success('Wage payment saved in local transaction book!');
     }
   };
 
@@ -301,10 +303,10 @@ export default function Labour() {
           </div>
           <div>
             <h1 className="text-sm font-black text-gray-100 flex items-center gap-1.5 uppercase tracking-wide">
-              लेबर और हाज़िरी रजिस्टर <span className="text-xs text-amber-500 font-mono">(Labour Roster Suite)</span>
+              <span>Labour & Attendance Registry</span> <span className="text-xs text-amber-500 font-mono">(Labour Roster Suite)</span>
             </h1>
             <p className="text-xs text-gray-450 mt-0.5">
-              कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन (हिसाब-किताब) व्यवस्थित करें।
+              <span>Track daily attendance, view monthly calendars, and manage payroll books seamlessly.</span>
             </p>
           </div>
         </div>
@@ -318,12 +320,12 @@ export default function Labour() {
           {supabaseMode ? (
             <>
               <Wifi className="h-3.5 w-3.5 shrink-0" />
-              <span>क्लाउड डेटाबेस सक्रिय (Sync Active)</span>
+              <span>Cloud Sync Active</span>
             </>
           ) : (
             <>
               <WifiOff className="h-3.5 w-3.5 shrink-0" />
-              <span>लोकल मोड सक्रिय (Local Offline Book)</span>
+              <span>Local Offline Ledger Mode</span>
             </>
           )}
         </div>
@@ -337,7 +339,7 @@ export default function Labour() {
             activeTab === 'attendance' ? 'bg-amber-500 text-white font-extrabold' : 'text-gray-450 hover:text-white'
           }`}
         >
-          📅 हाज़िरी कैलेंडर (Monthly & Bulk)
+          <span>📅 Attendance Calendar (Monthly & Bulk)</span>
         </button>
         <button
           onClick={() => setActiveTab('workers')}
@@ -345,7 +347,7 @@ export default function Labour() {
             activeTab === 'workers' ? 'bg-amber-500 text-white font-extrabold' : 'text-gray-450 hover:text-white'
           }`}
         >
-          👷 कारीगर प्रबंधक (Manage Workers)
+          <span>👷 Manage Workers Registry</span>
         </button>
         <button
           onClick={() => setActiveTab('salary')}
@@ -353,7 +355,7 @@ export default function Labour() {
             activeTab === 'salary' ? 'bg-amber-500 text-white font-extrabold' : 'text-gray-450 hover:text-white'
           }`}
         >
-          💰 हिसाब और सैलरी (Payroll Book)
+          <span>💰 Wages & Payroll Ledger</span>
         </button>
       </div>
 

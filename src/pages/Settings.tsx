@@ -21,22 +21,22 @@ export default function Settings() {
   const handleUpdatePin = (e: React.FormEvent) => {
     e.preventDefault();
     if (currentPin !== profitPin) {
-      toast.error('पुराना सेफ्टी पिन (Current PIN) गलत है!');
+      toast.error('Incorrect Current PIN!');
       return;
     }
 
     if (newPinVal.length < 4 || !/^\d+$/.test(newPinVal)) {
-      toast.error('नया पिन 4 अंकों (Digits) का होना चाहिए!');
+      toast.error('New PIN must be exactly 4 digits!');
       return;
     }
 
     if (newPinVal !== confirmNewPinVal) {
-      toast.error('नया पिन और कन्फर्म पिन मेल नहीं खाते!');
+      toast.error('New PIN and Confirm PIN do not match!');
       return;
     }
 
     updateProfitPin(newPinVal);
-    toast.success('सेफ्टी पिन सफलतापूर्वक अपडेट कर दिया गया है!');
+    toast.success('Security PIN updated successfully!');
     setCurrentPin('');
     setNewPinVal('');
     setConfirmNewPinVal('');
@@ -54,10 +54,10 @@ export default function Settings() {
           </div>
           <div>
             <h1 className="text-sm font-black text-gray-100 uppercase tracking-wide">
-              नियम और सेटिंग्स <span className="text-xs text-amber-500 font-mono">(Business Settings Hub)</span>
+              Settings & Choice <span className="text-xs text-amber-500 font-mono">(Business Settings Hub)</span>
             </h1>
             <p className="text-xs text-gray-450 mt-0.5">
-              अपनी दुकान के विज्ञापनों, बैंक खाता, लोगो, भाषा चयन, पिन सिक्योरिटी और प्लान को नियंत्रित करें।
+              Manage your business profile, membership plan, and private ledger security PIN.
             </p>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function Settings() {
           }`}
         >
           <Building className="h-4 w-4 shrink-0" />
-          <span>🏢 व्यापारिक प्रोफाइल</span>
+          <span>🏢 Business Profile</span>
         </button>
 
         <button
@@ -82,7 +82,7 @@ export default function Settings() {
           }`}
         >
           <CreditCard className="h-4 w-4 shrink-0" />
-          <span>💳 प्लान एवं लिमिट</span>
+          <span>💳 Plans & Limits</span>
         </button>
 
         <button
@@ -92,7 +92,7 @@ export default function Settings() {
           }`}
         >
           <Lock className="h-4 w-4 shrink-0" />
-          <span>🔒 सेफ्टी लॉक पिन</span>
+          <span>🔒 Safety PIN Lock</span>
         </button>
       </div>
 
@@ -113,8 +113,8 @@ export default function Settings() {
             <div className="flex items-center space-x-2 border-b border-gray-900 pb-3">
               <Lock className="h-5 w-5 text-amber-500" />
               <div>
-                <h4 className="text-xs font-black text-white uppercase">प्राइवेट खतौनी सेफ्टी पिन (Profit Ledger PIN Security)</h4>
-                <p className="text-[10px] text-gray-500 mt-0.5">अपना "प्राइवेट बचत (Estimate Margin)" सुरक्षा लॉक बदलने के लिए नीचे फॉर्म भरें।</p>
+                <h4 className="text-xs font-black text-white uppercase">Private Profit Ledger PIN Security</h4>
+                <p className="text-[10px] text-gray-500 mt-0.5">Please fill out the form below to update your Private Margin / Profit Ledger security lock PIN.</p>
               </div>
             </div>
 
@@ -125,7 +125,7 @@ export default function Settings() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div>
-                    <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">पुराना पिन (Current PIN) *</label>
+                    <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Current PIN *</label>
                     <input 
                       type="password" 
                       maxLength={4}
@@ -138,7 +138,7 @@ export default function Settings() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">नया सुरक्षा पिन (New 4-digit PIN) *</label>
+                    <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">New 4-Digit Security PIN *</label>
                     <input 
                       type="password" 
                       maxLength={4}
@@ -151,7 +151,7 @@ export default function Settings() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">नया पिन दुबारा लिखे (Confirm PIN) *</label>
+                    <label className="text-[10px] text-gray-400 uppercase font-black block mb-1">Confirm New PIN *</label>
                     <input 
                       type="password" 
                       maxLength={4}
@@ -170,7 +170,7 @@ export default function Settings() {
                     className="bg-amber-500 hover:bg-amber-400 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 transition cursor-pointer font-mono"
                   >
                     <Check className="h-4.5 w-4.5" />
-                    <span>सेफ्टी पिन अपडेट करें (Save Security PIN)</span>
+                    <span>Update Security PIN</span>
                   </button>
                 </div>
 
@@ -178,12 +178,12 @@ export default function Settings() {
 
               {/* Informative helper sidebar */}
               <div className="bg-[#0e1322] border border-gray-850 p-4 rounded-2xl space-y-2 text-[11px] text-gray-300 leading-relaxed">
-                <span className="text-[10px] font-black uppercase text-amber-500 block tracking-wider">यह पिन कहाँ उपयोग होता है?</span>
+                <span className="text-[10px] font-black uppercase text-amber-500 block tracking-wider">Where is this PIN used?</span>
                 <p>
-                  जब आप "प्राइवेट बचत (Estimate Margin)" की प्राइवेट बही खोलते हैं, तब यह सेफ्टी पिन मागा जाता है ताकि आपकी अनुपस्थिति में कोई भी कर्मचारी आपकी वास्तविक बचत या मुनाफा न देख सके।
+                  This safety PIN is requested when you open your Private Estimate Margin / Profit Ledger. It ensures that in your absence, no staff, workers, or clients can view your actual business savings, margins, or profits.
                 </p>
                 <div className="bg-gray-950 p-2.5 rounded-xl text-[10px] border border-gray-900 font-mono text-gray-500 mt-2">
-                  डिफ़ॉल्ट आरंभिक पिन: <b>1234</b>
+                  Default Initial PIN: <b>1234</b>
                 </div>
               </div>
 

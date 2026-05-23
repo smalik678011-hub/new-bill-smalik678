@@ -77,7 +77,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     localStorage.removeItem('billkaro_demo_user');
     try {
       await supabase.auth.signOut();
-      toast.success('लॉगआउट सफल रहा!');
+      toast.success('Logged out successfully!');
       navigate('/signin');
     } catch (err) {
       // Still navigate and clean up locally even if sign out fails
@@ -92,7 +92,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     return (
       <div className="min-h-screen bg-[#0B0F1A] flex flex-col justify-center items-center font-sans">
         <div className="h-10 w-10 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin mb-4" />
-        <span className="text-gray-400 text-sm font-black animate-pulse">BillKaro लोड हो रहा है...</span>
+        <span className="text-gray-400 text-sm font-black animate-pulse">BillKaro Loading...</span>
       </div>
     );
   }
@@ -153,7 +153,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <ClipboardCheck className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-sm font-black text-gray-900 block">एस्टीमेट बही</span>
+                  <span className="text-sm font-black text-gray-900 block">Estimates</span>
                   <span className="text-xs text-orange-600 block leading-none mt-1">Quotations</span>
                 </div>
               </button>
@@ -166,8 +166,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <Calculator className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-sm font-black text-gray-900 block">प्राइवेट बचत</span>
-                  <span className="text-xs text-orange-600 block leading-none mt-1">Marge Profits</span>
+                  <span className="text-sm font-black text-gray-900 block">Project Margin</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Income & Profit</span>
                 </div>
               </button>
 
@@ -179,7 +179,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <TrendingUp className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-sm font-black text-gray-900 block">कमाई-खर्चा</span>
+                  <span className="text-sm font-black text-gray-900 block">Expenses</span>
                   <span className="text-xs text-orange-600 block leading-none mt-1">Kamaai Kharcha</span>
                 </div>
               </button>
@@ -192,7 +192,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <CreditCard className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-sm font-black text-gray-900 block">डिजिटल कार्ड</span>
+                  <span className="text-sm font-black text-gray-900 block">Digital Card</span>
                   <span className="text-xs text-orange-600 block leading-none mt-1">Visiting Cards</span>
                 </div>
               </button>
@@ -205,8 +205,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <Package className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-sm font-black text-gray-900 block">स्टॉक माल</span>
-                  <span className="text-xs text-orange-600 block leading-none mt-1">Inventory</span>
+                  <span className="text-sm font-black text-gray-900 block">Inventory</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Stock</span>
                 </div>
               </button>
 
@@ -218,8 +218,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <Building className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-sm font-black text-gray-900 block">सिटिंग्स व प्रोफाइल</span>
-                  <span className="text-xs text-orange-600 block leading-none mt-1">Settings Info</span>
+                  <span className="text-sm font-black text-gray-900 block">Settings</span>
+                  <span className="text-xs text-orange-600 block leading-none mt-1">Profile Info</span>
                 </div>
               </button>
             </div>

@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 import useAppStore from '../../store';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Check, ShieldAlert, Award, Chrome } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Sparkles, Check, ShieldAlert, Award } from 'lucide-react';
 import Modal from './Modal';
 import Button from './Button';
 import toast from 'react-hot-toast';
-
-
 
 interface SubscriptionGateProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
   featureName?: string;
-  hindiFeatureName?: string;
   mode?: 'block' | 'modal';
   id?: string;
 }
@@ -22,11 +18,10 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
   children,
   fallback,
   featureName = 'Premium Feature',
-  hindiFeatureName = 'प्रीमियम सेवा',
   mode = 'block',
   id
 }) => {
-  const { subscription, setSubscription, profile } = useAppStore();
+  const { subscription, setSubscription } = useAppStore();
   const navigate = useNavigate();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +30,6 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 
   const handleUpgradeClick = async () => {
     setIsLoading(true);
-    // Dynamic Razorpay checkout loader
     const loadScript = (): Promise<boolean> => {
       return new Promise((resolve) => {
         if ((window as any).Razorpay) {
@@ -51,14 +45,13 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
       });
     };
 
-    const scriptLoaded = await loadScript();
+    await loadScript();
     
-    // Process upgrade
     setTimeout(() => {
       setSubscription('PRO');
       setIsLoading(false);
       setShowUpgradeModal(false);
-      toast.success('भुगतान सफल! आप PRO मेम्बर बन गए हैं।');
+      toast.success('Payment successful! You are now a PRO member.');
       navigate('/settings');
     }, 1200);
   };
@@ -66,23 +59,21 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
   const gateId = id || 'premium-gate';
 
   const benefits = [
-    { en: 'Create Unlimited Invoices & Estimates', hi: 'असीमित पक्के टैक्स बिल बनाएं' },
-    { en: 'Add Unlimited Clients & Suppliers', hi: 'असीमित ग्राहक एवं सप्लायर जोड़ें' },
-    { en: 'Full Stock Inventory & Warehouse Manager', hi: 'संपूर्ण स्टॉक एवं माल का ब्यौरा' },
-    { en: 'Workers Attendance & Dynamic Wage Ledger', hi: 'कर्मचारी हाज़िरी व दिहाड़ी रजिस्टर' },
-    { en: 'Digital QR Payment Link & WhatsApp Sharing', hi: 'डिजिटल पेमेंट लिंक और व्हाट्सएप शेयर' }
+    { en: 'Create Unlimited Invoices & Estimates' },
+    { en: 'Add Unlimited Clients & Suppliers' },
+    { en: 'Full Stock Inventory & Warehouse Manager' },
+    { en: 'Workers Attendance & Dynamic Wage Ledger' },
+    { en: 'Digital QR Payment Link & WhatsApp Sharing' }
   ];
 
   if (isPremium) {
     return <>{children}</>;
   }
 
-  // If fallback is provided, use it directly
   if (fallback) {
     return <>{fallback}</>;
   }
 
-  // Render inline card blocking access to the content
   if (mode === 'block') {
     return (
       <div 
@@ -95,14 +86,10 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 
         <h3 className="text-base font-black text-slate-800 dark:text-slate-100 flex items-baseline gap-1.5 flex-wrap justify-center">
           <span>👑 Upgrade to Unlock {featureName}</span>
-          <span className="text-xs text-amber-500 font-bold font-sans">({hindiFeatureName})</span>
         </h3>
 
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-sans max-w-sm">
           This feature is exclusive to BillKaro PRO members. Upgrade now to unlock advanced business ledgers.
-        </p>
-        <p className="text-[11px] text-amber-600 font-medium font-sans mt-1">
-          यह पक्का फ़ीचर केवल PRO प्लान ग्राहकों के लिए है। अभी अपग्रेड करें।
         </p>
 
         <div className="mt-5 flex gap-2.5">
@@ -114,7 +101,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
             className="font-bold flex items-center gap-1"
           >
             <Sparkles className="w-4 h-4" />
-            <span>Upgrade to PRO / अपग्रेड करें</span>
+            <span>Upgrade to PRO</span>
           </Button>
 
           <Button 
@@ -133,7 +120,6 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
           isOpen={showUpgradeModal}
           onClose={() => setShowUpgradeModal(false)}
           title="Become BillKaro PRO"
-          hindiTitle="प्रो मेम्बर बनें 👑"
           size="md"
           footer={
             <div className="flex justify-end gap-2 w-full">
@@ -143,7 +129,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
                 onClick={() => setShowUpgradeModal(false)}
                 className="font-bold"
               >
-                Later / बाद में
+                Later
               </Button>
               <Button
                 variant="primary"
@@ -163,7 +149,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
                 <Award className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <h4 className="text-xs font-bold text-slate-900 dark:text-slate-50">PRO Membership (प्रो सदस्यता)</h4>
+                <h4 className="text-xs font-bold text-slate-900 dark:text-slate-50">PRO Membership</h4>
                 <p className="text-[10.5px] text-slate-500 font-sans mt-0.5">
                   Unlock premium bahi-khata templates, unlimited accounts, and professional reports.
                 </p>
@@ -171,14 +157,13 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
             </div>
 
             <div className="space-y-2.5 pt-2">
-              <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300">Included Benefits / विशेष सेवाएं:</h5>
+              <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300">Included Benefits:</h5>
               <div className="space-y-2">
                 {benefits.map((benefit, index) => (
                   <div key={index} className="flex gap-2 items-start text-xs text-slate-600 dark:text-slate-400">
                     <Check className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-medium text-slate-800 dark:text-slate-200 font-sans">{benefit.en}</p>
-                      <p className="text-[10.5px] text-amber-600 font-medium font-sans">({benefit.hi})</p>
                     </div>
                   </div>
                 ))}
@@ -186,7 +171,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
             </div>
 
             <div className="pt-2 text-[10px] text-slate-400 text-center font-sans tracking-tight">
-              Secure online checkout powered by Razorpay. Safe sandbox sandbox transaction emulation.
+              Secure online checkout powered by Razorpay. Safe sandbox transaction emulation.
             </div>
           </div>
         </Modal>
@@ -194,7 +179,6 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
     );
   }
 
-  // Modal mode: return children but wrap trigger with a payment warning modal on load/click
   return (
     <>
       <div 
@@ -214,7 +198,6 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
         title="Become BillKaro PRO"
-        hindiTitle="प्रो मेम्बर बनें 👑"
         size="md"
         footer={
           <div className="flex justify-end gap-2 w-full">
@@ -246,20 +229,19 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
             <div className="flex-1">
               <h4 className="text-xs font-bold text-slate-900 dark:text-slate-50">Locked Feature: {featureName}</h4>
               <p className="text-[10.5px] text-slate-500 font-sans mt-0.5">
-                ({hindiFeatureName}) — Upgrade to unlock this and many other premium utilities.
+                Upgrade to unlock this and many other premium utilities.
               </p>
             </div>
           </div>
 
           <div className="space-y-2.5 pt-2">
-            <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300">Included Benefits / प्रो सेवाएं:</h5>
+            <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300">Included Benefits:</h5>
             <div className="space-y-2">
               {benefits.map((benefit, index) => (
                 <div key={index} className="flex gap-2 items-start text-xs text-slate-600 dark:text-slate-400">
                   <Check className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-slate-800 dark:text-slate-200 font-sans">{benefit.en}</p>
-                    <p className="text-[10.5px] text-amber-600 font-bold font-sans">({benefit.hi})</p>
                   </div>
                 </div>
               ))}

@@ -17,7 +17,7 @@ export default function BusinessCard() {
     ownerName: '',
     phone: '',
     address: '',
-    tagline: 'मजबूत काम, सही दाम और भरोसा!',
+    tagline: 'High Quality Work, Fair Prices & Trust!',
     specialties: [
       'Iron Gate, Grill & Railings Designer',
       'Specialist Steel Shed and Roof fitting',
@@ -36,7 +36,7 @@ export default function BusinessCard() {
       ownerName: profile.ownerName || 'Aman Sharma',
       phone: profile.phone || '9876543210',
       address: profile.address || 'Aligarh, India',
-      tagline: 'मजबूत काम, सही दाम और भरोसा!',
+      tagline: 'High Quality Work, Fair Prices & Trust!',
       specialties: [
         'Iron Gate, Grill & Railings Designer',
         'Specialist Steel Shed and Roof fitting',
@@ -44,7 +44,7 @@ export default function BusinessCard() {
       ],
       upiId: profile.upiId || ''
     });
-    toast.success('प्रोफाइल डेटा से लाइव ऑटो-फिल हो गया है!');
+    toast.success('Auto-filled from profile data successfully!');
   };
 
   useEffect(() => {
@@ -97,11 +97,11 @@ export default function BusinessCard() {
               <CreditCard className="h-5 w-5 animate-pulse" />
             </div>
             <h2 className="text-base font-black text-gray-100 font-sans tracking-wide uppercase">
-              प्रीमियम विज़िटिंग कार्ड स्टूडियो (Premium Visiting Card Maker)
+              Premium Visiting Card Maker Studio
             </h2>
           </div>
           <p className="text-[11px] text-gray-400 mt-1">
-            अपने व्यापार के लिए आधुनिक डिजिटल विज़िटिंग कार्ड डिज़ाइन करें। अलग-अलग सोशल मीडिया साइज में उच्च गुणवत्ता (PNG) डाउनलोड करें।
+            Create professional digital business visiting cards for your brand. Download in premium high-quality PNG formats for dynamic sharing.
           </p>
         </div>
 
@@ -124,7 +124,7 @@ export default function BusinessCard() {
             <div className="flex items-center space-x-2 border-b border-gray-850 pb-2">
               <Palette className="h-4.5 w-4.5 text-amber-500" />
               <h3 className="text-xs font-black uppercase tracking-wider text-gray-305">
-                डिज़ाइन थीम चुनें (Select Template Preset)
+                Select Design Preset Template
               </h3>
             </div>
 
@@ -136,7 +136,7 @@ export default function BusinessCard() {
                     key={t.id}
                     onClick={() => {
                       setSelectedTemplate(t.id);
-                      toast.success(`${t.name} थीम चुनी गयी!`);
+                      toast.success(`${t.name} preset template selected!`);
                     }}
                     className={`p-3.5 rounded-2xl border text-center transition tracking-tight select-none cursor-pointer relative flex flex-col items-center justify-center space-y-1.5 ${
                       active ? 'border-amber-500 ring-1 ring-amber-500 bg-amber-500/5' : 'border-gray-800 bg-[#0B0F1A]'
@@ -175,8 +175,8 @@ export default function BusinessCard() {
           <div className="flex items-center justify-between border-b border-gray-800 pb-2.5">
             <div className="flex items-center space-x-2">
               <Layout className="h-4.5 w-4.5 text-amber-500" />
-              <h3 className="text-xs font-black uppercase tracking-wider text-gray-300">
-                लाइव कार्ड मॉकअप (Mockup Preview)
+              <h3 className="text-xs font-black uppercase tracking-wider text-gray-305">
+                Live Business Card Mockup
               </h3>
             </div>
 
@@ -222,7 +222,7 @@ export default function BusinessCard() {
           <div className="bg-amber-500/5 border border-amber-500/10 p-3.5 rounded-2xl flex items-center space-x-2.5 text-amber-500/90 text-center">
             <Info className="h-4.5 w-4.5 shrink-0" />
             <span className="text-[10.5px] leading-tight text-left">
-              💡 <b>Tip:</b> डिज़ाइनिंग करने के बाद नीचे दिए गए बटन पर क्लिक करके high-quality PNG तस्वीर अपने फोन की गैलरी में सेव करें और WhatsApp Status पर लगाएं।
+              💡 <b>Tip:</b> Once done tweaking, use the download button below to save high-quality PNG images to share on WhatsApp or social media statuses.
             </span>
           </div>
 

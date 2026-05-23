@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar as CalendarIcon, CheckCheck, RefreshCw, ChevronLeft, ChevronRight, User, HelpCircle, ShieldAlert, Sparkles } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 
 interface AttendanceCalendarProps {
@@ -18,6 +19,7 @@ export default function AttendanceCalendar({
   loading
 }: AttendanceCalendarProps) {
 
+  const { t } = useTranslation();
   
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedWorkerId, setSelectedWorkerId] = useState<string>('');
@@ -120,7 +122,7 @@ export default function AttendanceCalendar({
         <div className="flex items-center space-x-2">
           <CalendarIcon className="h-5 w-5 text-amber-500" />
           <h3 className="text-xs font-black uppercase tracking-wider text-gray-200">
-            हाज़िरी एवं कैलेंडर (Attendance Suite)
+            {t('हाज़िरी एवं कैलेंडर (Attendance Suite)')}
           </h3>
         </div>
 
@@ -131,7 +133,7 @@ export default function AttendanceCalendar({
               viewMode === 'date' ? 'bg-amber-500 text-white font-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'
             }`}
           >
-            तारीख के अनुसार
+            {t('तारीख के अनुसार')}
           </button>
           <button
             onClick={() => setViewMode('calendar')}
@@ -139,14 +141,14 @@ export default function AttendanceCalendar({
               viewMode === 'calendar' ? 'bg-amber-500 text-white font-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'
             }`}
           >
-            मासिक कैलेंडर
+            {t('मासिक कैलेंडर')}
           </button>
         </div>
       </div>
 
       {loading && (
         <div className="text-center py-6 text-xs text-gray-550 italic font-mono animate-pulse">
-          हाज़िरी अपडेट सिंक हो रही है...
+          {t('हाज़िरी अपडेट सिंक हो रही है...')}
         </div>
       )}
 
@@ -156,7 +158,7 @@ export default function AttendanceCalendar({
           <div className="bg-gray-950 p-4 rounded-2xl border border-gray-850 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
             <div className="flex items-center space-x-2.5">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-bold text-gray-300">हाजिरी की तारीख चुनें:</span>
+              <span className="text-xs font-bold text-gray-300">{t('हाजिरी की तारीख चुनें:')}</span>
               <input
                 type="date"
                 value={selectedDate}
@@ -171,7 +173,7 @@ export default function AttendanceCalendar({
                 className="bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white text-emerald-400 font-extrabold text-[10.5px] uppercase tracking-wider py-2 px-4 rounded-xl transition flex items-center justify-center space-x-1.5 cursor-pointer"
               >
                 <CheckCheck className="h-4 w-4 shrink-0" />
-                <span>सभी को उपस्थित करें (Bulk Present Only)</span>
+                <span>{t('सभी को उपस्थित करें (Bulk Present Only)')}</span>
               </button>
             )}
           </div>
@@ -206,7 +208,7 @@ export default function AttendanceCalendar({
                           : 'bg-[#0B0F1A] border-gray-850 text-gray-400 hover:text-gray-200'
                       }`}
                     >
-                      पूर्ण (P)
+                      {t('पूर्ण (P)')}
                     </button>
                     <button
                       onClick={() => onMarkAttendance(worker.id, selectedDate, 'HalfDay')}
@@ -216,7 +218,7 @@ export default function AttendanceCalendar({
                           : 'bg-[#0B0F1A] border-gray-850 text-gray-400 hover:text-gray-200'
                       }`}
                     >
-                      आधा (½)
+                      {t('आधा (½)')}
                     </button>
                     <button
                       onClick={() => onMarkAttendance(worker.id, selectedDate, 'Absent')}
@@ -226,7 +228,7 @@ export default function AttendanceCalendar({
                           : 'bg-[#0B0F1A] border-gray-850 text-gray-400 hover:text-gray-200'
                       }`}
                     >
-                      अनु० (A)
+                      {t('अनु० (A)')}
                     </button>
                   </div>
                 </div>
@@ -234,8 +236,8 @@ export default function AttendanceCalendar({
             })}
 
             {workers.length === 0 && (
-              <div className="text-center py-8 text-xs text-gray-500 bg-gray-950 rounded-2xl border border-dashed border-gray-850">
-                पहले कारीगर लिस्ट में कारीगर जोड़ें!
+              <div className="text-center py-8 text-xs text-gray-500 bg-gray-950 rounded-2xl border border-dashed border-gray-850 font-bold">
+                {t('पहले कारीगर लिस्ट में कारीगर जोड़ें!')}
               </div>
             )}
           </div>
@@ -249,7 +251,7 @@ export default function AttendanceCalendar({
           {/* Worker Select dropdown */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-center bg-gray-950 p-4 rounded-xl border border-gray-850">
             <div>
-              <label className="text-[10px] text-gray-400 font-bold block mb-1">कारीगर चुनें:</label>
+              <label className="text-[10px] text-gray-400 font-bold block mb-1">{t('कारीगर चुनें:')}</label>
               <select
                 value={selectedWorkerId}
                 onChange={e => setSelectedWorkerId(e.target.value)}
@@ -293,7 +295,7 @@ export default function AttendanceCalendar({
                 </button>
                 <div className="text-center">
                   <span className="text-xs font-bold text-white block">
-                    {monthsHindi[currentMonth]} {currentYear}
+                    {t(monthsHindi[currentMonth])} {currentYear}
                   </span>
                   <span className="text-[9.5px] text-emerald-400 font-mono font-bold block mt-0.5 uppercase tracking-wider">
                     Net Served: {activeStats.calculatedWorked} Present Units
@@ -349,7 +351,7 @@ export default function AttendanceCalendar({
 
               {/* Indicator color block label guidance */}
               <div className="bg-gray-950 border border-gray-850 text-[10px] text-gray-400 px-4 py-2 rounded-xl flex flex-wrap gap-4 justify-between leading-tight items-center">
-                <span>💡 <b>तारीख पर टैप करें:</b> स्टेटस बदलने के लिए।</span>
+                <span>{t('💡 तारीख पर टैप करें: स्टेटस बदलने के लिए।')}</span>
                 <div className="flex items-center space-x-3 text-[9px] font-bold">
                   <span className="flex items-center space-x-1"><span className="h-2 w-2 rounded-full bg-emerald-500" /> <span>Present</span></span>
                   <span className="flex items-center space-x-1"><span className="h-2 w-2 rounded-full bg-amber-500" /> <span>Half Day</span></span>
@@ -359,8 +361,8 @@ export default function AttendanceCalendar({
 
             </div>
           ) : (
-            <div className="text-center py-10 text-xs text-gray-550 italic font-medium">
-              कैलेंडर देखने के लिए कोई कारीगर चुनें!
+            <div className="text-center py-10 text-xs text-gray-550 italic font-medium font-bold">
+              {t('कैलेंडर देखने के लिए कोई कारीगर चुनें!')}
             </div>
           )}
 

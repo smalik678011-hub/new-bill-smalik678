@@ -4,9 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { LogIn, Mail, Lock, ShieldCheck, Chrome, ArrowRight } from 'lucide-react';
 
-
 export default function Login() {
-
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,7 +13,7 @@ export default function Login() {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      toast.error('कृपया ईमेल और पासवर्ड भरें!');
+      toast.error('Please enter your email and password!');
       return;
     }
 
@@ -28,11 +26,11 @@ export default function Login() {
 
       if (error) throw error;
 
-      toast.success('लॉगइन सफल रहा!');
+      toast.success('Logged in successfully!');
       // Navigate to dashboard
       navigate('/');
     } catch (err: any) {
-      toast.error(err.message || 'लॉगइन में समस्या आई। क्रेडेंशियल चेक करें!');
+      toast.error(err.message || 'Login failed. Please check your credentials!');
     } finally {
       setLoading(false);
     }
@@ -48,7 +46,7 @@ export default function Login() {
       });
       if (error) throw error;
     } catch (err: any) {
-      toast.error(err.message || 'Google लॉगइन शुरू नहीं हो पाया!');
+      toast.error(err.message || 'Failed to initialize Google Login!');
     }
   };
 
@@ -62,27 +60,27 @@ export default function Login() {
         user_metadata: { full_name: 'Demo Account' }
       };
       localStorage.setItem('billkaro_demo_user', JSON.stringify(demoUser));
-      toast.success('डेमो मोड (Demo Mode) में लॉगइन सफल! स्वागत है।');
+      toast.success('Demo mode logged in successfully! Welcome.');
       navigate('/');
     }, 400);
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F1A] text-gray-100 flex flex-col justify-center items-center p-4 selection:bg-amber-500 selection:text-white">
-      <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col justify-center items-center p-4 selection:bg-blue-500/10 selection:text-blue-600">
+      <div className="w-full max-w-md bg-[#FFFFFF] border border-slate-200/80 rounded-3xl p-6 md:p-8 space-y-6 shadow-xl relative overflow-hidden">
         {/* Subtle decorative background glow */}
-        <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16" />
+        <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16" />
         
         {/* Brand identity */}
         <div className="text-center space-y-2">
-          <div className="inline-flex h-12 w-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 items-center justify-center text-amber-400 shadow-inner">
+          <div className="inline-flex h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 items-center justify-center text-blue-600 shadow-inner">
             <ShieldCheck className="h-7 w-7" />
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-white font-sans">
-            Bill<span className="text-amber-500">Karo</span>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 font-sans">
+            Bill<span className="text-[#0C56D1]">Karo</span>
           </h1>
-          <p className="text-xs text-gray-200 font-medium">
-            मजबूत व्यापार का मजबूत डिजिटल बही खाता।
+          <p className="text-xs text-slate-500 font-medium font-sans">
+            Smart digital ledger for modern growing businesses.
           </p>
         </div>
 
@@ -91,53 +89,53 @@ export default function Login() {
           <button
             onClick={handleDemoLogin}
             type="button"
-            className="w-full bg-amber-500 hover:bg-amber-600 border border-amber-600 text-white font-black py-4 rounded-2xl text-sm uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] flex flex-col items-center justify-center group relative overflow-hidden cursor-pointer"
+            className="w-full bg-[#0C56D1] hover:bg-[#0b4cb0] border border-blue-700 text-white font-black py-4 rounded-2xl text-sm uppercase tracking-widest transition-all shadow-[0_4px_12px_rgba(12,86,209,0.15)] flex flex-col items-center justify-center group relative overflow-hidden cursor-pointer"
           >
             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
             <span className="relative z-10 flex items-center space-x-2">
               <ArrowRight className="h-5 w-5" />
-              <span>डेमो शुरू करें (Explore Demo)</span>
+              <span>Explore Demo</span>
             </span>
           </button>
-          <p className="text-[10px] text-gray-400 text-center uppercase tracking-tighter">
+          <p className="text-[10px] text-slate-400 text-center uppercase tracking-tighter">
             Instant Access • No Password Required • Cloud Ready
           </p>
         </div>
 
         <div className="relative flex py-2 items-center">
-          <div className="flex-grow border-t border-gray-800"></div>
-          <span className="flex-shrink mx-4 text-gray-600 text-[10px] uppercase font-mono font-black">अथवा (OR)</span>
-          <div className="flex-grow border-t border-gray-800"></div>
+          <div className="flex-grow border-t border-slate-100"></div>
+          <span className="flex-shrink mx-4 text-slate-400 text-[10px] uppercase font-mono font-black">OR</span>
+          <div className="flex-grow border-t border-slate-100"></div>
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleEmailLogin} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-black text-gray-100 block">ईमेल (Email Address)</label>
+            <label className="text-xs font-black text-slate-700 block">Email Address</label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300" />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="अपना ईमेल डालें (e.g. name@gmail.com)"
-                className="w-full bg-[#0B0F1A] border border-gray-700 focus:border-amber-500 text-sm text-white rounded-xl py-2.5 pl-10 pr-4 placeholder-gray-450 focus:outline-none transition-colors"
+                placeholder="Enter your email (e.g. name@gmail.com)"
+                className="w-full bg-white border border-slate-200 focus:border-[#0C56D1] text-sm text-slate-800 rounded-xl py-2.5 pl-10 pr-4 placeholder-slate-400 focus:outline-none transition-colors"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-black text-gray-100 block">पासवर्ड (Password)</label>
+            <label className="text-xs font-black text-slate-700 block">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300" />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#0B0F1A] border border-gray-700 focus:border-amber-500 text-sm text-white rounded-xl py-2.5 pl-10 pr-4 placeholder-gray-450 focus:outline-none transition-colors"
+                className="w-full bg-white border border-slate-200 focus:border-[#0C56D1] text-sm text-slate-800 rounded-xl py-2.5 pl-10 pr-4 placeholder-slate-400 focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -145,50 +143,50 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-amber-500/25 flex items-center justify-center space-x-2 disabled:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full bg-[#0C56D1] hover:bg-[#0b4cb0] text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? (
-              <span className="animate-pulse">प्रतीक्षा करें...</span>
+              <span className="animate-pulse">Please wait...</span>
             ) : (
               <>
                 <LogIn className="h-4 w-4" />
-                <span>लॉगइन करें (Sign In)</span>
+                <span>Sign In</span>
               </>
             )}
           </button>
         </form>
 
         <div className="relative flex py-2 items-center">
-          <div className="flex-grow border-t border-gray-700"></div>
-          <span className="flex-shrink mx-4 text-gray-300 text-[10px] uppercase font-mono font-black">अथवा</span>
-          <div className="flex-grow border-t border-gray-700"></div>
+          <div className="flex-grow border-t border-slate-100"></div>
+          <span className="flex-shrink mx-4 text-slate-400 text-[10px] uppercase font-mono font-black">OR</span>
+          <div className="flex-grow border-t border-slate-100"></div>
         </div>
 
         {/* Google OAuth Login - Professional Branding */}
         <button
           onClick={handleGoogleLogin}
           type="button"
-          className="w-full bg-[#4285F4] hover:bg-[#3367D6] text-white text-xs font-black py-3.5 rounded-xl flex items-center justify-center space-x-3 transition-all shadow-lg hover:shadow-[#4285F4]/30 cursor-pointer border border-[#4285F4]"
+          className="w-full bg-[#4285F4] hover:bg-[#3367D6] text-white text-xs font-black py-3.5 rounded-xl flex items-center justify-center space-x-3 transition-all shadow-md hover:shadow-lg cursor-pointer border border-[#4285F4]"
         >
           <div className="bg-white p-1 rounded-sm">
             <Chrome className="h-3.5 w-3.5 text-[#4285F4]" />
           </div>
-          <span>GOOGLE के साथ लॉगइन करें</span>
+          <span>SIGN IN WITH GOOGLE</span>
         </button>
 
         {/* Signup Link */}
         <div className="text-center pt-2">
-          <p className="text-xs text-gray-300">
-            नया खाता चाहिए?{' '}
-            <Link to="/signup" className="text-amber-400 hover:underline font-black ml-1">
-              यहाँ नया अकाउंट बनाएं (Register)
+          <p className="text-xs text-slate-600">
+            Need an account?{' '}
+            <Link to="/signup" className="text-[#0C56D1] hover:underline font-black ml-1">
+              Create Free Account (Register)
             </Link>
           </p>
         </div>
       </div>
 
       {/* Visual simple credit */}
-      <span className="text-[10px] text-gray-350 font-mono mt-8 uppercase select-none">
+      <span className="text-[10px] text-slate-400 font-mono mt-8 uppercase select-none">
         Securely powered by Supabase Authentication
       </span>
     </div>
