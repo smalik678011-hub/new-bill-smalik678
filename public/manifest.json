@@ -1,0 +1,23 @@
+{
+  "short_name": "BillKaro",
+  "name": "BillKaro जीएसटी बिल एवं बहीखाता (GST Billing & Ledger)",
+  "description": "Polished Tax Billing, Quotations, Workers Attendance, and Expenses Ledger App.",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/lucide-react/lucide/main/icons/zap.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/lucide-react/lucide/main/icons/zap.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#f59e0b",
+  "display": "standalone",
+  "orientation": "portrait",
+  "status_bar": "black-translucent"
+}

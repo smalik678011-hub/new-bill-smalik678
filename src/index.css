@@ -1,0 +1,476 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-primary: #1e40af;
+  --color-dark: #ffffff;
+  --color-card: #ffffff;
+
+  /* Proportionally increased standard font sizes to maintain perfect typography hierarchy */
+  --text-xs: 0.875rem; /* 14px instead of 12px (Minimum body/label font size requirement) */
+  --text-xs--line-height: 1.25rem;
+  
+  --text-sm: 0.9375rem; /* 15px instead of 14px */
+  --text-sm--line-height: 1.375rem;
+  
+  --text-base: 1.0625rem; /* 17px instead of 16px */
+  --text-base--line-height: 1.5rem;
+  
+  --text-lg: 1.25rem; /* 20px instead of 18px (Increate headings proportionally) */
+  --text-lg--line-height: 1.75rem;
+  
+  --text-xl: 1.375rem; /* 22px instead of 20px */
+  --text-xl--line-height: 2rem;
+  
+  --text-2xl: 1.625rem; /* 26px instead of 24px */
+  --text-2xl--line-height: 2.25rem;
+  
+  --text-3xl: 2.125rem; /* 34px instead of 30px */
+  --text-3xl--line-height: 2.5rem;
+  
+  --text-4xl: 2.75rem; /* 44px instead of 36px */
+  --text-4xl--line-height: 3.25rem;
+}
+
+/* Base styling customized for BillKaro */
+body {
+  background-color: #ffffff;
+  color: #1f2937;
+  font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14.5px !important; /* Satisfies body: minimum 14px */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Force main content background to be pure white */
+div.min-h-screen,
+main,
+#active-viewport,
+div[class*="bg-[#0B0F1A]"] {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+/* Selection background color override */
+::selection {
+  background-color: rgba(30, 64, 175, 0.15) !important;
+  color: #1e40af !important;
+}
+
+/* Override all light / dark text variations for clean contrast on white background */
+.text-white,
+.text-gray-50,
+.text-gray-100,
+.text-gray-200,
+.text-slate-100,
+.text-slate-200,
+.text-secondary-white {
+  color: #1f2937 !important;
+}
+
+.text-gray-300,
+.text-slate-300,
+.text-gray-400,
+.text-slate-400,
+.text-secondary {
+  color: #4b5563 !important;
+}
+
+.text-gray-500,
+.text-slate-500,
+.text-gray-400 {
+  color: #6b7280 !important;
+}
+
+/* Professional blue primary overrides */
+.text-amber-500,
+.text-amber-600,
+.text-amber-400,
+.text-amber-700,
+.text-[#F59E0B] {
+  color: #1e40af !important;
+}
+
+.bg-amber-500,
+.bg-amber-600,
+.bg-amber-400,
+.bg-amber-700,
+.bg-[#F59E0B],
+.from-amber-500,
+.to-amber-600 {
+  background-color: #1e40af !important;
+  background-image: none !important;
+  color: #ffffff !important;
+}
+
+.border-amber-500,
+.border-amber-600,
+.border-amber-400 {
+  border-color: #1e40af !important;
+}
+
+/* Dynamic Hover effects for buttons */
+.hover\:bg-amber-400:hover,
+.hover\:bg-amber-600:hover,
+.hover\:from-amber-400:hover,
+.hover\:bg-emerald-400:hover,
+.hover\:bg-cyan-400:hover {
+  background-color: #1d4ed8 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+}
+
+/* Target HTML inputs, select boxes, and textareas */
+input, select, textarea {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #1e40af !important;
+  box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.15) !important;
+  outline: none !important;
+}
+
+/* Header style override: pure white with light blue borders */
+header,
+header[class*="bg-"] {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #bfdbfe !important;
+  box-shadow: 0 2px 4px rgba(30, 64, 175, 0.04) !important;
+}
+
+header h1,
+header h1 *,
+header h2,
+header span,
+header text {
+  color: #1f2937 !important;
+}
+
+/* App Branding logo text colors in header */
+header span[class*="text-amber-500"],
+header h1 [class*="text-"] {
+  color: #1e40af !important;
+}
+
+/* Sidebar Styling: professional blue background with white text */
+aside,
+aside[class*="bg-"] {
+  background-color: #1e40af !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+aside span,
+aside h3,
+aside h4,
+aside text,
+aside p,
+aside svg {
+  color: #ffffff !important;
+}
+
+aside button {
+  background-color: transparent !important;
+}
+
+aside button:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+aside nav button[class*="bg-amber-500/10"],
+aside nav button[class*="text-amber-500"],
+aside nav button.bg-amber-500\/10 {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+aside nav button[class*="text-amber-500"] svg {
+  color: #ffffff !important;
+}
+
+aside div[class*="bg-[#0B0F1A]/30"] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+aside span[class*="bg-amber-400/10"] {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #facc15 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+aside button[class*="hover:bg-red-500/10"]:hover {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+}
+
+/* Mobile bottom-nav: solid blue background with white text */
+div[class*="pb-safe"] {
+  background-color: #1e40af !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+div[class*="pb-safe"] button {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+div[class*="pb-safe"] button svg {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+div[class*="pb-safe"] button[class*="text-amber-500"] {
+  color: #ffffff !important;
+}
+
+div[class*="pb-safe"] button[class*="text-amber-500"] svg {
+  color: #ffffff !important;
+}
+
+/* Card components overlay styling: White background with light blue border or shadow */
+div[class*="bg-gray-900"],
+div[class*="bg-slate-900"],
+div[class*="bg-slate-950"],
+div[class*="bg-[#111827]"],
+div[class*="bg-[#1C160C]"],
+div[class*="bg-[#161B29]"],
+div[class*="bg-[#0B0F1A]/80"],
+div[class*="bg-[#0B0F1A]/90"],
+div.border-gray-800,
+div.border-gray-850 {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  border-color: #bfdbfe !important;
+  box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.05), 0 2px 4px -1px rgba(30, 64, 175, 0.03) !important;
+}
+
+/* Sub-borders and dividers inside white card containers */
+div[class*="bg-gray-900"] *,
+div[class*="bg-slate-900"] *,
+div[class*="bg-[#111827]"] *,
+div[class*="bg-[#0B0F1A]"] * {
+  border-color: #e5e7eb;
+}
+
+/* Dialog and Modal containers */
+div[class*="fixed inset-0"][class*="bg-[#0B0F1A]/"] {
+  background-color: rgba(17, 24, 39, 0.7) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+div[class*="fixed inset-0"] div[class*="bg-gray-900"],
+div[class*="fixed inset-0"] div[class*="bg-[#0B0F1A]"] {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border-color: #bfdbfe !important;
+}
+
+/* Override generic and specific buttons to maintain compliance */
+button,
+.button {
+  transition: all 0.2s ease-in-out;
+}
+
+button.bg-amber-500,
+button.bg-emerald-500,
+button.bg-[#F59E0B],
+button[class*="bg-amber-"],
+button[class*="bg-emerald-"],
+button[class*="bg-cyan-"] {
+  background-color: #1e40af !important;
+  background-image: none !important;
+  color: #ffffff !important;
+}
+
+button.bg-amber-500:hover,
+button.bg-emerald-500:hover,
+button[class*="bg-amber-"]:hover {
+  background-color: #1d4ed8 !important;
+}
+
+/* All text components inside these custom buttons should stay white */
+button.bg-amber-500 span,
+button.bg-emerald-500 span,
+button[class*="bg-amber-"] span,
+button.bg-cyan-500 span,
+button.bg-amber-500 text,
+button.bg-emerald-500 text {
+  color: #ffffff !important;
+}
+
+button.bg-amber-500 svg,
+button.bg-emerald-500 svg,
+button[class*="bg-amber-"] svg,
+button.bg-cyan-500 svg {
+  color: #ffffff !important;
+}
+
+/* Tables, headers, inputs styling defaults */
+input, select, textarea, button, label {
+  font-size: 14px !important; /* Satisfies labels and form fields: minimum 14px */
+}
+
+table, th, td {
+  font-size: 13.5px !important; /* Satisfies table content: minimum 13px */
+  color: #1f2937 !important;
+  border-color: #bfdbfe !important;
+}
+
+th {
+  background-color: #f3f4f6 !important;
+  color: #1f2937 !important;
+}
+
+/* Explicit pixel overrides */
+.text-\[7px\], .text-\[7\.5px\], .text-\[8px\], .text-\[8\.5px\] {
+  font-size: 13px !important;
+}
+
+.text-\[9px\], .text-\[9\.5px\], .text-\[10px\], .text-\[10\.5px\], .text-\[11px\], .text-\[11\.5px\], .text-\[12px\], .text-\[12\.5px\], .text-\[13px\] {
+  font-size: 14px !important;
+}
+
+.text-\[13\.5px\], .text-\[14px\] {
+  font-size: 15px !important;
+}
+
+.text-\[14\.5px\], .text-\[15px\] {
+  font-size: 16px !important;
+}
+
+.text-\[15\.5px\] {
+  font-size: 17px !important;
+}
+
+/* Hide scrollbars for slick mobile app switcher layout */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Print and PDF rendering styles to ensure pristine A4 format layout */
+@media print {
+  /* Hide all interactive screen elements like sidebars, headers, mobile navigations, action panels etc */
+  header,
+  aside,
+  nav,
+  button,
+  .no-print,
+  [class*="pb-safe"],
+  /* Selectively target action banners in modals */
+  div[class*="bg-[#0D121F]"],
+  div[class*="backdrop-blur-md"] > div > div:first-child,
+  header + md\:hidden {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Reset document flow and background for paper printouts */
+  html, body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    width: 210mm !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Specific A4 sizing guidelines */
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 15mm 15mm;
+  }
+
+  /* Make sure modal overlays behave as static blocks to span multiple pages continuously if needed */
+  div[class*="fixed inset-0"],
+  div[class*="fixed inset-0"] > div,
+  /* Handle scrollable inner packaging */
+  div[class*="overflow-y-auto"] {
+    position: static !important;
+    display: block !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Standardize printable invoice, estimate, and receipt cards to cover A4 boundaries */
+  #printable-tax-invoice-card,
+  #printable-estimate-card,
+  #payment-receipt-slip-paper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  /* Ensure colors and backgrounds of items maintain high readability */
+  #printable-tax-invoice-card *,
+  #printable-estimate-card *,
+  #payment-receipt-slip-paper * {
+    color: #1f2937 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Table rules for page-breaks */
+  thead {
+    display: table-header-group !important;
+  }
+
+  tr, td, th {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Styling details high print contrast */
+  th {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+    border-bottom: 2px solid #9ca3af !important;
+  }
+
+  td {
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+}
+
+/* Ensure pdf generation is perfectly formatted to standard desk workspace dimensions */
+.pdf-rendering {
+  width: 794px !important; /* Matches standard A4 width beautifully */
+  max-width: 794px !important;
+  min-width: 794px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 30px !important;
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+.pdf-rendering * {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
